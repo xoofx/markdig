@@ -13,8 +13,14 @@ namespace Markdig.Extensions.SmartyPants;
 [DebuggerDisplay("SmartyPant {ToString()}")]
 public class SmartyPant : LeafInline
 {
+    /// <summary>
+    /// Gets or sets the opening character.
+    /// </summary>
     public char OpeningCharacter { get; set; }
 
+    /// <summary>
+    /// Gets or sets the type.
+    /// </summary>
     public SmartyPantType Type { get; set; }
 
     /// <summary>
@@ -47,6 +53,9 @@ public class SmartyPant : LeafInline
         return OpeningCharacter != 0 ? OpeningCharacter.ToString() : string.Empty;
     }
 
+    /// <summary>
+    /// Performs the as literal inline operation.
+    /// </summary>
     public LiteralInline AsLiteralInline()
     {
         return new LiteralInline(ToString())

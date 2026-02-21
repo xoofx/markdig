@@ -32,8 +32,14 @@ public class LinkInlineParser : InlineParser
         OpeningCharacters = ['[', ']', '!'];
     }
 
+    /// <summary>
+    /// Gets or sets the options.
+    /// </summary>
     public readonly LinkOptions Options;
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // The following methods are inspired by the "An algorithm for parsing nested emphasis and links"

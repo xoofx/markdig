@@ -72,6 +72,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return GetEnumerator();
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
     public void Add(Block item)
     {
         if (item is null)
@@ -109,6 +112,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
+    /// <summary>
+    /// Performs the clear operation.
+    /// </summary>
     public void Clear()
     {
         BlockWrapper[] children = _children;
@@ -153,11 +159,17 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         Count = 0;
     }
 
+    /// <summary>
+    /// Performs the contains operation.
+    /// </summary>
     public bool Contains(Block item)
     {
         return IndexOf(item) >= 0;
     }
 
+    /// <summary>
+    /// Performs the copy to operation.
+    /// </summary>
     public void CopyTo(Block[] array, int arrayIndex)
     {
         BlockWrapper[] children = _children;
@@ -167,6 +179,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
+    /// <summary>
+    /// Performs the remove operation.
+    /// </summary>
     public bool Remove(Block item)
     {
         int index = IndexOf(item);
@@ -178,10 +193,19 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return false;
     }
 
+    /// <summary>
+    /// Gets or sets the count.
+    /// </summary>
     public int Count { get; private set; }
 
+    /// <summary>
+    /// Gets or sets the is read only.
+    /// </summary>
     public bool IsReadOnly => false;
 
+    /// <summary>
+    /// Performs the index of operation.
+    /// </summary>
     public int IndexOf(Block item)
     {
         if (item is null)
@@ -198,6 +222,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return -1;
     }
 
+    /// <summary>
+    /// Performs the insert operation.
+    /// </summary>
     public void Insert(int index, Block item)
     {
         if (item is null)
@@ -224,6 +251,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         item.Parent = this;
     }
 
+    /// <summary>
+    /// Removes at.
+    /// </summary>
     public void RemoveAt(int index)
     {
         if ((uint)index >= (uint)Count)
@@ -240,6 +270,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         _children[Count] = default;
     }
 
+    /// <summary>
+    /// Gets the value at the specified index.
+    /// </summary>
     public Block this[int index]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -390,12 +423,18 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return true;
     }
 
+    /// <summary>
+    /// Performs the sort operation.
+    /// </summary>
     public void Sort(IComparer<Block> comparer)
     {
         if (comparer is null) ThrowHelper.ArgumentNullException(nameof(comparer));
         Array.Sort(_children, 0, Count, new BlockComparerWrapper(comparer));
     }
 
+    /// <summary>
+    /// Performs the sort operation.
+    /// </summary>
     public void Sort(Comparison<Block> comparison)
     {
         if (comparison is null) ThrowHelper.ArgumentNullException(nameof(comparison));
@@ -404,6 +443,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
 
     #region Nested type: Enumerator
 
+    /// <summary>
+    /// Represents the Enumerator type.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Enumerator : IEnumerator<Block>
     {
@@ -418,14 +460,23 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
             current = null;
         }
 
+        /// <summary>
+        /// Gets or sets the current.
+        /// </summary>
         public Block Current => current!;
 
         object IEnumerator.Current => Current;
 
+        /// <summary>
+        /// Performs the dispose operation.
+        /// </summary>
         public void Dispose()
         {
         }
 
+        /// <summary>
+        /// Performs the move next operation.
+        /// </summary>
         public bool MoveNext()
         {
             if (index < block.Count)

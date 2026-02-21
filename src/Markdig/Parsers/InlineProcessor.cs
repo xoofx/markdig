@@ -115,6 +115,9 @@ public class InlineProcessor
     /// </summary>
     public LiteralInlineParser LiteralInlineParser { get; } = new();
 
+    /// <summary>
+    /// Gets source position from local span.
+    /// </summary>
     public SourceSpan GetSourcePositionFromLocalSpan(SourceSpan span)
     {
         if (span.IsEmpty)
@@ -384,6 +387,9 @@ public class InlineProcessor
         }
     }
 
+    /// <summary>
+    /// Performs the post process inlines operation.
+    /// </summary>
     public void PostProcessInlines(int startingIndex, Inline? root, Inline? lastChild, bool isFinalProcessing)
     {
         for (int i = startingIndex; i < Parsers.PostInlineProcessors.Length; i++)

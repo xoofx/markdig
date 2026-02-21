@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Footers;
 /// <seealso cref="IMarkdownExtension" />
 public class FooterExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<FooterBlockParser>())
@@ -29,6 +32,9 @@ public class FooterExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

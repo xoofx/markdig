@@ -12,6 +12,9 @@ namespace Markdig.Extensions.Footnotes;
 /// <seealso cref="LinkReferenceDefinition" />
 public class FootnoteLinkReferenceDefinition : LinkReferenceDefinition
 {
+    /// <summary>
+    /// Initializes a new instance of the FootnoteLinkReferenceDefinition class.
+    /// </summary>
     public FootnoteLinkReferenceDefinition(Footnote footnote)
     {
         Footnote = footnote;

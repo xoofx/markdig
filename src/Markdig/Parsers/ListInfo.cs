@@ -60,5 +60,8 @@ public struct ListInfo
     /// </summary>
     public string? DefaultOrderedStart { get; set; }
 
+    /// <summary>
+    /// Gets or sets the source bullet.
+    /// </summary>
     public StringSlice SourceBullet { get; set; }
 }

@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Normalize;
 /// <seealso cref="NormalizeObjectRenderer{ThematicBreakBlock}" />
 public class ThematicBreakRenderer : NormalizeObjectRenderer<ThematicBreakBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, ThematicBreakBlock obj)
     {
         renderer.WriteLine(new string(obj.ThematicChar, obj.ThematicCharCount));

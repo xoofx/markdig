@@ -15,15 +15,24 @@ public class ConfigureNewLineExtension : IMarkdownExtension
 {
     private readonly string newLine;
 
+    /// <summary>
+    /// Initializes a new instance of the ConfigureNewLineExtension class.
+    /// </summary>
     public ConfigureNewLineExtension(string newLine)
     {
         this.newLine = newLine;
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is TextRendererBase textRenderer)

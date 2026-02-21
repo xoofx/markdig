@@ -15,21 +15,36 @@ namespace Markdig.Extensions.MediaLinks;
 /// <seealso cref="IMarkdownExtension" />
 public class MediaLinkExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Initializes a new instance of the MediaLinkExtension class.
+    /// </summary>
     public MediaLinkExtension() : this(new MediaOptions())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the MediaLinkExtension class.
+    /// </summary>
     public MediaLinkExtension(MediaOptions? options)
     {
         Options = options ?? new MediaOptions();
     }
 
+    /// <summary>
+    /// Gets the options.
+    /// </summary>
     public MediaOptions Options { get; }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

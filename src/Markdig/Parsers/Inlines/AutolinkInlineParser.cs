@@ -15,6 +15,9 @@ namespace Markdig.Parsers.Inlines;
 /// <seealso cref="InlineParser" />
 public class AutolinkInlineParser : InlineParser
 {
+    /// <summary>
+    /// Initializes a new instance of the AutolinkInlineParser class.
+    /// </summary>
     public AutolinkInlineParser() : this(new AutolinkOptions())
     {
 
@@ -29,8 +32,14 @@ public class AutolinkInlineParser : InlineParser
         OpeningCharacters = ['<'];
     }
 
+    /// <summary>
+    /// Gets or sets the options.
+    /// </summary>
     public readonly AutolinkOptions Options;
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         var saved = slice;

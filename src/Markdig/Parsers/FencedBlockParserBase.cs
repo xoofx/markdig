@@ -10,6 +10,9 @@ using Markdig.Syntax;
 
 namespace Markdig.Parsers;
 
+/// <summary>
+/// Represents the FencedBlockParserBase type.
+/// </summary>
 public abstract class FencedBlockParserBase : BlockParser, IAttributesParseable
 {
     /// <summary>
@@ -71,8 +74,14 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
         }
     }
 
+    /// <summary>
+    /// Gets or sets the minimum match count.
+    /// </summary>
     public int MinimumMatchCount { get; set; }
 
+    /// <summary>
+    /// Gets or sets the maximum match count.
+    /// </summary>
     public int MaximumMatchCount { get; set; }
 
     private enum ParseState
@@ -243,6 +252,9 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
         return true;
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         // We expect no indentation for a fenced code block.
@@ -303,8 +315,14 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
         return BlockState.ContinueDiscard;
     }
 
+    /// <summary>
+    /// Performs the create fenced block operation.
+    /// </summary>
     protected abstract T CreateFencedBlock(BlockProcessor processor);
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var fence = (IFencedBlock)block;

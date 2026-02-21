@@ -30,6 +30,9 @@ public class EmphasisExtraExtension : IMarkdownExtension
     /// </summary>
     public EmphasisExtraOptions Options { get; }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         var parser = pipeline.InlineParsers.FindExact<EmphasisInlineParser>();
@@ -88,6 +91,9 @@ public class EmphasisExtraExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

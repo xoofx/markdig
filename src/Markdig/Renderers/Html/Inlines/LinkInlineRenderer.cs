@@ -44,6 +44,9 @@ public class LinkInlineRenderer : HtmlObjectRenderer<LinkInline>
     /// </summary>
     public string? Rel { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, LinkInline link)
     {
         if (renderer.EnableHtmlForInline)

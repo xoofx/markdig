@@ -18,6 +18,9 @@ namespace Markdig.Syntax.Inlines;
 /// <seealso cref="Inline" />
 public class ContainerInline : Inline, IEnumerable<Inline>
 {
+    /// <summary>
+    /// Initializes a new instance of the ContainerInline class.
+    /// </summary>
     public ContainerInline() : base(dummySkipTypeKind: true)
     {
         SetTypeKind(isInline: true, isContainer: true);
@@ -215,6 +218,9 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         AppendChild(container);
     }
 
+    /// <summary>
+    /// Performs the on child insert operation.
+    /// </summary>
     protected override void OnChildInsert(Inline child)
     {
         // A child is inserted before the FirstChild
@@ -237,6 +243,9 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         }
     }
 
+    /// <summary>
+    /// Performs the on child remove operation.
+    /// </summary>
     protected override void OnChildRemove(Inline child)
     {
         if (child == FirstChild)
@@ -257,6 +266,9 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         }
     }
 
+    /// <summary>
+    /// Performs the dump child to operation.
+    /// </summary>
     protected override void DumpChildTo(TextWriter writer, int level)
     {
         if (FirstChild != null)
@@ -373,12 +385,18 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         }
     }
 
+    /// <summary>
+    /// Represents the Enumerator type.
+    /// </summary>
     public struct Enumerator : IEnumerator<Inline>
     {
         private readonly ContainerInline container;
         private Inline? currentChild;
         private Inline? nextChild;
 
+        /// <summary>
+        /// Initializes a new instance of the Enumerator class.
+        /// </summary>
         public Enumerator(ContainerInline container) : this()
         {
             if (container is null) ThrowHelper.ArgumentNullException(nameof(container));
@@ -386,14 +404,23 @@ public class ContainerInline : Inline, IEnumerable<Inline>
             currentChild = nextChild = container.FirstChild;
         }
 
+        /// <summary>
+        /// Gets or sets the current.
+        /// </summary>
         public Inline Current => currentChild!;
 
         object IEnumerator.Current => Current;
 
+        /// <summary>
+        /// Performs the dispose operation.
+        /// </summary>
         public void Dispose()
         {
         }
 
+        /// <summary>
+        /// Performs the move next operation.
+        /// </summary>
         public bool MoveNext()
         {
             currentChild = nextChild;
@@ -406,12 +433,18 @@ public class ContainerInline : Inline, IEnumerable<Inline>
             return false;
         }
 
+        /// <summary>
+        /// Performs the reset operation.
+        /// </summary>
         public void Reset()
         {
             currentChild = nextChild = container.FirstChild;
         }
     }
 
+    /// <summary>
+    /// Gets enumerator.
+    /// </summary>
     public Enumerator GetEnumerator()
     {
         return new Enumerator(this);

@@ -14,14 +14,23 @@ namespace Markdig.Helpers;
 /// <remarks>We use a typed list and don't use extension methods because it would pollute all list implements and the top level namespace.</remarks>
 public class OrderedList<T> : List<T> where T: notnull
 {
+    /// <summary>
+    /// Performs the ordered list operation.
+    /// </summary>
     public OrderedList()
     {
     }
 
+    /// <summary>
+    /// Performs the ordered list operation.
+    /// </summary>
     public OrderedList(IEnumerable<T> collection) : base(collection)
     {
     }
 
+    /// <summary>
+    /// Performs the insert before t item operation.
+    /// </summary>
     public bool InsertBefore<TItem>(T item) where TItem : T
     {
         if (item is null) ThrowHelper.ArgumentNullException_item();
@@ -36,6 +45,9 @@ public class OrderedList<T> : List<T> where T: notnull
         return false;
     }
 
+    /// <summary>
+    /// Performs the find t item operation.
+    /// </summary>
     public TItem? Find<TItem>() where TItem : T
     {
         for (int i = 0; i < Count; i++)
@@ -48,12 +60,18 @@ public class OrderedList<T> : List<T> where T: notnull
         return default;
     }
 
+    /// <summary>
+    /// Attempts to find t item.
+    /// </summary>
     public bool TryFind<TItem>([NotNullWhen(true)] out TItem? item) where TItem : T
     {
         item = Find<TItem>();
         return item != null;
     }
 
+    /// <summary>
+    /// Performs the find exact t item operation.
+    /// </summary>
     public TItem? FindExact<TItem>() where TItem : T
     {
         for (int i = 0; i < Count; i++)
@@ -66,6 +84,9 @@ public class OrderedList<T> : List<T> where T: notnull
         return default;
     }
 
+    /// <summary>
+    /// Adds if not already t item.
+    /// </summary>
     public void AddIfNotAlready<TItem>() where TItem : class, T, new()
     {
         if (!Contains<TItem>())
@@ -74,6 +95,9 @@ public class OrderedList<T> : List<T> where T: notnull
         }
     }
 
+    /// <summary>
+    /// Adds if not already t item.
+    /// </summary>
     public void AddIfNotAlready<TItem>(TItem item) where TItem : T
     {
         if (!Contains<TItem>())
@@ -82,6 +106,9 @@ public class OrderedList<T> : List<T> where T: notnull
         }
     }
 
+    /// <summary>
+    /// Performs the insert after t item operation.
+    /// </summary>
     public bool InsertAfter<TItem>(T item) where TItem : T
     {
         if (item is null) ThrowHelper.ArgumentNullException_item();
@@ -96,6 +123,9 @@ public class OrderedList<T> : List<T> where T: notnull
         return false;
     }
 
+    /// <summary>
+    /// Performs the contains t item operation.
+    /// </summary>
     public bool Contains<TItem>() where TItem : T
     {
         for (int i = 0; i < Count; i++)

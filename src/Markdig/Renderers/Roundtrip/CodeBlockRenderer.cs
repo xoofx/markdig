@@ -13,6 +13,9 @@ namespace Markdig.Renderers.Roundtrip;
 /// <seealso cref="RoundtripObjectRenderer{CodeBlock}" />
 public class CodeBlockRenderer : RoundtripObjectRenderer<CodeBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, CodeBlock obj)
     {
         renderer.RenderLinesBefore(obj);
@@ -80,6 +83,9 @@ public class CodeBlockRenderer : RoundtripObjectRenderer<CodeBlock>
         renderer.RenderLinesAfter(obj);
     }
 
+    /// <summary>
+    /// Performs the write leaf raw lines operation.
+    /// </summary>
     public void WriteLeafRawLines(RoundtripRenderer renderer, LeafBlock leafBlock)
     {
         if (leafBlock.Lines.Lines != null)

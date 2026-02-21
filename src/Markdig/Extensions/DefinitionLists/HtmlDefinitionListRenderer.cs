@@ -14,6 +14,9 @@ namespace Markdig.Extensions.DefinitionLists;
 /// <seealso cref="HtmlObjectRenderer{DefinitionList}" />
 public class HtmlDefinitionListRenderer : HtmlObjectRenderer<DefinitionList>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, DefinitionList list)
     {
         renderer.EnsureLine();

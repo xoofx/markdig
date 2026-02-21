@@ -6,13 +6,22 @@ using Markdig.Parsers;
 
 namespace Markdig.Extensions.AutoLinks;
 
+/// <summary>
+/// Represents the AutoLinkOptions type.
+/// </summary>
 public class AutoLinkOptions : LinkOptions
 {
+    /// <summary>
+    /// Initializes a new instance of the AutoLinkOptions class.
+    /// </summary>
     public AutoLinkOptions()
     {
         ValidPreviousCharacters = "*_~(";
     }
 
+    /// <summary>
+    /// Gets or sets the valid previous characters.
+    /// </summary>
     public string ValidPreviousCharacters { get; set; }
 
     /// <summary>

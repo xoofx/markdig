@@ -12,6 +12,9 @@ namespace Markdig.Extensions.Tables;
 /// <seealso cref="IMarkdownExtension" />
 public class GridTableExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<GridTableParser>())
@@ -20,6 +23,9 @@ public class GridTableExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())

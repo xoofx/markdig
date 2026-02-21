@@ -21,6 +21,9 @@ public class HeadingRenderer : NormalizeObjectRenderer<HeadingBlock>
         "######",
     ];
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, HeadingBlock obj)
     {        
         if (obj.Level is > 0 and <= 6)

@@ -34,6 +34,9 @@ public class LinkReferenceDefinitionGroup : ContainerBlock
     /// </summary>
     public Dictionary<string, LinkReferenceDefinition> Links { get; }
 
+    /// <summary>
+    /// Performs the set operation.
+    /// </summary>
     public void Set(string label, LinkReferenceDefinition link)
     {
         if (link is null) ThrowHelper.ArgumentNullException(nameof(link));
@@ -44,6 +47,9 @@ public class LinkReferenceDefinitionGroup : ContainerBlock
         }
     }
 
+    /// <summary>
+    /// Attempts to get.
+    /// </summary>
     public bool TryGet(string label, [NotNullWhen(true)] out LinkReferenceDefinition? link)
     {
         return Links.TryGetValue(label, out link);

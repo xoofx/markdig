@@ -9,6 +9,9 @@ using Markdig.Helpers;
 
 namespace Markdig.Extensions.MediaLinks;
 
+/// <summary>
+/// Represents the HostProviderBuilder type.
+/// </summary>
 public class HostProviderBuilder
 {
     private sealed class DelegateProvider(

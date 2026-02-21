@@ -12,11 +12,17 @@ namespace Markdig.Extensions.Abbreviations;
 /// <seealso cref="IMarkdownExtension" />
 public class AbbreviationExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         pipeline.BlockParsers.AddIfNotAlready<AbbreviationParser>();
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlAbbreviationRenderer>())

@@ -13,6 +13,9 @@ namespace Markdig.Extensions.TaskLists;
 /// <seealso cref="HtmlObjectRenderer{TaskList}" />
 public class HtmlTaskListRenderer : HtmlObjectRenderer<TaskList>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, TaskList obj)
     {
         if (renderer.EnableHtmlForInline)

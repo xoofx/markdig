@@ -10,6 +10,9 @@ namespace Markdig.Parsers;
 /// <seealso cref="ParserList{InlineParser, InlineParserState}" />
 public class InlineParserList : ParserList<InlineParser, InlineProcessor>
 {
+    /// <summary>
+    /// Initializes a new instance of the InlineParserList class.
+    /// </summary>
     public InlineParserList(IEnumerable<InlineParser> parsers) : base(parsers)
     {
         // Prepare the list of post inline processors

@@ -13,6 +13,9 @@ namespace Markdig.Syntax.Inlines;
 [DebuggerDisplay("<{Url}>")]
 public sealed class AutolinkInline : LeafInline
 {
+    /// <summary>
+    /// Initializes a new instance of the AutolinkInline class.
+    /// </summary>
     public AutolinkInline(string url)
     {
         Url = url;
@@ -28,6 +31,9 @@ public sealed class AutolinkInline : LeafInline
     /// </summary>
     public string Url { get; set; }
 
+    /// <summary>
+    /// Performs the to string operation.
+    /// </summary>
     public override string ToString()
     {
         return Url;

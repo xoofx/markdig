@@ -76,12 +76,24 @@ public abstract class RendererBase : IMarkdownRenderer
         return renderer;
     }
 
+    /// <summary>
+    /// Gets the object renderers.
+    /// </summary>
     public ObjectRendererCollection ObjectRenderers { get; } = new();
 
+    /// <summary>
+    /// Performs the render operation.
+    /// </summary>
     public abstract object Render(MarkdownObject markdownObject);
 
+    /// <summary>
+    /// Gets or sets the is first in container.
+    /// </summary>
     public bool IsFirstInContainer { get; private set; }
 
+    /// <summary>
+    /// Gets or sets the is last in container.
+    /// </summary>
     public bool IsLastInContainer { get; private set; }
 
     /// <summary>

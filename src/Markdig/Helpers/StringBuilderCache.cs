@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Markdig.Helpers;
 
+/// <summary>
+/// Represents the StringBuilderCache type.
+/// </summary>
 public static class StringBuilderCache
 {
     /// <summary>

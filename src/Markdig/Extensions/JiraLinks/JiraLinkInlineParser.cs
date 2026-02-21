@@ -18,6 +18,9 @@ public class JiraLinkInlineParser : InlineParser
     private readonly JiraLinkOptions _options;
     private readonly string _baseUrl;
 
+    /// <summary>
+    /// Initializes a new instance of the JiraLinkInlineParser class.
+    /// </summary>
     public JiraLinkInlineParser(JiraLinkOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
@@ -26,6 +29,9 @@ public class JiraLinkInlineParser : InlineParser
         OpeningCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // Allow preceding whitespace or `(`

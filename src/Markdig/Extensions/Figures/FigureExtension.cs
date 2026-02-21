@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Figures;
 /// <seealso cref="IMarkdownExtension" />
 public class FigureExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<FigureBlockParser>())
@@ -29,6 +32,9 @@ public class FigureExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

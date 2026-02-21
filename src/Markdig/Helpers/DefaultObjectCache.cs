@@ -11,6 +11,9 @@ namespace Markdig.Helpers;
 /// <seealso cref="ObjectCache{T}" />
 public abstract class DefaultObjectCache<T> : ObjectCache<T> where T : class, new()
 {
+    /// <summary>
+    /// Performs the new instance operation.
+    /// </summary>
     protected override T NewInstance()
     {
         return new T();

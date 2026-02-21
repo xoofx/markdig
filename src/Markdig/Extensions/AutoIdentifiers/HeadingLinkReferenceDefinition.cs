@@ -12,6 +12,9 @@ namespace Markdig.Extensions.AutoIdentifiers;
 /// <seealso cref="LinkReferenceDefinition" />
 public class HeadingLinkReferenceDefinition : LinkReferenceDefinition
 {
+    /// <summary>
+    /// Initializes a new instance of the HeadingLinkReferenceDefinition class.
+    /// </summary>
     public HeadingLinkReferenceDefinition(HeadingBlock headling)
     {
         Heading = headling;

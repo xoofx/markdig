@@ -16,6 +16,9 @@ public class LinkDelimiterInline : DelimiterInline
     private TriviaProperties? _trivia => GetTrivia<TriviaProperties>();
     private TriviaProperties Trivia => GetOrSetTrivia<TriviaProperties>();
 
+    /// <summary>
+    /// Initializes a new instance of the LinkDelimiterInline class.
+    /// </summary>
     public LinkDelimiterInline(InlineParser parser) : base(parser)
     {
     }
@@ -42,6 +45,9 @@ public class LinkDelimiterInline : DelimiterInline
     /// </summary>
     public StringSlice LabelWithTrivia { get => _trivia?.LabelWithTrivia ?? StringSlice.Empty; set => Trivia.LabelWithTrivia = value; }
 
+    /// <summary>
+    /// Performs the to literal operation.
+    /// </summary>
     public override string ToLiteral()
     {
         return IsImage ? "![" : "[";

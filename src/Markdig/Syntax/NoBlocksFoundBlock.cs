@@ -12,6 +12,9 @@ namespace Markdig.Syntax;
 /// </summary>
 public sealed class EmptyBlock  : LeafBlock
 {
+    /// <summary>
+    /// Initializes a new instance of the EmptyBlock class.
+    /// </summary>
     public EmptyBlock (BlockParser? parser) : base(parser)
     {
     }

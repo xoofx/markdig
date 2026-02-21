@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Yaml;
 /// <seealso cref="HtmlObjectRenderer{YamlFrontMatterBlock}" />
 public class YamlFrontMatterHtmlRenderer : HtmlObjectRenderer<YamlFrontMatterBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, YamlFrontMatterBlock obj)
     {
     }

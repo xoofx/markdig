@@ -13,18 +13,33 @@ namespace Markdig.Extensions.Footnotes;
 /// <seealso cref="HtmlObjectRenderer{FootnoteLink}" />
 public class HtmlFootnoteLinkRenderer : HtmlObjectRenderer<FootnoteLink>
 {
+    /// <summary>
+    /// Initializes a new instance of the HtmlFootnoteLinkRenderer class.
+    /// </summary>
     public HtmlFootnoteLinkRenderer()
     {
         BackLinkString = "&#8617;";
         FootnoteLinkClass = "footnote-ref";
         FootnoteBackLinkClass = "footnote-back-ref";
     }
+    /// <summary>
+    /// Gets or sets the back link string.
+    /// </summary>
     public string BackLinkString { get; set; }
 
+    /// <summary>
+    /// Gets or sets the footnote link class.
+    /// </summary>
     public string FootnoteLinkClass { get; set; }
 
+    /// <summary>
+    /// Gets or sets the footnote back link class.
+    /// </summary>
     public string FootnoteBackLinkClass { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, FootnoteLink link)
     {
         var order = link.Footnote.Order;

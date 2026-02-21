@@ -33,6 +33,9 @@ public class EmphasisInlineRenderer : HtmlObjectRenderer<EmphasisInline>
     /// </summary>
     public GetTagDelegate GetTag { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, EmphasisInline obj)
     {
         string? tag = null;

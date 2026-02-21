@@ -23,6 +23,9 @@ public class AbbreviationParser : BlockParser
         OpeningCharacters = ['*'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         if (processor.IsCodeIndent)

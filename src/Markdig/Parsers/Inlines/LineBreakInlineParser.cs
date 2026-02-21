@@ -26,6 +26,9 @@ public class LineBreakInlineParser : InlineParser
     /// </summary>
     public bool EnableSoftAsHard { get; set; }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:

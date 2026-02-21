@@ -39,6 +39,9 @@ public class BlockProcessor
 
     private BlockProcessor() { }
 
+    /// <summary>
+    /// Gets or sets the skip first unwind space.
+    /// </summary>
     public bool SkipFirstUnwindSpace { get; set; }
 
     /// <summary>
@@ -1063,8 +1066,14 @@ public class BlockProcessor
         LinesBefore = null;
     }
 
+    /// <summary>
+    /// Performs the create child operation.
+    /// </summary>
     public BlockProcessor CreateChild() => Rent(Document, Parsers, Context, TrackTrivia);
 
+    /// <summary>
+    /// Performs the release child operation.
+    /// </summary>
     public void ReleaseChild() => Release(this);
 
     private static readonly BlockProcessorCache _cache = new();

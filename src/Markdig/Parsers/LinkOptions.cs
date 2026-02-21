@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Markdig.Parsers;
 
+/// <summary>
+/// Represents the LinkOptions type.
+/// </summary>
 public class LinkOptions
 {
     /// <summary>

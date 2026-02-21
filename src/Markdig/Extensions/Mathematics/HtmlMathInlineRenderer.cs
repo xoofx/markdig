@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Mathematics;
 /// <seealso cref="HtmlObjectRenderer{Figure}" />
 public class HtmlMathInlineRenderer : HtmlObjectRenderer<MathInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, MathInline obj)
     {
         if (renderer.EnableHtmlForInline)

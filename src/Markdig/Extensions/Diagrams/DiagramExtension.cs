@@ -13,10 +13,16 @@ namespace Markdig.Extensions.Diagrams;
 /// <seealso cref="IMarkdownExtension" />
 public class DiagramExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

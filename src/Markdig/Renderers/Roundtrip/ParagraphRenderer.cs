@@ -14,6 +14,9 @@ namespace Markdig.Renderers.Roundtrip;
 [DebuggerDisplay("renderer.Writer.ToString()")]
 public class ParagraphRenderer : RoundtripObjectRenderer<ParagraphBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, ParagraphBlock paragraph)
     {
         renderer.RenderLinesBefore(paragraph);

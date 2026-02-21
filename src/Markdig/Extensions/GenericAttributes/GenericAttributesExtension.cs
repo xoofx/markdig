@@ -18,6 +18,9 @@ namespace Markdig.Extensions.GenericAttributes;
 /// <seealso cref="IMarkdownExtension" />
 public class GenericAttributesExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.InlineParsers.Contains<GenericAttributesParser>())
@@ -35,6 +38,9 @@ public class GenericAttributesExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

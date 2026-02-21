@@ -24,6 +24,9 @@ public class HtmlEntityParser : InlineParser
         OpeningCharacters = ['&'];
     }
 
+    /// <summary>
+    /// Attempts to parse.
+    /// </summary>
     public static bool TryParse(ref StringSlice slice, [NotNullWhen(true)] out string? literal, out int match)
     {
         literal = null;
@@ -44,6 +47,9 @@ public class HtmlEntityParser : InlineParser
         return literal != null;
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         if (!TryParse(ref slice, out string? literal, out int match))

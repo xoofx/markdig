@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Html;
 /// <seealso cref="HtmlObjectRenderer{QuoteBlock}" />
 public class QuoteBlockRenderer : HtmlObjectRenderer<QuoteBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, QuoteBlock obj)
     {
         renderer.EnsureLine();

@@ -49,6 +49,9 @@ public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
     /// </summary>
     public string? Rel { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
     {
         if (renderer.EnableHtmlForInline)

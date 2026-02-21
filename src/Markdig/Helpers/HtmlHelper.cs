@@ -32,11 +32,17 @@ public static class HtmlHelper
         }
     }
 
+    /// <summary>
+    /// Performs the escape url character operation.
+    /// </summary>
     public static string? EscapeUrlCharacter(char c)
     {
         return c < 128 ? EscapeUrlsForAscii[c] : null;
     }
 
+    /// <summary>
+    /// Attempts to parse html tag.
+    /// </summary>
     public static bool TryParseHtmlTag(ref StringSlice text, [NotNullWhen(true)] out string? htmlTag)
     {
         var builder = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);

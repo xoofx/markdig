@@ -30,6 +30,9 @@ public class ListExtraItemParser : OrderedListItemParser
         }
     }
 
+    /// <summary>
+    /// Attempts to parse.
+    /// </summary>
     public override bool TryParse(BlockProcessor state, char pendingBulletType, out ListInfo result)
     {
         result = new ListInfo();

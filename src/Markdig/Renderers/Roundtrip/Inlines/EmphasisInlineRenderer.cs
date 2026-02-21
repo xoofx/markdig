@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{EmphasisInline}" />
 public class EmphasisInlineRenderer : RoundtripObjectRenderer<EmphasisInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, EmphasisInline obj)
     {
         renderer.Write(obj.DelimiterChar, obj.DelimiterCount);

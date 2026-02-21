@@ -11,6 +11,9 @@ namespace Markdig.Renderers.Normalize.Inlines;
 /// </summary>
 public class NormalizeHtmlInlineRenderer : NormalizeObjectRenderer<HtmlInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, HtmlInline obj)
     {
         renderer.Write(obj.Tag);

@@ -22,8 +22,14 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     private CharacterMap<EmphasisDescriptor>? emphasisMap;
     private readonly DelimitersObjectCache inlinesCache = new();
 
+    /// <summary>
+    /// Represents the EmphasisInline type.
+    /// </summary>
     [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
     public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
+    /// <summary>
+    /// Represents the EmphasisInline type.
+    /// </summary>
     public delegate EmphasisInline? TryCreateEmphasisInlineDelegate(char emphasisChar, int delimiterCount);
 
     /// <summary>
@@ -65,8 +71,14 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     /// </summary>
     [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
     public CreateEmphasisInlineDelegate? CreateEmphasisInline { get; set; }
+    /// <summary>
+    /// Gets or sets the try create emphasis inline list.
+    /// </summary>
     public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = [];
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
     public override void Initialize()
     {
         OpeningCharacters = new char[EmphasisDescriptors.Count];
@@ -89,6 +101,9 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         emphasisMap = new CharacterMap<EmphasisDescriptor>(tempMap);
     }
 
+    /// <summary>
+    /// Performs the post process operation.
+    /// </summary>
     public bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
     {
         if (root is null || !root.IsContainerInline)
@@ -144,6 +159,9 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         return true;
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // First, some definitions.
@@ -410,13 +428,22 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         delimiters.Clear();
     }
 
+    /// <summary>
+    /// Represents the DelimitersObjectCache type.
+    /// </summary>
     public class DelimitersObjectCache : ObjectCache<List<EmphasisDelimiterInline>>
     {
+        /// <summary>
+        /// Performs the new instance operation.
+        /// </summary>
         protected override List<EmphasisDelimiterInline> NewInstance()
         {
             return new List<EmphasisDelimiterInline>(4);
         }
 
+        /// <summary>
+        /// Performs the reset operation.
+        /// </summary>
         protected override void Reset(List<EmphasisDelimiterInline> instance)
         {
             instance.Clear();

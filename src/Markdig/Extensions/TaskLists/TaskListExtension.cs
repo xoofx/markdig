@@ -13,6 +13,9 @@ namespace Markdig.Extensions.TaskLists;
 /// </summary>
 public class TaskListExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.InlineParsers.Contains<TaskListInlineParser>())
@@ -22,6 +25,9 @@ public class TaskListExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

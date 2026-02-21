@@ -20,6 +20,9 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
     /// </summary>
     public CodeBlockRenderer() { }
 
+    /// <summary>
+    /// Gets or sets the output attributes on pre.
+    /// </summary>
     public bool OutputAttributesOnPre { get; set; }
 
     /// <summary>
@@ -49,6 +52,9 @@ public class CodeBlockRenderer : HtmlObjectRenderer<CodeBlock>
         }
     }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, CodeBlock obj)
     {
         renderer.EnsureLine();

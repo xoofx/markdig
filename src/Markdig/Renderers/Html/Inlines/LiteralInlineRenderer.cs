@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Html.Inlines;
 /// <seealso cref="HtmlObjectRenderer{LiteralInline}" />
 public class LiteralInlineRenderer : HtmlObjectRenderer<LiteralInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, LiteralInline obj)
     {
         if (renderer.EnableHtmlEscape)

@@ -22,6 +22,9 @@ public class SmartyPantsInlineParser : InlineParser, IPostInlineProcessor
         OpeningCharacters = ['\'', '"', '<', '>', '.', '-'];
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // We are matching the following characters:

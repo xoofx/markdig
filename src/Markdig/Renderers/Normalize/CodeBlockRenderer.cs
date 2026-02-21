@@ -12,8 +12,14 @@ namespace Markdig.Renderers.Normalize;
 /// <seealso cref="NormalizeObjectRenderer{CodeBlock}" />
 public class CodeBlockRenderer : NormalizeObjectRenderer<CodeBlock>
 {
+    /// <summary>
+    /// Gets or sets the output attributes on pre.
+    /// </summary>
     public bool OutputAttributesOnPre { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, CodeBlock obj)
     {
         if (obj is FencedCodeBlock fencedCodeBlock)

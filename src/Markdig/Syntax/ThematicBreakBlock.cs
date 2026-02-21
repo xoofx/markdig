@@ -20,9 +20,18 @@ public class ThematicBreakBlock : LeafBlock
     {
     }
 
+    /// <summary>
+    /// Gets or sets the thematic char.
+    /// </summary>
     public char ThematicChar { get; set; }
 
+    /// <summary>
+    /// Gets or sets the thematic char count.
+    /// </summary>
     public int ThematicCharCount { get; set; }
 
+    /// <summary>
+    /// Gets or sets the content.
+    /// </summary>
     public StringSlice Content;
 }

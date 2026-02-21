@@ -13,6 +13,9 @@ namespace Markdig.Extensions.CustomContainers;
 /// <seealso cref="HtmlObjectRenderer{CustomContainerInline}" />
 public class HtmlCustomContainerInlineRenderer : HtmlObjectRenderer<CustomContainerInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, CustomContainerInline obj)
     {
         renderer.Write("<span").WriteAttributes(obj).Write('>');

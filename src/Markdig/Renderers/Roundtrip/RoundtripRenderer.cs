@@ -67,6 +67,9 @@ public class RoundtripRenderer : TextRendererBase<RoundtripRenderer>
         }
     }
 
+    /// <summary>
+    /// Performs the render lines before operation.
+    /// </summary>
     public void RenderLinesBefore(Block block)
     {
         if (block.LinesBefore is null)
@@ -80,6 +83,9 @@ public class RoundtripRenderer : TextRendererBase<RoundtripRenderer>
         }
     }
 
+    /// <summary>
+    /// Performs the render lines after operation.
+    /// </summary>
     public void RenderLinesAfter(Block block)
     {
         previousWasLine = true;

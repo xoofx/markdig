@@ -38,6 +38,9 @@ public abstract class BlockParser : ParserBase<BlockProcessor>, IBlockParser<Blo
     }
 
     // TODO: Add comment
+    /// <summary>
+    /// Occurs when closed.
+    /// </summary>
     public event ProcessBlockDelegate? Closed;
 
     internal ProcessBlockDelegate? GetClosedEvent => Closed;

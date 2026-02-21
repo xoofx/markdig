@@ -15,6 +15,9 @@ namespace Markdig.Extensions.Tables;
 /// <seealso cref="HtmlObjectRenderer{TableBlock}" />
 public class HtmlTableRenderer : HtmlObjectRenderer<Table>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, Table table)
     {
         if (renderer.EnableHtmlForBlock)

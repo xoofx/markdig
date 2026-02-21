@@ -13,5 +13,8 @@ namespace Markdig.Extensions.TaskLists;
 [DebuggerDisplay("TaskList {Checked}")]
 public class TaskList : LeafInline
 {
+    /// <summary>
+    /// Gets or sets the checked.
+    /// </summary>
     public bool Checked { get; set; }
 }

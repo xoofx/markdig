@@ -13,8 +13,14 @@ namespace Markdig.Extensions.AutoLinks;
 /// <seealso cref="IMarkdownExtension" />
 public class AutoLinkExtension(AutoLinkOptions? options) : IMarkdownExtension
 {
+    /// <summary>
+    /// Gets or sets the options.
+    /// </summary>
     public readonly AutoLinkOptions Options = options ?? new AutoLinkOptions();
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.InlineParsers.Contains<AutoLinkParser>())
@@ -24,6 +30,9 @@ public class AutoLinkExtension(AutoLinkOptions? options) : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

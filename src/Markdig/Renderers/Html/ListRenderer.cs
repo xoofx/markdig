@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Html;
 /// <seealso cref="HtmlObjectRenderer{ListBlock}" />
 public class ListRenderer : HtmlObjectRenderer<ListBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, ListBlock listBlock)
     {
         renderer.EnsureLine();

@@ -176,6 +176,9 @@ public abstract class Block : MarkdownObject, IBlock
         ThrowHelper.CheckDepthLimit(depth, useLargeLimit: true);
     }
 
+    /// <summary>
+    /// Performs the update span end operation.
+    /// </summary>
     public void UpdateSpanEnd(int spanEnd)
     {
         // Update parent spans

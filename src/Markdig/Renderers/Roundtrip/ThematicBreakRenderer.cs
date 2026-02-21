@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip;
 /// <seealso cref="RoundtripObjectRenderer{ThematicBreakBlock}" />
 public class ThematicBreakRenderer : RoundtripObjectRenderer<ThematicBreakBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, ThematicBreakBlock obj)
     {
         renderer.RenderLinesBefore(obj);

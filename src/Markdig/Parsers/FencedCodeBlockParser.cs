@@ -13,6 +13,9 @@ namespace Markdig.Parsers;
 /// <seealso cref="BlockParser" />
 public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
 {
+    /// <summary>
+    /// Represents the default info prefix.
+    /// </summary>
     public const string DefaultInfoPrefix = "language-";
 
     /// <summary>
@@ -24,6 +27,9 @@ public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
         InfoPrefix = DefaultInfoPrefix;
     }
 
+    /// <summary>
+    /// Performs the create fenced block operation.
+    /// </summary>
     protected override FencedCodeBlock CreateFencedBlock(BlockProcessor processor)
     {
         var codeBlock = new FencedCodeBlock(this)
@@ -41,6 +47,9 @@ public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
         return codeBlock;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var result = base.TryContinue(processor, block);

@@ -21,6 +21,9 @@ public class FigureBlockParser : BlockParser
         OpeningCharacters = ['^'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         // We expect no indentation for a figure block.
@@ -70,6 +73,9 @@ public class FigureBlockParser : BlockParser
         return BlockState.ContinueDiscard;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var figure = (Figure)block;

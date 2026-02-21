@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Normalize.Inlines;
 /// <seealso cref="NormalizeObjectRenderer{LinkInline}" />
 public class LinkInlineRenderer : NormalizeObjectRenderer<LinkInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, LinkInline link)
     {
         if (link.IsAutoLink && !renderer.Options.ExpandAutoLinks)

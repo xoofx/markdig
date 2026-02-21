@@ -32,6 +32,9 @@ public class ListBlockParser : BlockParser
     /// </summary>
     public OrderedList<ListItemParser> ItemParsers { get; }
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
     public override void Initialize()
     {
         var tempMap = new Dictionary<char, ListItemParser>();
@@ -56,6 +59,9 @@ public class ListBlockParser : BlockParser
         mapItemParsers = new CharacterMap<ListItemParser>(tempMap);
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         // When both a thematic break and a list item are possible
@@ -73,6 +79,9 @@ public class ListBlockParser : BlockParser
         return TryParseListItem(processor, null);
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         if (block is ListBlock && processor.NextContinue is ListItemBlock)
@@ -335,6 +344,9 @@ public class ListBlockParser : BlockParser
         return BlockState.Continue;
     }
 
+    /// <summary>
+    /// Performs the close operation.
+    /// </summary>
     public override bool Close(BlockProcessor processor, Block blockToClose)
     {
         if (processor.TrackTrivia)

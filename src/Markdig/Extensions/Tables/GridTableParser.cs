@@ -9,13 +9,22 @@ using System.Linq;
 
 namespace Markdig.Extensions.Tables;
 
+/// <summary>
+/// Represents the GridTableParser type.
+/// </summary>
 public class GridTableParser : BlockParser
 {
+    /// <summary>
+    /// Initializes a new instance of the GridTableParser class.
+    /// </summary>
     public GridTableParser()
     {
         OpeningCharacters = ['+'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         // A grid table cannot start more than an indent
@@ -93,6 +102,9 @@ public class GridTableParser : BlockParser
         return BlockState.ContinueDiscard;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var gridTable = (Table)block;
@@ -363,6 +375,9 @@ public class GridTableParser : BlockParser
         processor.Open(paragraphBlock);
     }
 
+    /// <summary>
+    /// Performs the close operation.
+    /// </summary>
     public override bool Close(BlockProcessor processor, Block block)
     {
         // Work only on Table, not on TableCell

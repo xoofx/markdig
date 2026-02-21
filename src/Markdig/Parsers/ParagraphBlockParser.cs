@@ -13,8 +13,14 @@ namespace Markdig.Parsers;
 /// <seealso cref="BlockParser" />
 public class ParagraphBlockParser : BlockParser
 {
+    /// <summary>
+    /// Gets or sets the parse setex headings.
+    /// </summary>
     public bool ParseSetexHeadings { get; set; } = true;
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         if (processor.IsBlankLine)
@@ -39,6 +45,9 @@ public class ParagraphBlockParser : BlockParser
         return BlockState.Continue;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         if (processor.IsBlankLine)
@@ -55,6 +64,9 @@ public class ParagraphBlockParser : BlockParser
         return BlockState.Continue;
     }
 
+    /// <summary>
+    /// Performs the close operation.
+    /// </summary>
     public override bool Close(BlockProcessor processor, Block block)
     {
         if (block is ParagraphBlock paragraph)

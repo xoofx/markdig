@@ -17,6 +17,9 @@ public class YamlFrontMatterExtension : IMarkdownExtension
     /// </summary>
     public bool AllowInMiddleOfDocument { get; set; }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<YamlFrontMatterParser>())
@@ -26,6 +29,9 @@ public class YamlFrontMatterExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (!renderer.ObjectRenderers.Contains<YamlFrontMatterHtmlRenderer>())

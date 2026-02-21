@@ -13,6 +13,9 @@ namespace Markdig.Renderers.Normalize;
 /// <seealso cref="NormalizeObjectRenderer{ListBlock}" />
 public class ListRenderer : NormalizeObjectRenderer<ListBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, ListBlock listBlock)
     {
         renderer.EnsureLine();

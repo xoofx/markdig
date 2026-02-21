@@ -6,8 +6,14 @@ using Markdig.Syntax;
 
 namespace Markdig.Renderers.Roundtrip;
 
+/// <summary>
+/// Represents the EmptyBlockRenderer type.
+/// </summary>
 public class EmptyBlockRenderer : RoundtripObjectRenderer<EmptyBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, EmptyBlock  noBlocksFoundBlock)
     {
         renderer.RenderLinesAfter(noBlocksFoundBlock);

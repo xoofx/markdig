@@ -15,6 +15,9 @@ namespace Markdig.Extensions.SelfPipeline;
 /// </summary>
 public sealed class SelfPipelineExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Represents the default tag.
+    /// </summary>
     public const string DefaultTag = "markdig";
 
     /// <summary>
@@ -52,6 +55,9 @@ public sealed class SelfPipelineExtension : IMarkdownExtension
     /// </summary>
     public string SelfPipelineHintTagStart { get; }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         // Make sure that this pipeline has only one extension (itself)
@@ -62,6 +68,9 @@ public sealed class SelfPipelineExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Footnotes;
 /// <seealso cref="ContainerBlock" />
 public class Footnote : ContainerBlock
 {
+    /// <summary>
+    /// Initializes a new instance of the Footnote class.
+    /// </summary>
     public Footnote(BlockParser parser) : base(parser)
     {
         Order = -1;

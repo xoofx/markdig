@@ -477,6 +477,9 @@ public static class MarkdownExtensions
         return pipeline.UseReferralLinks("nofollow");
     }
 
+    /// <summary>
+    /// Performs the use referral links operation.
+    /// </summary>
     public static MarkdownPipelineBuilder UseReferralLinks(this MarkdownPipelineBuilder pipeline, params string[] rels)
     {
         if (pipeline.Extensions.TryFind(out ReferralLinksExtension? referralLinksExtension))

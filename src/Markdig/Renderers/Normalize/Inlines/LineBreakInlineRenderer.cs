@@ -17,6 +17,9 @@ public class LineBreakInlineRenderer : NormalizeObjectRenderer<LineBreakInline>
     /// </summary>
     public bool RenderAsHardlineBreak { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, LineBreakInline obj)
     {
         if (obj.IsHard)

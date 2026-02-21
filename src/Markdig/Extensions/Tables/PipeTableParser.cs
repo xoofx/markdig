@@ -38,6 +38,9 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     /// </summary>
     public PipeTableOptions Options { get; }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // Only working on Paragraph block
@@ -113,6 +116,9 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         return true;
     }
 
+    /// <summary>
+    /// Performs the post process operation.
+    /// </summary>
     public bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
     {
         var container = root as ContainerInline;

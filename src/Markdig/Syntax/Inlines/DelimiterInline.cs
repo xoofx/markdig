@@ -15,6 +15,9 @@ namespace Markdig.Syntax.Inlines;
 [DebuggerDisplay("{ToLiteral()} {Type}")]
 public abstract class DelimiterInline : ContainerInline
 {
+    /// <summary>
+    /// Initializes a new instance of the DelimiterInline class.
+    /// </summary>
     protected DelimiterInline(InlineParser parser)
     {
         if (parser is null) ThrowHelper.ArgumentNullException(nameof(parser));
@@ -43,6 +46,9 @@ public abstract class DelimiterInline : ContainerInline
     /// <returns>The string representation of this delimiter</returns>
     public abstract string ToLiteral();
 
+    /// <summary>
+    /// Performs the replace by literal operation.
+    /// </summary>
     public void ReplaceByLiteral()
     {
         var literalInline = new LiteralInline()

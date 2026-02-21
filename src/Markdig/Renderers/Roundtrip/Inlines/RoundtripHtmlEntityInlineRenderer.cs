@@ -11,6 +11,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// </summary>
 public class RoundtripHtmlEntityInlineRenderer : RoundtripObjectRenderer<HtmlEntityInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, HtmlEntityInline obj)
     {
         renderer.Write(obj.Original);

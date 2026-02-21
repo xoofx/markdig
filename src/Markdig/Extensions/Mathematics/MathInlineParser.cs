@@ -30,6 +30,9 @@ public class MathInlineParser : InlineParser
     /// </summary>
     public string DefaultClass { get; set; }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         var match = slice.CurrentChar;

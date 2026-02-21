@@ -26,6 +26,9 @@ public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
     /// </summary>
     public string GroupClass { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, FootnoteGroup footnotes)
     {
         renderer.EnsureLine();

@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{CodeInline}" />
 public class CodeInlineRenderer : RoundtripObjectRenderer<CodeInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, CodeInline obj)
     {
         renderer.Write(obj.Delimiter, obj.DelimiterCount);

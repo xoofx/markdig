@@ -7,8 +7,14 @@ using Markdig.Syntax;
 
 namespace Markdig.Renderers.Roundtrip;
 
+/// <summary>
+/// Represents the LinkReferenceDefinitionRenderer type.
+/// </summary>
 public class LinkReferenceDefinitionRenderer : RoundtripObjectRenderer<LinkReferenceDefinition>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, LinkReferenceDefinition linkDef)
     {
         renderer.RenderLinesBefore(linkDef);

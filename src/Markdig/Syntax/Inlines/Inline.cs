@@ -15,6 +15,9 @@ namespace Markdig.Syntax.Inlines;
 /// <seealso cref="MarkdownObject" />
 public abstract class Inline : MarkdownObject, IInline
 {
+    /// <summary>
+    /// Initializes a new instance of the Inline class.
+    /// </summary>
     protected Inline()
     {
         SetTypeKind(isInline: true, isContainer: false);
@@ -275,6 +278,9 @@ public abstract class Inline : MarkdownObject, IInline
         }
     }
 
+    /// <summary>
+    /// Performs the first parent of type t operation.
+    /// </summary>
     public T? FirstParentOfType<T>() where T : notnull, Inline
     {
         var inline = this;
@@ -289,6 +295,9 @@ public abstract class Inline : MarkdownObject, IInline
         return null;
     }
 
+    /// <summary>
+    /// Performs the find best parent operation.
+    /// </summary>
     public Inline FindBestParent()
     {
         var current = this;
@@ -307,11 +316,17 @@ public abstract class Inline : MarkdownObject, IInline
         return current;
     }
 
+    /// <summary>
+    /// Performs the on child remove operation.
+    /// </summary>
     protected virtual void OnChildRemove(Inline child)
     {
 
     }
 
+    /// <summary>
+    /// Performs the on child insert operation.
+    /// </summary>
     protected virtual void OnChildInsert(Inline child)
     {
     }
@@ -351,6 +366,9 @@ public abstract class Inline : MarkdownObject, IInline
         }
     }
 
+    /// <summary>
+    /// Performs the dump child to operation.
+    /// </summary>
     protected virtual void DumpChildTo(TextWriter writer, int level)
     {
     }

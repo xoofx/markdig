@@ -100,6 +100,9 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
         }
     }
 
+    /// <summary>
+    /// Gets or sets the previous was line.
+    /// </summary>
     protected bool previousWasLine;
 #if !NETSTANDARD2_1_OR_GREATER && !NETCOREAPP3_1_OR_GREATER
     private char[] buffer;
@@ -120,6 +123,9 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
         indents = new List<Indent>();
     }
 
+    /// <summary>
+    /// Performs the reset operation.
+    /// </summary>
     protected internal void Reset()
     {
         if (Writer is StringWriter stringWriter)
@@ -156,12 +162,18 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
         return (T)this;
     }
 
+    /// <summary>
+    /// Performs the push indent operation.
+    /// </summary>
     public void PushIndent(string indent)
     {
         if (indent is null) ThrowHelper.ArgumentNullException(nameof(indent));
         indents.Add(new Indent(indent));
     }
 
+    /// <summary>
+    /// Performs the push indent operation.
+    /// </summary>
     public void PushIndent(string[] lineSpecific)
     {
         if (indents is null) ThrowHelper.ArgumentNullException(nameof(indents));
@@ -172,6 +184,9 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
         previousWasLine = true;
     }
 
+    /// <summary>
+    /// Performs the pop indent operation.
+    /// </summary>
     public void PopIndent()
     {
         if (this.indents.Count > 0)
@@ -180,6 +195,9 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
             throw new InvalidOperationException("No indent to pop");
     }
 
+    /// <summary>
+    /// Performs the clear indent operation.
+    /// </summary>
     public void ClearIndent() => indents.Clear();
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

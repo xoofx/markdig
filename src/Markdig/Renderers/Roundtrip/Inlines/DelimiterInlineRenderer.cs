@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{DelimiterInline}" />
 public class DelimiterInlineRenderer : RoundtripObjectRenderer<DelimiterInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, DelimiterInline obj)
     {
         renderer.Write(obj.ToLiteral());

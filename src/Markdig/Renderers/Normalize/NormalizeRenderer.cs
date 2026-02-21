@@ -46,10 +46,19 @@ public class NormalizeRenderer : TextRendererBase<NormalizeRenderer>
         ObjectRenderers.Add(new LiteralInlineRenderer());
     }
 
+    /// <summary>
+    /// Gets the options.
+    /// </summary>
     public NormalizeOptions Options { get; }
 
+    /// <summary>
+    /// Gets or sets the compact paragraph.
+    /// </summary>
     public bool CompactParagraph { get; set; }
 
+    /// <summary>
+    /// Performs the finish block operation.
+    /// </summary>
     public void FinishBlock(bool emptyLine)
     {
         if (!IsLastInContainer)

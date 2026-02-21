@@ -13,6 +13,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{LiteralInline}" />
 public class LiteralInlineRenderer : RoundtripObjectRenderer<LiteralInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, LiteralInline obj)
     {
         if (obj.IsFirstCharacterEscaped && obj.Content.Length > 0 && obj.Content[obj.Content.Start].IsAsciiPunctuation())
