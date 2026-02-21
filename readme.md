@@ -4,7 +4,7 @@
 
 Markdig is a fast, powerful, [CommonMark](https://commonmark.org/) compliant, extensible Markdown processor for .NET.
 
-> NOTE: The repository is under construction. There will be a dedicated website and proper documentation at some point!
+> **Documentation**: https://xoofx.github.io/markdig
 
 You can **try Markdig online** and compare it to other implementations on [babelmark3](https://babelmark.github.io/?text=Hello+**Markdig**!)
 
@@ -66,11 +66,11 @@ If you are looking for support for an old .NET Framework 3.5 or 4.0, you can dow
 
 ## Documentation
 
-> The repository is under construction. There will be a dedicated website and proper documentation at some point!
+Full documentation is available at **https://xoofx.github.io/markdig** — covering getting started, usage, all extensions, and the developer guide for writing custom parsers and renderers.
 
-While there is not yet a dedicated documentation, you can find from the [specs documentation](src/Markdig.Tests/Specs/readme.md) how to use these extensions.
+For detailed specs and corner cases of each extension, see the [specs documentation](src/Markdig.Tests/Specs/readme.md).
 
-In the meantime, you can have a "behind the scene" article about Markdig in my blog post ["Implementing a Markdown Engine for .NET"](https://xoofx.github.io/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/)
+For a "behind the scene" article about Markdig, see the blog post ["Implementing a Markdown Engine for .NET"](https://xoofx.github.io/blog/2016/06/13/implementing-a-markdown-processor-for-dotnet/).
 
 ## Download
 
@@ -118,7 +118,7 @@ This software is released under the [BSD-Clause 2 license](https://github.com/lu
 
 The latest benchmark was collected on April 23 2022, against the following implementations:
 
-- [Markdig](https://github.com/lunet-io/markdig) (version: 0.30.2): itself
+- [Markdig](https://github.com/xoofx/markdig) (version: 0.30.2): itself
 - [cmark](https://github.com/commonmark/cmark) (version: 0.30.2): Reference C implementation of CommonMark, no support for extensions
 - [CommonMark.NET(master)](https://github.com/Knagis/CommonMark.NET) (version: 0.15.1): CommonMark implementation for .NET, no support for extensions, port of cmark, deprecated.
 - [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp) (version: 2.0.5): Open source C# implementation of Markdown processor, as featured previously on Stack Overflow, regexp based.
