@@ -28,6 +28,10 @@ site_project_owner_url = "https://xoofx.github.io"
 
 site_project_init
 
+# Playground API URL - override with https://localhost:5001 for local development
+playground_api_url = environment == "dev" ? "https://localhost:5001" : "https://markdig.azurewebsites.net/"
+log.info $"Using playground API URL: {playground_api_url}"
+
 # -----------------------------------------------------------------------------
 # API reference (.NET)
 # -----------------------------------------------------------------------------

@@ -22,6 +22,65 @@ og_type: website
     </div>
   </div>
 </section>
+<!-- Playground section -->
+<section id="playground" class="container my-5" data-api-url="{{site.playground_api_url}}">
+  <div class="card">
+    <div class="card-header display-6">
+      <i class="bi bi-play-circle lunet-feature-icon lunet-icon--controls"></i> Playground
+    </div>
+    <div class="card-body">
+      <p class="card-text mb-3">
+        Try Markdig live with the public API. Edit Markdown, pick extensions, and click <strong>Run</strong> (or press <kbd>Ctrl</kbd>+<kbd>Enter</kbd>).
+      </p>
+      <div class="row gx-3 gy-3">
+        <div class="col-lg-8">
+          <label for="playground-markdown" class="form-label fw-bold"><i class="bi bi-markdown"></i> Markdown input</label>
+          <textarea id="playground-markdown" class="form-control font-monospace" rows="14" spellcheck="false"></textarea>
+          <div class="form-text">The public API truncates input to the first 1000 characters.</div>
+        </div>
+        <div class="col-lg-4">
+          <label for="playground-extensions" class="form-label fw-bold"><i class="bi bi-sliders2"></i> Extensions</label>
+          <select id="playground-extensions" class="form-select mb-3">
+            <option value="advanced" selected>advanced</option>
+            <option value="common">common</option>
+            <option value="common+pipetables+tasklists+footnotes">common+pipetables+tasklists+footnotes</option>
+            <option value="advanced+nohtml">advanced+nohtml</option>
+            <option value="common+autoidentifiers+mathematics">common+autoidentifiers+mathematics</option>
+          </select>
+          <div class="small text-secondary">
+            This uses <code>MarkdownPipelineBuilder.Configure(...)</code> on the remote playground service.
+          </div>
+          <div class="mt-3">
+            <a href="https://markdig.azurewebsites.net/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-box-arrow-up-right"></i> Open service
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 d-flex align-items-center gap-2">
+        <button id="playground-run" class="btn btn-primary" disabled>
+          <i class="bi bi-play-fill"></i> Run
+        </button>
+        <span id="playground-status" class="small text-secondary"><i class="bi bi-hourglass-split"></i> Checking service availability…</span>
+      </div>
+      <div class="row gx-3 gy-3 mt-1">
+        <div class="col-lg-6">
+          <label for="playground-html" class="form-label fw-bold"><i class="bi bi-filetype-html"></i> Generated HTML</label>
+          <pre id="playground-html" class="border rounded p-3 bg-body-tertiary" style="min-height: 14rem; white-space: pre-wrap;"><code>&lt;h1&gt;Markdig Playground&lt;/h1&gt;
+&lt;p&gt;Markdig is a &lt;strong&gt;fast&lt;/strong&gt; and extensible Markdown processor for .NET.&lt;/p&gt;
+</code></pre>
+        </div>
+        <div class="col-lg-6">
+          <label for="playground-preview" class="form-label fw-bold"><i class="bi bi-eye"></i> Preview</label>
+          <div id="playground-preview" class="border rounded p-3 bg-body-tertiary" style="min-height: 14rem;">
+            <h1>Markdig Playground</h1>
+            <p>Markdig is a <strong>fast</strong> and extensible Markdown processor for .NET.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- Feature cards -->
 <section class="container my-5">
@@ -106,6 +165,126 @@ og_type: website
     </div>
   </div>
 </section>
+
+<script>
+(function () {
+  "use strict";
+
+  var section = document.getElementById("playground");
+  if (!section) return;
+
+  var apiUrl = (section.getAttribute("data-api-url") || "").replace(/\/+$/, "");
+  var markdownEl = document.getElementById("playground-markdown");
+  var extensionsEl = document.getElementById("playground-extensions");
+  var runButton = document.getElementById("playground-run");
+  var statusEl = document.getElementById("playground-status");
+  var htmlEl = document.getElementById("playground-html");
+  var previewEl = document.getElementById("playground-preview");
+  var defaultMarkdown = [
+    "# Markdig Playground",
+    "",
+    "Markdig is a **fast** and extensible Markdown processor for .NET.",
+    "",
+    "- [x] Task list support",
+    "- [ ] Pipe table support",
+    "- [ ] Footnotes",
+    "",
+    "| Feature | Enabled |",
+    "| ------- | :-----: |",
+    "| CommonMark | ✅ |",
+    "| Extensions | ✅ |",
+    "",
+    "[^note]: Footnotes require an extension set that includes `footnotes`."
+  ].join("\n");
+
+  if (!markdownEl.value) {
+    markdownEl.value = defaultMarkdown;
+  }
+
+  function setStatus(html, cssClass) {
+    statusEl.className = "small " + (cssClass || "text-secondary");
+    statusEl.innerHTML = html;
+  }
+
+  function setBusy(isBusy) {
+    runButton.disabled = isBusy;
+    runButton.classList.toggle("btn-secondary", isBusy);
+    runButton.classList.toggle("btn-primary", !isBusy);
+  }
+
+  function runPlayground() {
+    if (runButton.disabled) return;
+
+    setBusy(true);
+    setStatus('<i class="bi bi-hourglass-split"></i> Rendering…', "text-info");
+    htmlEl.textContent = "";
+    previewEl.innerHTML = "";
+
+    var query = new URLSearchParams({
+      text: markdownEl.value || "",
+      extension: extensionsEl.value || "advanced"
+    });
+
+    fetch(apiUrl + "/api/to_html?" + query.toString(), { method: "GET", mode: "cors" })
+      .then(function (response) {
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+      })
+      .then(function (payload) {
+        var html = payload && typeof payload.html === "string" ? payload.html : "";
+        htmlEl.textContent = html;
+
+        if (html.toLowerCase().startsWith("exception:")) {
+          previewEl.textContent = html;
+          setStatus('<i class="bi bi-exclamation-triangle"></i> Rendering error', "text-danger");
+          return;
+        }
+
+        previewEl.innerHTML = html;
+        var version = payload && payload.version ? " (v" + payload.version + ")" : "";
+        setStatus('<i class="bi bi-check-circle"></i> Done' + version, "text-success");
+      })
+      .catch(function (error) {
+        htmlEl.textContent = "Request failed: " + error.message;
+        previewEl.textContent = "Unable to reach the Markdig playground service.";
+        setStatus('<i class="bi bi-x-circle"></i> Service unavailable or blocked by CORS', "text-danger");
+      })
+      .finally(function () {
+        setBusy(false);
+      });
+  }
+
+  if (!apiUrl) {
+    setStatus('<i class="bi bi-exclamation-triangle"></i> Playground API URL not configured.', "text-warning");
+    return;
+  }
+
+  setBusy(true);
+  fetch(apiUrl + "/api/to_html?text=health&extension=common", { method: "GET", mode: "cors" })
+    .then(function (response) {
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      return response.json();
+    })
+    .then(function (payload) {
+      var version = payload && payload.version ? " (v" + payload.version + ")" : "";
+      setStatus('<i class="bi bi-check-circle"></i> Service available' + version, "text-success");
+      setBusy(false);
+    })
+    .catch(function () {
+      setStatus('<i class="bi bi-x-circle"></i> Service unavailable or blocked by CORS', "text-danger");
+      htmlEl.textContent = "The current browser cannot access the remote API endpoint.";
+      previewEl.textContent = "Use the 'Open service' button to try the playground directly.";
+    });
+
+  runButton.addEventListener("click", runPlayground);
+  document.addEventListener("keydown", function (event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      event.preventDefault();
+      runPlayground();
+    }
+  });
+})();
+</script>
 
 <section class="container my-5">
   <div class="card">
