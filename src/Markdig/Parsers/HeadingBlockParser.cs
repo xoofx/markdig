@@ -91,7 +91,7 @@ public class HeadingBlockParser : BlockParser, IAttributesParseable
             {
                 headingBlock.TriviaAfterAtxHeaderChar = trivia;
                 headingBlock.TriviaBefore = processor.UseTrivia(sourcePosition - 1);
-                headingBlock.LinesBefore = processor.UseLinesBefore();
+                headingBlock.LinesBefore = processor.TakeLinesBefore();
                 headingBlock.NewLine = processor.Line.NewLine;
             }
             else

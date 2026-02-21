@@ -123,7 +123,7 @@ public static class MarkdownParser
         {
             // this means we have unassigned characters
             var noBlocksFoundBlock = new EmptyBlock(null);
-            List<StringSlice> linesBefore = blockProcessor.UseLinesBefore();
+            var linesBefore = blockProcessor.TakeLinesBefore();
             noBlocksFoundBlock.LinesAfter = [];
             if (linesBefore != null)
             {
@@ -139,8 +139,11 @@ public static class MarkdownParser
             // of the document.
             var rootMostContainerBlock = Block.FindRootMostContainerParent(lastBlock);
             rootMostContainerBlock.LinesAfter ??= [];
-            var linesBefore = blockProcessor.UseLinesBefore();
-            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+            var linesBefore = blockProcessor.TakeLinesBefore();
+            if (linesBefore != null)
+            {
+                rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+            }
         }
     }
 

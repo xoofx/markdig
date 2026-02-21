@@ -45,7 +45,7 @@ public class QuoteBlockParser : BlockParser
 
         if (processor.TrackTrivia)
         {
-            quoteBlock.LinesBefore = processor.UseLinesBefore();
+            quoteBlock.LinesBefore = processor.TakeLinesBefore();
         }
 
         bool hasSpaceAfterQuoteChar = false;

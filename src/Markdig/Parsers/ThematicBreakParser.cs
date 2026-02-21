@@ -99,7 +99,7 @@ public class ThematicBreakParser : BlockParser
 
         if (processor.TrackTrivia)
         {
-            thematicBreak.LinesBefore = processor.UseLinesBefore();
+            thematicBreak.LinesBefore = processor.TakeLinesBefore();
             thematicBreak.NewLine = processor.Line.NewLine;
         }
 

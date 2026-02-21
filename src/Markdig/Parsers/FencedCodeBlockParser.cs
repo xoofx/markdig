@@ -33,7 +33,7 @@ public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
 
         if (processor.TrackTrivia)
         {
-            codeBlock.LinesBefore = processor.UseLinesBefore();
+            codeBlock.LinesBefore = processor.TakeLinesBefore();
             codeBlock.TriviaBefore = processor.UseTrivia(processor.Start - 1);
             codeBlock.NewLine = processor.Line.NewLine;
         }

@@ -177,14 +177,15 @@ public class BlockProcessor
     }
 
     /// <summary>
-    /// Returns the current stack of <see cref="LinesBefore"/> to assign it to a <see cref="Block"/>.
-    /// Afterwards, the <see cref="LinesBefore"/> is set to null.
+    /// Takes the current stack of <see cref="LinesBefore"/> to assign it to a <see cref="Block"/>.
+    /// Afterwards, <see cref="LinesBefore"/> is set to null.
     /// </summary>
-    internal List<StringSlice> UseLinesBefore()
+    /// <returns>The pending list of lines before the current block, or <c>null</c> if none.</returns>
+    public List<StringSlice>? TakeLinesBefore()
     {
         var linesBefore = LinesBefore;
         LinesBefore = null;
-        return linesBefore!;
+        return linesBefore;
     }
 
     /// <summary>
@@ -530,8 +531,14 @@ public class BlockProcessor
         CloseAll(false);
     }
 
-    internal bool IsOpen(Block block)
+    /// <summary>
+    /// Checks whether the specified block is currently part of the open block stack.
+    /// </summary>
+    /// <param name="block">The block to check.</param>
+    /// <returns><c>true</c> if the block is open; otherwise <c>false</c>.</returns>
+    public bool IsOpen(Block block)
     {
+        if (block is null) ThrowHelper.ArgumentNullException(nameof(block));
         return OpenedBlocks.Contains(block);
     }
 
@@ -589,16 +596,22 @@ public class BlockProcessor
                     if (LinesBefore.Count == 1)
                     {
                         block.LinesAfter ??= new List<StringSlice>();
-                        var linesBefore = UseLinesBefore();
-                        block.LinesAfter.AddRange(linesBefore);
+                        var linesBefore = TakeLinesBefore();
+                        if (linesBefore != null)
+                        {
+                            block.LinesAfter.AddRange(linesBefore);
+                        }
                     }
                     else
                     {
                         // attach multiple lines after to the root most parent ContainerBlock
                         var rootMostContainerBlock = Block.FindRootMostContainerParent(block);
                         rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
-                        var linesBefore = UseLinesBefore();
-                        rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        var linesBefore = TakeLinesBefore();
+                        if (linesBefore != null)
+                        {
+                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        }
                     }
                 }
             }

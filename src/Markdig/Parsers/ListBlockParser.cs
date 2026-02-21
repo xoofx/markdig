@@ -287,7 +287,7 @@ public class ListBlockParser : BlockParser
         if (state.TrackTrivia)
         {
             newListItem.TriviaBefore = triviaBefore;
-            newListItem.LinesBefore = state.UseLinesBefore();
+            newListItem.LinesBefore = state.TakeLinesBefore();
             newListItem.NewLine = state.Line.NewLine;
             newListItem.SourceBullet = listInfo.SourceBullet;
         }
@@ -327,7 +327,7 @@ public class ListBlockParser : BlockParser
 
             if (state.TrackTrivia)
             {
-                newList.LinesBefore = state.UseLinesBefore();
+                newList.LinesBefore = state.TakeLinesBefore();
             }
 
             state.NewBlocks.Push(newList);

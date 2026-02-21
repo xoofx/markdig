@@ -31,7 +31,7 @@ public class ParagraphBlockParser : BlockParser
 
         if (processor.TrackTrivia)
         {
-            paragraph.LinesBefore = processor.UseLinesBefore();
+            paragraph.LinesBefore = processor.TakeLinesBefore();
             paragraph.NewLine = processor.Line.NewLine;
         }
 

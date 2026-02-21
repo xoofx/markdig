@@ -206,13 +206,22 @@ public class InlineProcessor
     }
 
     /// <summary>
-    /// Replace a parent container. This method is experimental and should be used with caution.
+    /// Requests a replacement for a parent container while processing the current leaf block.
     /// </summary>
-    /// <param name="previousParentContainer">The previous parent container to replace</param>
-    /// <param name="newParentContainer">The new parent container</param>
-    /// <exception cref="InvalidOperationException">If a new parent container has been already setup.</exception>
-    internal void ReplaceParentContainer(ContainerBlock previousParentContainer, ContainerBlock newParentContainer)
+    /// <param name="previousParentContainer">The parent container that has already been replaced in the block tree.</param>
+    /// <param name="newParentContainer">The replacement parent container.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="previousParentContainer"/> or <paramref name="newParentContainer"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if a replacement has already been requested for this leaf processing pass.</exception>
+    /// <remarks>
+    /// This method does not perform the replacement in the block tree. Callers must already update
+    /// the AST (replace the parent block and transfer children as needed). This method only synchronizes
+    /// the traversal state used by <see cref="MarkdownParser.ProcessInlines"/>.
+    /// </remarks>
+    public void ReplaceParentContainer(ContainerBlock previousParentContainer, ContainerBlock newParentContainer)
     {
+        if (previousParentContainer is null) ThrowHelper.ArgumentNullException(nameof(previousParentContainer));
+        if (newParentContainer is null) ThrowHelper.ArgumentNullException(nameof(newParentContainer));
+
         // Limitation for now, only one parent container can be replaced.
         if (PreviousContainerToReplace != null)
         {

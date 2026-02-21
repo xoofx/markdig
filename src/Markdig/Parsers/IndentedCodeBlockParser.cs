@@ -40,7 +40,7 @@ public class IndentedCodeBlockParser : BlockParser
 
             if (processor.TrackTrivia)
             {
-                codeBlock.LinesBefore = processor.UseLinesBefore();
+                codeBlock.LinesBefore = processor.TakeLinesBefore();
                 codeBlock.NewLine = processor.Line.NewLine;
             }
 

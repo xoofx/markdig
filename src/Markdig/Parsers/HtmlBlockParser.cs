@@ -287,7 +287,7 @@ public class HtmlBlockParser : BlockParser
 
         if (state.TrackTrivia)
         {
-            htmlBlock.LinesBefore = state.UseLinesBefore();
+            htmlBlock.LinesBefore = state.TakeLinesBefore();
             htmlBlock.NewLine = state.Line.NewLine;
         }
 
