@@ -1,0 +1,9 @@
+doc:
+  - {path: readme.md, title: "<i class='bi bi-gear' aria-hidden='true'></i> Overview"}
+  - {path: ast.md, title: "Abstract syntax tree"}
+  - {path: pipeline.md, title: "Pipeline architecture"}
+  - {path: creating-extensions.md, title: "Creating extensions"}
+  - {path: block-parsers.md, title: "Block parsers"}
+  - {path: inline-parsers.md, title: "Inline parsers"}
+  - {path: renderers.md, title: "Renderers"}
+  - {path: performance.md, title: "Performance"}

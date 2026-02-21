@@ -16,7 +16,8 @@ Paths/commands below are relative to this directory.
 - Tooling: `src/mdtoc/` (CLI to generate a Markdown TOC from a local file or GitHub URL)
 - Tooling: `src/SpecFileGen/` (regenerates `*.generated.cs` spec tests from `src/Markdig.Tests/**.md`)
 - Tooling: `src/UnicodeNormDApp/` (generates the Unicode→ASCII mapping used by `Markdig.Helpers.CharNormalizer`)
-- Docs to keep in sync with behavior: `readme.md` and the docs under `doc/` (e.g., `doc/**/*.md`)
+- Docs to keep in sync with behavior: `readme.md` and the docs under `site/docs/` (e.g., `site/docs/**/*.md`)
+- Website: `site/` — Lunet-based documentation site (https://xoofx.github.io/markdig)
 
 ## Build & Test
 
@@ -28,6 +29,24 @@ dotnet test -c Release
 ```
 
 All tests must pass and docs must be updated before submitting.
+
+## Website (Lunet)
+
+The project website lives in `site/` and is built with [Lunet](https://lunet.io), a static site generator.
+
+```sh
+# Prerequisites: install lunet as a .NET global tool
+dotnet tool install -g lunet
+
+# Build the site (from the project root)
+cd site
+lunet build          # production build → .lunet/build/www/
+lunet serve          # dev server with live reload at http://localhost:4000
+```
+
+### Escaping `{{` `}}` in site Markdown
+
+Because the site is processed by Scriban via Lunet, any literal `{{` or `}}` in Markdown documentation must be escaped as `{{ "{{" }}` and `{{ "}}" }}` respectively. Hand-written pages must be escaped manually.
 
 ## Contribution Rules (Do/Don't)
 

@@ -1,0 +1,48 @@
+# Markdig documentation site.
+# Build from this folder with:
+#   lunet build
+#   lunet serve
+#
+# This site uses the shared template published as a Lunet extension.
+extend "lunet-io/templates"
+
+template_theme_default_mode = "dark"
+
+# -----------------------------------------------------------------------------
+# SITE SECTION (project-specific values only)
+# -----------------------------------------------------------------------------
+
+# Canonical base URL used for `lunet build` (links, og:meta, sitemap...).
+site_project_baseurl = "https://xoofx.github.io"
+site_project_basepath = "/markdig"
+site_project_name = "Markdig"
+site_project_description = "A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET."
+site_project_logo_path = "/img/markdig.svg"
+site_project_social_banner_path = "/img/github-banner.png"
+site_project_package_id = "Markdig"
+site_project_github_user = "xoofx"
+site_project_github_repo = "markdig"
+site_project_owner_name = "Alexandre Mutel"
+site_project_owner_alias = "xoofx"
+site_project_owner_url = "https://xoofx.github.io"
+
+site_project_init
+
+# -----------------------------------------------------------------------------
+# API reference (.NET)
+# -----------------------------------------------------------------------------
+with api.dotnet
+    title = "Markdig .NET API Reference"
+    path = "/api"
+    menu_name = "api"
+    menu_title = "API Reference"
+    properties = {
+        TargetFramework: "net10.0"
+    }
+    projects = [
+        {
+            name: "Markdig",
+            path: "../src/Markdig/Markdig.csproj"
+        }
+    ]
+end
