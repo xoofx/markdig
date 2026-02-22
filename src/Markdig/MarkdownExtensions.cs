@@ -466,16 +466,6 @@ public static class MarkdownExtensions
         }
         return pipeline;
     }
-    /// <summary>
-    /// Add rel=nofollow to all links rendered to HTML.
-    /// </summary>
-    /// <param name="pipeline"></param>
-    /// <returns></returns>
-    [Obsolete("Call `UseReferralLinks(\"nofollow\")` instead")]
-    public static MarkdownPipelineBuilder UseNoFollowLinks(this MarkdownPipelineBuilder pipeline)
-    {
-        return pipeline.UseReferralLinks("nofollow");
-    }
 
     /// <summary>
     /// Performs the use referral links operation.
