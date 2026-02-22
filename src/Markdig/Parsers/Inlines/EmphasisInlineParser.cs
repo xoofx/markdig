@@ -21,12 +21,6 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
 {
     private CharacterMap<EmphasisDescriptor>? emphasisMap;
     private readonly DelimitersObjectCache inlinesCache = new();
-
-    /// <summary>
-    /// Represents the EmphasisInline type.
-    /// </summary>
-    [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
-    public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
     /// <summary>
     /// Represents the EmphasisInline type.
     /// </summary>
@@ -66,11 +60,6 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         return false;
     }
 
-    /// <summary>
-    /// Gets or sets the create emphasis inline delegate (allowing to create a different emphasis inline class)
-    /// </summary>
-    [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
-    public CreateEmphasisInlineDelegate? CreateEmphasisInline { get; set; }
     /// <summary>
     /// Gets or sets the try create emphasis inline list.
     /// </summary>
@@ -292,33 +281,19 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
 
                         // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
                         EmphasisInline? emphasis = null;
-                        {
-                            if (delimiterDelta <= 2) // We can try using the legacy delegate
-                            {
-                                #pragma warning disable CS0618 // Support fields marked as obsolete
-                                emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong: delimiterDelta == 2);
-                                #pragma warning restore CS0618 // Support fields marked as obsolete
-                            }
-                            if (emphasis is null)
-                            {
-                                // Go in backwards order to give priority to newer delegates
-                                for (int delegateIndex = TryCreateEmphasisInlineList.Count - 1; delegateIndex >= 0; delegateIndex--)
-                                {
-                                    emphasis = TryCreateEmphasisInlineList[delegateIndex].Invoke(closeDelimiter.DelimiterChar, delimiterDelta);
-                                    if (emphasis != null) break;
-                                }
 
-                                if (emphasis is null)
-                                {
-                                    emphasis = new EmphasisInline()
-                                    {
-                                        DelimiterChar = closeDelimiter.DelimiterChar,
-                                        DelimiterCount = delimiterDelta
-                                    };
-                                }
-                            }
+                        // Go in backwards order to give priority to newer delegates
+                        for (int delegateIndex = TryCreateEmphasisInlineList.Count - 1; delegateIndex >= 0; delegateIndex--)
+                        {
+                            emphasis = TryCreateEmphasisInlineList[delegateIndex].Invoke(closeDelimiter.DelimiterChar, delimiterDelta);
+                            if (emphasis != null) break;
                         }
-                        Debug.Assert(emphasis != null);
+
+                        emphasis ??= new EmphasisInline
+                        {
+                            DelimiterChar = closeDelimiter.DelimiterChar,
+                            DelimiterCount = delimiterDelta
+                        };
 
                         // Update position for emphasis
                         var openDelimitercount = openDelimiter.DelimiterCount;
