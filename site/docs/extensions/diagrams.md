@@ -6,7 +6,12 @@ title: Diagrams
 
 Enable with `.UseDiagrams()` (included in `UseAdvancedExtensions()`).
 
-When a fenced code block uses a recognized diagram language as its info string, Markdig wraps the content in a `<div>` with the language as a CSS class instead of rendering it as `<pre><code>`.
+When a fenced code block uses a recognized diagram language as its info string, Markdig renders it as a plain HTML block (without the nested `<code>` element) so client-side diagram libraries can consume the raw text easily.
+
+By default:
+
+- `mermaid` renders as a `<pre class="mermaid">...</pre>` block
+- `nomnoml` renders as a `<div class="nomnoml">...</div>` block
 
 ## Supported languages
 
@@ -30,11 +35,11 @@ graph LR
 This renders as:
 
 ```html
-<div class="mermaid">graph LR
+<pre class="mermaid">graph LR
     A[Parse] --> B[AST]
     B --> C[Render]
     C --> D[HTML]
-</div>
+</pre>
 ```
 
 To display the diagram in a browser, include the Mermaid JavaScript library:
@@ -63,10 +68,11 @@ Instead of the usual code block rendering:
 <pre><code class="language-mermaid">...</code></pre>
 ```
 
-The diagrams extension produces:
+The diagrams extension produces a plain block for recognized languages, for example:
 
 ```html
-<div class="mermaid">...</div>
+<pre class="mermaid">...</pre>
+<div class="nomnoml">...</div>
 ```
 
 This allows client-side diagram libraries to find and render the content.

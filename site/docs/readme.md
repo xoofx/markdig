@@ -56,7 +56,9 @@ Welcome to the Markdig documentation. Whether you are new to Markdig or an exper
 | [Abstract syntax tree](advanced/ast.md) | Structure and traversal of the AST |
 | [Pipeline architecture](advanced/pipeline.md) | How the parsing pipeline works |
 | [Creating extensions](advanced/creating-extensions.md) | Implement `IMarkdownExtension` and register it |
+| [Parser authoring API](advanced/parser-authoring-api.md) | Advanced authoring contracts and parser/AST parity APIs |
 | [Block parsers](advanced/block-parsers.md) | Write custom block-level parsers |
 | [Inline parsers](advanced/inline-parsers.md) | Write custom inline-level parsers |
 | [Renderers](advanced/renderers.md) | Write custom renderers for HTML and other formats |
 | [Performance](advanced/performance.md) | Tips for high-performance Markdown processing |
+| [Migration notes](advanced/parser-authoring-api-migration.md) | Compatibility notes for parser/AST authoring APIs |

@@ -165,10 +165,13 @@ foreach (var node in document.Descendants())
 
 Use `.DisableHtml()` (a configuration option, not an extension).
 
-Removes the HTML block parser and disables inline HTML parsing. Useful for safe rendering of user-provided Markdown:
+Removes the HTML block parser and disables inline HTML parsing. This prevents raw HTML injection, but it is **not** a complete security solution on its own:
 
 ```csharp
 var pipeline = new MarkdownPipelineBuilder()
     .DisableHtml()
     .Build();
 ```
+
+> [!IMPORTANT]
+> Markdig does not sanitize the generated HTML. If you render untrusted Markdown in a browser, you should still sanitize the output HTML (and consider filtering/rewriting link and image URLs) to prevent XSS.

@@ -151,6 +151,7 @@ public class NoteBlockParser : BlockParser
 - **Check `processor.IsCodeIndent`** — If the line is indented 4+ spaces, it's a code block, not your custom syntax.
 - **Set the `Parser` property** — The `Block` constructor automatically sets it from the argument.
 - **Set `Span`, `Line`, and `Column`** — These enable precise source location tracking.
+- **Support trivia when enabled** — If `processor.TrackTrivia` is `true`, take pending leading blank/trivia lines via `processor.TakeLinesBefore()` and assign them to `block.LinesBefore` (and use `processor.UseTrivia(end)` when you need exact trivia slices around markers).
 - **Push to `processor.NewBlocks`** — This tells the processor a new block was found.
 - **Return the right `BlockState`** — `Break` for a single-line block, `Continue` for multi-line blocks.
 

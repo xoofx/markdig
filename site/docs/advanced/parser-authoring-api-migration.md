@@ -1,4 +1,8 @@
-# Parser + AST API Migration Notes (Potential Breaking Changes)
+---
+title: Parser authoring API migration notes
+---
+
+# Parser + AST API migration notes (potential breaking changes)
 
 This document tracks compatibility risks for consumers adopting the new parser/AST authoring APIs and for future releases that may tighten contracts.
 

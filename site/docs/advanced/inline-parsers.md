@@ -141,68 +141,32 @@ The `slice` parameter is a mutable view into the `LeafBlock`'s text. Key operati
 Inside `Match`, the `processor` provides context:
 
 {.table}
-| Property | Description |
+| Member | Description |
 |---|---|
 | `processor.Inline` | Set this to your created inline on match |
 | `processor.Block` | The `LeafBlock` currently being processed |
 | `processor.Root` | The root `ContainerInline` of the current block |
 | `processor.Document` | The root `MarkdownDocument` |
+| `processor.Context` | The per-call `MarkdownParserContext` (may be `null`) |
 | `processor.GetSourcePosition(pos, out line, out column)` | Map a slice position to source position |
+| `processor.GetParserState<TState>(this)` | Get/create parser state scoped to the current leaf processing pass |
+| `processor.Emit(inline)` | Append `inline` into the deepest open inline container and set `processor.Inline` |
+| `processor.BlockNew` | Request replacing the current leaf block after inline processing completes |
+| `processor.ReplaceParentContainer(old, @new)` | Advanced: synchronize traversal if you replace a parent container block during inline processing |
 
 ## Container inlines and delimiters
 
-For inlines that can contain other inlines (like emphasis), the pattern is more complex. You typically:
+Some inline syntaxes are **paired delimiters**: they open, later close, and the content between them becomes children of a `ContainerInline` node.
 
-1. On opening delimiter: Insert a `DelimiterInline` placeholder.
-2. Continue parsing other inlines normally.
-3. On closing delimiter: Find the matching opener, replace both with the final inline, and adopt all children between them.
+Markdig implements this pattern with temporary delimiter nodes (subclasses of `DelimiterInline`) plus a post-processing step that rewires the inline linked-list into the final AST shape.
 
-This is the strategy used by `LinkInlineParser` and the emphasis system. Here's a simplified example:
+Before building your own delimiter system, consider:
 
-```csharp
-public class HighlightInlineParser : InlineParser
-{
-    public HighlightInlineParser()
-    {
-        OpeningCharacters = ['⌈', '⌉']; // Custom delimiters
-    }
-
-    public override bool Match(InlineProcessor processor, ref StringSlice slice)
-    {
-        var current = slice.CurrentChar;
-
-        if (current == '⌈')
-        {
-            // Opening delimiter — push a marker
-            var delimiter = new DelimiterInline(this, new MarkdownDocument())
-            {
-                Type = DelimiterType.Open,
-                // ... set span
-            };
-            processor.Inline = delimiter;
-            slice.SkipChar();
-            return true;
-        }
-
-        if (current == '⌉')
-        {
-            // Closing delimiter — find opener and replace
-            var opener = processor.Inline?.FirstParentOfType<DelimiterInline>();
-            if (opener?.Parser == this)
-            {
-                var highlight = new HighlightInline();
-                opener.ReplaceBy(highlight);
-                processor.Inline = highlight;
-                processor.PostProcessInlines(0, highlight, null, false);
-                slice.SkipChar();
-                return true;
-            }
-        }
-
-        return false;
-    }
-}
-```
+- If your syntax can be expressed as a simple paired delimiter (`~~`, `==`, `^^`, `""...""`, etc.), prefer extending `EmphasisInlineParser` by adding an `EmphasisDescriptor`. This gives you correct nesting rules and integrates with existing HTML renderers.
+- If you need custom pairing rules (like links/images, tables, or non-trivial delimiter constraints), follow the built-in patterns:
+  - `EmphasisInlineParser` + `EmphasisDelimiterInline`
+  - `LinkInlineParser` + `LinkDelimiterInline`
+  - `PipeTableDelimiterInline` (tables)
 
 ## Post-processing with IPostInlineProcessor
 

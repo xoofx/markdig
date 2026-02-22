@@ -36,7 +36,7 @@ var pipeline = new MarkdownPipelineBuilder()
 | [Alert blocks](alert-blocks.md) | `.UseAlertBlocks()` | GitHub-style `[!NOTE]`, `[!TIP]`, etc. |
 | [Abbreviations](abbreviations.md) | `.UseAbbreviations()` | Abbreviation definitions: `*[HTML]: Hyper Text Markup Language` |
 | [Auto-identifiers](auto-identifiers.md) | `.UseAutoIdentifiers()` | Automatic `id` attributes on headings |
-| [Citations](figures-footers-citations.md) | `.UseCitations()` | Citation text with `""...""`  |
+| [Citations](figures-footers-citations.md) | `.UseCitations()` | Citation text with `""...""` |
 | [Custom containers](custom-containers.md) | `.UseCustomContainers()` | Fenced `:::` div containers |
 | [Definition lists](definition-lists.md) | `.UseDefinitionLists()` | `<dl>` / `<dt>` / `<dd>` lists |
 | [Emphasis extras](emphasis-extras.md) | `.UseEmphasisExtras()` | Strikethrough, sub/superscript, inserted, marked |

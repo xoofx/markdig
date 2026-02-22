@@ -37,9 +37,9 @@ MarkdownDocument (ContainerBlock)
 All AST nodes inherit from `MarkdownObject`, which provides:
 
 {.table}
-| Property | Type | Description |
+| Member | Type | Description |
 |---|---|---|
-| `Span` | `SourceSpan` | Start and end positions in the source text |
+| `Span` | `SourceSpan` | Start and end positions (inclusive) in the source text |
 | `Line` | `int` | Zero-based line number in the source |
 | `Column` | `int` | Zero-based column number |
 
@@ -189,6 +189,33 @@ if (node.ContainsData("my-key")) { ... }
 node.RemoveData("my-key");
 ```
 
+### Typed metadata helpers
+
+For extension state, prefer collision-resistant typed keys via `DataKey<T>` and the typed helper methods:
+
+```csharp
+using Markdig.Syntax;
+
+public sealed class MyExtensionState
+{
+    public int Value { get; set; }
+}
+
+static readonly DataKey<MyExtensionState> StateKey = new();
+
+// Store
+node.SetData<MyExtensionState>(StateKey, new MyExtensionState { Value = 123 });
+
+// Retrieve
+if (node.TryGetData<MyExtensionState>(StateKey, out var state))
+{
+    Console.WriteLine(state.Value);
+}
+```
+
+> [!TIP]
+> Use the explicit generic calls (`SetData<T>`, `TryGetData<T>`, `GetData<T>`) to avoid ambiguity with the untyped `IMarkdownObject` methods.
+
 ### HTML attributes
 
 The most common attached data is `HtmlAttributes`, used by the [Generic attributes](../extensions/generic-attributes.md) extension:
@@ -201,6 +228,27 @@ attrs.AddClass("my-class");
 attrs.Id = "my-id";
 attrs.AddProperty("data-value", "42");
 ```
+
+## Mutating the AST safely
+
+Markdig provides a few small helpers for common AST "surgery" operations:
+
+```csharp
+// Remove a block from its parent container
+block.Remove();
+
+// Replace a block in its parent container (optionally transferring children)
+block.ReplaceBy(replacementBlock, moveChildren: true);
+
+// Transfer children efficiently (preserves order)
+sourceContainerBlock.TransferChildrenTo(destinationContainerBlock);
+sourceContainerInline.TransferChildrenTo(destinationContainerInline);
+```
+
+These helpers preserve parent/child ownership invariants and avoid common O(n²) patterns (for example repeatedly calling `RemoveAt(0)` on a `ContainerBlock`).
+
+> [!IMPORTANT]
+> These helpers do not automatically recompute spans or trivia. If your transform needs exact source fidelity after mutation, update `Span`, `Line`, `Column`, and trivia properties explicitly.
 
 ## The SourceSpan struct
 

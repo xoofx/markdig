@@ -119,6 +119,9 @@ var pipeline = new MarkdownPipelineBuilder()
 | `.DisableHeadings()` | Disable ATX and Setex heading parsing |
 | `.DisableHtml()` | Disable HTML block and inline HTML parsing |
 
+> [!CAUTION]
+> Markdig is a Markdown processor, not an HTML sanitizer. Disabling HTML parsing reduces risk from raw HTML input, but it does not make rendering untrusted Markdown to HTML "safe" by itself. If you accept user-provided Markdown, sanitize the generated HTML and consider filtering/rewriting link and image URLs.
+
 #### Extension ordering
 
 Extensions are applied in the order they are added. Most extensions are order-independent, but a few need specific positioning:

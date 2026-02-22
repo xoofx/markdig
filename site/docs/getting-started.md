@@ -28,7 +28,7 @@ dotnet add package Markdig.Signed
 
 ### Requirements
 
-Markdig targets .NET Standard 2.0, .NET Standard 2.1, .NET 8.0, and .NET 9.0. It works with .NET Framework 4.6.2+, .NET Core 2.0+, and .NET 5+.
+Markdig targets `net462`, `netstandard2.0`, `netstandard2.1`, `net8.0`, and `net10.0`. It works with .NET Framework 4.6.2+, .NET Core 2.0+, and .NET 5+.
 
 ## Your first conversion
 

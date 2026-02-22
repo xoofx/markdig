@@ -1,6 +1,12 @@
-# Parser + AST Authoring API Guide
+---
+title: Parser authoring API
+---
 
-This guide documents the parser authoring contracts and the new public APIs added for extension parity and safe AST manipulation.
+# Parser + AST authoring API
+
+This page documents parser authoring contracts and the public APIs intended to give third-party extensions parity with built-in extensions (and to make safe AST manipulation less error-prone).
+
+If you're new to writing extensions, start with [Creating extensions](creating-extensions.md) and then come back here for the "engine contract" details.
 
 ## Scope
 

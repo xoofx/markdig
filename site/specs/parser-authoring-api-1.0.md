@@ -1,4 +1,8 @@
-# Spec: Parser + Markdown Model (AST) Authoring API Improvements — 1.3
+---
+title: Parser + AST authoring API specification (Draft)
+---
+
+# Parser + Markdown model (AST) authoring API specification
 
 Status: Draft
 

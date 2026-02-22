@@ -26,6 +26,9 @@ var pipeline = builder.Build();
 var html = Markdown.ToHtml(markdownText, pipeline);
 ```
 
+> [!NOTE]
+> `MarkdownPipelineBuilder` is mutable and not thread-safe. Build pipelines during configuration/startup, then share the built `MarkdownPipeline` instances.
+
 ## What the pipeline holds
 
 The `MarkdownPipeline` contains:

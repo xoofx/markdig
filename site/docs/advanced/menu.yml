@@ -3,7 +3,9 @@ doc:
   - {path: ast.md, title: "Abstract syntax tree"}
   - {path: pipeline.md, title: "Pipeline architecture"}
   - {path: creating-extensions.md, title: "Creating extensions"}
+  - {path: parser-authoring-api.md, title: "Parser authoring API"}
   - {path: block-parsers.md, title: "Block parsers"}
   - {path: inline-parsers.md, title: "Inline parsers"}
   - {path: renderers.md, title: "Renderers"}
   - {path: performance.md, title: "Performance"}
+  - {path: parser-authoring-api-migration.md, title: "Migration notes"}

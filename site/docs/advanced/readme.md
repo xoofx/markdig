@@ -32,10 +32,12 @@ Extensions can modify any of these stages: adding new parsers, modifying existin
 | [Abstract syntax tree](ast.md) | Structure of block/inline nodes, traversal with `Descendants`, source spans |
 | [Pipeline architecture](pipeline.md) | How `MarkdownPipeline`, `MarkdownPipelineBuilder`, and extensions interact |
 | [Creating extensions](creating-extensions.md) | Implement `IMarkdownExtension` — from simple to complex |
+| [Parser authoring API](parser-authoring-api.md) | Authoring contracts and advanced APIs for parser/AST parity |
 | [Block parsers](block-parsers.md) | Write custom `BlockParser` subclasses — `TryOpen`, `TryContinue`, `BlockState` |
 | [Inline parsers](inline-parsers.md) | Write custom `InlineParser` subclasses — `Match`, `StringSlice`, post-processing |
 | [Renderers](renderers.md) | Implement `HtmlObjectRenderer<T>` or build a completely custom renderer |
 | [Performance](performance.md) | Tips for maintaining high throughput — allocation-free patterns, pooling, Span-based parsing |
+| [Migration notes](parser-authoring-api-migration.md) | Compatibility risks and future contract tightening to avoid depending on ambiguous behavior |
 
 ## Quick reference: key types
 
