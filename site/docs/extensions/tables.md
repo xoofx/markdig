@@ -162,6 +162,11 @@ Use a continuous line (without `+` separators) to span columns:
 | Cell spanning |
 +-------+-------+
 ```
++-------+-------+
+| A     | B     |
++=======+=======+
+| Cell spanning |
++-------+-------+
 
 ### Header separator
 
