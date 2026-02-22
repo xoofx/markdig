@@ -33,6 +33,19 @@ playground_api_url = environment == "dev" ? "https://localhost:5001" : "https://
 log.info $"Using playground API URL: {playground_api_url}"
 
 # -----------------------------------------------------------------------------
+# Customize the template bundle (e.g., add custom JS/CSS resources)
+# -----------------------------------------------------------------------------
+with bundle
+    mermaid = resource "npm:mermaid" "11.12.3"
+    js mermaid "/dist/mermaid.min.js"
+
+    katex = resource "npm:katex" "0.16.28"
+    js katex "/dist/katex.min.js"
+    js katex "/dist/contrib/auto-render.min.js"
+    css katex "/dist/katex.min.css"
+end
+
+# -----------------------------------------------------------------------------
 # API reference (.NET)
 # -----------------------------------------------------------------------------
 with api.dotnet

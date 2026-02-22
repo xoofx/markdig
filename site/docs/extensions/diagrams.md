@@ -34,12 +34,11 @@ graph LR
 
 This renders as:
 
-```html
-<pre class="mermaid">graph LR
+```mermaid
+graph LR
     A[Parse] --> B[AST]
     B --> C[Render]
     C --> D[HTML]
-</pre>
 ```
 
 To display the diagram in a browser, include the Mermaid JavaScript library:

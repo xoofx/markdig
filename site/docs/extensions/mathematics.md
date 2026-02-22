@@ -13,10 +13,10 @@ This extension supports LaTeX-style math using `$` for inline and `$$` for displ
 Wrap math expressions with single `$`:
 
 ```markdown
-The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{{ "}{" }}2a}$.
+The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
 ```
 
-The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{{ "}{" }}2a}$.
+The quadratic formula is $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$.
 
 ## Block math
 
@@ -24,12 +24,12 @@ Wrap display equations with `$$` on their own lines:
 
 ```markdown
 $$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{{ "}{" }}2}
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
 $$
 ```
 
 $$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{{ "}{" }}2}
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
 $$
 
 ## HTML output
@@ -67,11 +67,35 @@ After rendering to HTML, include a math library in your page to render the formu
 <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex/dist/contrib/auto-render.min.js"></script>
 <script>
-  renderMathInElement(document.body, {
-    delimiters: [
-      { left: "\\(", right: "\\)", display: false },
-      { left: "\\[", right: "\\]", display: true }
-    ]
-  });
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : false
+        });
+    });
 </script>
 ```
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : false
+        });
+    });
+</script>
