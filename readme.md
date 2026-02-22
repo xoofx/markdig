@@ -1,4 +1,4 @@
-# Markdig [![ci](https://github.com/xoofx/markdig/actions/workflows/ci.yml/badge.svg)](https://github.com/xoofx/markdig/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/xoofx/markdig/badge.svg?branch=master)](https://coveralls.io/github/xoofx/markdig?branch=master) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/) [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FRGHXBTP442JL)
+# Markdig [![ci](https://github.com/xoofx/markdig/actions/workflows/ci.yml/badge.svg)](https://github.com/xoofx/markdig/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/xoofx/markdig/badge.svg?branch=master)](https://coveralls.io/github/xoofx/markdig?branch=master) [![NuGet](https://img.shields.io/nuget/v/Markdig.svg)](https://www.nuget.org/packages/Markdig/)
 
 <img align="right" width="160px" height="160px" src="img/markdig.png">
 
@@ -107,42 +107,11 @@ Contributions are what make the open source community such an amazing place to l
 
 ## Build
 
-In order to build Markdig, you need to install [.NET 6.0](https://dotnet.microsoft.com/en-us/download)
+In order to build Markdig, you need to install [.NET 10.0](https://dotnet.microsoft.com/en-us/download)
 
 ## License
 
 This software is released under the [BSD-Clause 2 license](https://github.com/lunet-io/markdig/blob/master/license.txt).
-
-
-## Benchmarking
-
-The latest benchmark was collected on April 23 2022, against the following implementations:
-
-- [Markdig](https://github.com/xoofx/markdig) (version: 0.30.2): itself
-- [cmark](https://github.com/commonmark/cmark) (version: 0.30.2): Reference C implementation of CommonMark, no support for extensions
-- [CommonMark.NET(master)](https://github.com/Knagis/CommonMark.NET) (version: 0.15.1): CommonMark implementation for .NET, no support for extensions, port of cmark, deprecated.
-- [MarkdownSharp](https://github.com/Kiri-rin/markdownsharp) (version: 2.0.5): Open source C# implementation of Markdown processor, as featured previously on Stack Overflow, regexp based.
-
-```
-// * Summary *
-
-BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
-AMD Ryzen 9 5950X, 1 CPU, 32 logical and 16 physical cores
-.NET SDK=6.0.202
-  [Host]     : .NET 6.0.4 (6.0.422.16404), X64 RyuJIT
-  DefaultJob : .NET 6.0.4 (6.0.422.16404), X64 RyuJIT
-
-
-|            Method |       Mean |     Error |    StdDev |
-|------------------ |-----------:|----------:|----------:|
-|           markdig |   1.979 ms | 0.0221 ms | 0.0185 ms |
-|             cmark |   2.571 ms | 0.0081 ms | 0.0076 ms |
-|    CommonMark.NET |   2.016 ms | 0.0169 ms | 0.0158 ms |
-|     MarkdownSharp | 221.455 ms | 1.4442 ms | 1.3509 ms |
-```
-
-- Markdig is roughly **x100 times faster than MarkdownSharp**
-- **20% faster than the reference cmark C implementation** 
 
 ## Sponsors
 
@@ -162,6 +131,7 @@ Thanks also to the project [BenchmarkDotNet](https://github.com/PerfDotNet/Bench
 Some decoding part (e.g HTML [EntityHelper.cs](https://github.com/lunet-io/markdig/blob/master/src/Markdig/Helpers/EntityHelper.cs)) have been re-used from [CommonMark.NET](https://github.com/Knagis/CommonMark.NET)
 
 Thanks to the work done by @clarkd on the [JIRA Link extension](https://github.com/clarkd/MarkdigJiraLinker), now included with this project!
+
 ## Author
 
 Alexandre MUTEL aka [xoofx](https://xoofx.github.io/)
