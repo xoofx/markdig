@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Html;
 /// <seealso cref="HtmlObjectRenderer{ParagraphBlock}" />
 public class ParagraphRenderer : HtmlObjectRenderer<ParagraphBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, ParagraphBlock obj)
     {
         if (!renderer.ImplicitParagraph && renderer.EnableHtmlForBlock)

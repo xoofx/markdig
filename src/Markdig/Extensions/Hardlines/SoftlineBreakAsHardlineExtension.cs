@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Hardlines;
 /// <seealso cref="IMarkdownExtension" />
 public class SoftlineBreakAsHardlineExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         // Simply modify the LineBreakInlineParser
@@ -24,6 +27,9 @@ public class SoftlineBreakAsHardlineExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

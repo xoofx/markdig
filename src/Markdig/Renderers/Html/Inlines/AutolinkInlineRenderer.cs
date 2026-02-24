@@ -13,42 +13,13 @@ namespace Markdig.Renderers.Html.Inlines;
 public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
 {
     /// <summary>
-    /// Gets or sets a value indicating whether to always add rel="nofollow" for links or not.
-    /// </summary>
-    [Obsolete("AutoRelNoFollow is obsolete. Please write \"nofollow\" into Property Rel.")]
-    public bool AutoRelNoFollow
-    {
-        get
-        {
-            return Rel is not null && Rel.Contains("nofollow");
-        }
-        set
-        {
-            const string NoFollow = "nofollow";
-
-            if (value)
-            {
-                if (string.IsNullOrEmpty(Rel))
-                {
-                    Rel = NoFollow;
-                }
-                else if (!Rel!.Contains(NoFollow))
-                {
-                    Rel += $" {NoFollow}";
-                }
-            }
-            else
-            {
-                Rel = Rel?.Replace(NoFollow, string.Empty);
-            }
-        }
-    }
-
-    /// <summary>
     /// Gets or sets the literal string in property rel for links
     /// </summary>
     public string? Rel { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, AutolinkInline obj)
     {
         if (renderer.EnableHtmlForInline)

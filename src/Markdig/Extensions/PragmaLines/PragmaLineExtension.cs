@@ -16,12 +16,18 @@ namespace Markdig.Extensions.PragmaLines;
 /// <seealso cref="IMarkdownExtension" />
 public class PragmaLineExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         pipeline.DocumentProcessed -= PipelineOnDocumentProcessed;
         pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

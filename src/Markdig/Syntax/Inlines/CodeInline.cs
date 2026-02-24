@@ -20,6 +20,9 @@ public class CodeInline : LeafInline
 
     private LazySubstring _content;
 
+    /// <summary>
+    /// Initializes a new instance of the CodeInline class.
+    /// </summary>
     public CodeInline(string content) : this(new LazySubstring(content)) { }
 
     internal CodeInline(LazySubstring content)
@@ -46,6 +49,9 @@ public class CodeInline : LeafInline
         set => _content = new LazySubstring(value ?? string.Empty);
     }
 
+    /// <summary>
+    /// Gets or sets the content span.
+    /// </summary>
     public ReadOnlySpan<char> ContentSpan => _content.AsSpan();
 
     /// <summary>

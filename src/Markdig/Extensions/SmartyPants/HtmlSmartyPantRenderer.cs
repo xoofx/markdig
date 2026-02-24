@@ -27,6 +27,9 @@ public class HtmlSmartyPantRenderer : HtmlObjectRenderer<SmartyPant>
         this.options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, SmartyPant obj)
     {
         if (!options.Mapping.TryGetValue(obj.Type, out string? text))

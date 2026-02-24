@@ -15,10 +15,19 @@ namespace Markdig.Helpers;
 /// </summary>
 public static class CharHelper
 {
+    /// <summary>
+    /// Represents the tab size.
+    /// </summary>
     public const int TabSize = 4;
 
+    /// <summary>
+    /// Represents the replacement char.
+    /// </summary>
     public const char ReplacementChar = '\uFFFD';
 
+    /// <summary>
+    /// Represents the replacement char string.
+    /// </summary>
     public const string ReplacementCharString = "\uFFFD";
 
     private const string EmailUsernameSpecialChars = ".!#$%&'*+/=?^_`{|}~-+.~";
@@ -77,6 +86,9 @@ public static class CharHelper
     private static bool IsPunctuationException(Rune c) =>
         c.IsBmp && IsPunctuationException((char)c.Value);
 
+    /// <summary>
+    /// Performs the check open close delimiter operation.
+    /// </summary>
     public static void CheckOpenCloseDelimiter(char pc, char c, bool enableWithinWord, out bool canOpen, out bool canClose)
     {
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
@@ -93,6 +105,9 @@ public static class CharHelper
             out canClose);
     }
 
+    /// <summary>
+    /// Performs the check open close delimiter operation.
+    /// </summary>
 #if NET
     public
 #else
@@ -261,6 +276,9 @@ public static class CharHelper
             );
     }
 
+    /// <summary>
+    /// Determines whether roman letter partial.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsRomanLetterPartial(char c)
     {
@@ -268,6 +286,9 @@ public static class CharHelper
         return IsRomanLetterLowerPartial(c) || IsRomanLetterUpperPartial(c);
     }
 
+    /// <summary>
+    /// Determines whether roman letter lower partial.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsRomanLetterLowerPartial(char c)
     {
@@ -275,6 +296,9 @@ public static class CharHelper
         return c == 'i' || c == 'v' || c == 'x';
     }
 
+    /// <summary>
+    /// Determines whether roman letter upper partial.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsRomanLetterUpperPartial(char c)
     {
@@ -282,6 +306,9 @@ public static class CharHelper
         return c == 'I' || c == 'V' || c == 'X';
     }
 
+    /// <summary>
+    /// Performs the roman to arabic operation.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int RomanToArabic(ReadOnlySpan<char> text)
     {
@@ -315,6 +342,9 @@ public static class CharHelper
         }
     }
 
+    /// <summary>
+    /// Adds tab.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int AddTab(int column)
     {
@@ -323,6 +353,9 @@ public static class CharHelper
         return TabSize + (column & ~(TabSize - 1));
     }
 
+    /// <summary>
+    /// Determines whether across tab.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAcrossTab(int column)
     {
@@ -368,6 +401,9 @@ public static class CharHelper
     // Note: there is no supplementary character whose Unicode category is Zs (at least as of Unicode 17).
     // https://www.compart.com/en/unicode/category/Zs
 
+    /// <summary>
+    /// Determines whether white space or zero.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsWhiteSpaceOrZero(this char c)
     {
@@ -399,12 +435,18 @@ public static class CharHelper
         }
     }
 
+    /// <summary>
+    /// Determines whether control.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsControl(this char c)
     {
         return char.IsControl(c);
     }
 
+    /// <summary>
+    /// Determines whether escapable symbol.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEscapableSymbol(this char c)
     {
@@ -498,12 +540,18 @@ public static class CharHelper
         "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F" +
         " <>\u007F");
 
+    /// <summary>
+    /// Determines whether new line or line feed.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNewLineOrLineFeed(this char c)
     {
         return c == '\n' || c == '\r';
     }
 
+    /// <summary>
+    /// Determines whether zero.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsZero(this char c)
     {
@@ -547,6 +595,9 @@ public static class CharHelper
         return IsSpace(c) || IsTab(c);
     }
 
+    /// <summary>
+    /// Performs the escape insecure operation.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static char EscapeInsecure(this char c)
     {
@@ -555,24 +606,36 @@ public static class CharHelper
         return c == '\0' ? ReplacementChar : c;
     }
 
+    /// <summary>
+    /// Determines whether alpha upper.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAlphaUpper(this char c)
     {
         return (uint)(c - 'A') <= ('Z' - 'A');
     }
 
+    /// <summary>
+    /// Determines whether alpha.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAlpha(this char c)
     {
         return (uint)((c - 'A') & ~0x20) <= ('Z' - 'A');
     }
 
+    /// <summary>
+    /// Determines whether alpha numeric.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAlphaNumeric(this char c)
     {
         return IsAlpha(c) || IsDigit(c);
     }
 
+    /// <summary>
+    /// Determines whether digit.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDigit(this char c)
     {
@@ -583,10 +646,16 @@ public static class CharHelper
     internal static bool IsAsciiPunctuationOrZero(this char c) =>
         s_asciiPunctuationCharsOrZero.Contains(c);
 
+    /// <summary>
+    /// Determines whether ascii punctuation.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsAsciiPunctuation(this char c) =>
         s_asciiPunctuationChars.Contains(c);
 
+    /// <summary>
+    /// Determines whether email username special char.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmailUsernameSpecialChar(char c) =>
         s_emailUsernameSpecialChar.Contains(c);
@@ -595,10 +664,16 @@ public static class CharHelper
     internal static bool IsEmailUsernameSpecialCharOrDigit(char c) =>
         s_emailUsernameSpecialCharOrDigit.Contains(c);
 
+    /// <summary>
+    /// Determines whether high surrogate.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsHighSurrogate(char c) =>
         char.IsHighSurrogate(c);
 
+    /// <summary>
+    /// Determines whether low surrogate.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsLowSurrogate(char c) =>
         char.IsLowSurrogate(c);
@@ -607,6 +682,9 @@ public static class CharHelper
     internal static bool IsInInclusiveRange(int value, uint min, uint max) =>
         ((uint)value - min) <= (max - min);
 
+    /// <summary>
+    /// Determines whether right to left.
+    /// </summary>
     public static bool IsRightToLeft(int c)
     {
         // Generated from Table D.1 of RFC3454
@@ -645,6 +723,9 @@ public static class CharHelper
                c == 0x00FB3E;
     }
 
+    /// <summary>
+    /// Determines whether left to right.
+    /// </summary>
     public static bool IsLeftToRight(int c)
     {
         // Generated from Table D.2 of RFC3454

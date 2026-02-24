@@ -12,13 +12,22 @@ namespace Markdig.Extensions.Emoji;
 /// <seealso cref="IMarkdownExtension" />
 public class EmojiExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Initializes a new instance of the EmojiExtension class.
+    /// </summary>
     public EmojiExtension(EmojiMapping emojiMapping)
     {
         EmojiMapping = emojiMapping;
     }
 
+    /// <summary>
+    /// Gets the emoji mapping.
+    /// </summary>
     public EmojiMapping EmojiMapping { get; }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.InlineParsers.Contains<EmojiParser>())
@@ -28,6 +37,9 @@ public class EmojiExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

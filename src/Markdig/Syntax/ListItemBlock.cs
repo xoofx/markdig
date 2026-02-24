@@ -24,6 +24,9 @@ public class ListItemBlock : ContainerBlock
     {
     }
 
+    /// <summary>
+    /// Gets or sets the column width.
+    /// </summary>
     public int ColumnWidth { get; set; }
 
     /// <summary>

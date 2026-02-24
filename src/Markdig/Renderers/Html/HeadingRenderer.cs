@@ -21,6 +21,9 @@ public class HeadingRenderer : HtmlObjectRenderer<HeadingBlock>
         "h6",
     ];
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, HeadingBlock obj)
     {
         int index = obj.Level - 1;

@@ -1,5 +1,5 @@
 // Copyright (c) Alexandre Mutel. All rights reserved.
-// This file is licensed under the BSD-Clause 2 license. 
+// This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
 using Markdig.Syntax;
@@ -17,16 +17,25 @@ namespace Markdig.Helpers;
 /// </summary>
 public static class LinkHelper
 {
+    /// <summary>
+    /// Attempts to parse autolink.
+    /// </summary>
     public static bool TryParseAutolink(StringSlice text, [NotNullWhen(true)] out string? link, out bool isEmail)
     {
         return TryParseAutolink(ref text, out link, out isEmail);
     }
 
+    /// <summary>
+    /// Performs the urilize operation.
+    /// </summary>
     public static string Urilize(string headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
     {
         return Urilize(headingText.AsSpan(), allowOnlyAscii, keepOpeningDigits);
     }
 
+    /// <summary>
+    /// Performs the urilize operation.
+    /// </summary>
     public static string Urilize(ReadOnlySpan<char> headingText, bool allowOnlyAscii, bool keepOpeningDigits = false)
     {
         var headingBuffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
@@ -60,12 +69,12 @@ public static class LinkHelper
             }
             else
             {
-                normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : null;
+                normalized = allowOnlyAscii ? CharNormalizer.ConvertToAscii(c) : ReadOnlySpan<char>.Empty;
             }
 
             for (int j = 0; j < (normalized.Length < 1 ? 1 : normalized.Length); j++)
             {
-                if (normalized != null)
+                if (!normalized.IsEmpty)
                 {
                     c = normalized[j];
                 }
@@ -174,11 +183,17 @@ public static class LinkHelper
         };
     }
 
+    /// <summary>
+    /// Performs the urilize as gfm operation.
+    /// </summary>
     public static string UrilizeAsGfm(string headingText)
     {
         return UrilizeAsGfm(headingText.AsSpan());
     }
 
+    /// <summary>
+    /// Performs the urilize as gfm operation.
+    /// </summary>
     public static string UrilizeAsGfm(ReadOnlySpan<char> headingText)
     {
         // Following https://github.com/jch/html-pipeline/blob/master/lib/html/pipeline/toc_filter.rb
@@ -204,6 +219,9 @@ public static class LinkHelper
         return c == '_' || c == '-' || c == '.';
     }
 
+    /// <summary>
+    /// Attempts to parse autolink.
+    /// </summary>
     public static bool TryParseAutolink(ref StringSlice text, [NotNullWhen(true)] out string? link, out bool isEmail)
     {
         link = null;
@@ -215,13 +233,13 @@ public static class LinkHelper
             return false;
         }
 
-        // An absolute URI, for these purposes, consists of a scheme followed by a colon (:) 
-        // followed by zero or more characters other than ASCII whitespace and control characters, <, and >. 
+        // An absolute URI, for these purposes, consists of a scheme followed by a colon (:)
+        // followed by zero or more characters other than ASCII whitespace and control characters, <, and >.
         // If the URI includes these characters, they must be percent-encoded (e.g. %20 for a space).
         // A URI that would end with a full stop (.) is treated instead as ending immediately before the full stop.
 
-        // a scheme is any sequence of 2–32 characters 
-        // beginning with an ASCII letter 
+        // a scheme is any sequence of 2–32 characters
+        // beginning with an ASCII letter
         // and followed by any combination of ASCII letters, digits, or the symbols plus (”+”), period (”.”), or hyphen (”-”).
 
         // An email address, for these purposes, is anything that matches the non-normative regex from the HTML5 spec:
@@ -276,7 +294,7 @@ public static class LinkHelper
 
             if (isValidChar)
             {
-                // a scheme is any sequence of 2–32 characters 
+                // a scheme is any sequence of 2–32 characters
                 if (state > 0 && builder.Length >= 32)
                 {
                     goto ReturnFalse;
@@ -307,7 +325,7 @@ public static class LinkHelper
             }
         }
 
-        // append ':' or '@' 
+        // append ':' or '@'
         builder.Append(c);
 
         if (state < 0)
@@ -398,27 +416,39 @@ public static class LinkHelper
         return false;
     }
 
+    /// <summary>
+    /// Attempts to parse inline link.
+    /// </summary>
     public static bool TryParseInlineLink(StringSlice text, out string? link, out string? title)
     {
         return TryParseInlineLink(ref text, out link, out title, out _, out _);
     }
 
+    /// <summary>
+    /// Attempts to parse inline link.
+    /// </summary>
     public static bool TryParseInlineLink(StringSlice text, out string? link, out string? title, out SourceSpan linkSpan, out SourceSpan titleSpan)
     {
         return TryParseInlineLink(ref text, out link, out title, out linkSpan, out titleSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse inline link.
+    /// </summary>
     public static bool TryParseInlineLink(ref StringSlice text, out string? link, out string? title)
     {
         return TryParseInlineLink(ref text, out link, out title, out SourceSpan linkSpan, out SourceSpan titleSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse inline link.
+    /// </summary>
     public static bool TryParseInlineLink(ref StringSlice text, out string? link, out string? title, out SourceSpan linkSpan, out SourceSpan titleSpan)
     {
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
-        // 3. an optional link destination, 
-        // 4. an optional link title separated from the link destination by whitespace, 
+        // 3. an optional link destination,
+        // 4. an optional link title separated from the link destination by whitespace,
         // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
         // 6. and a right parenthesis )
         bool isValid = false;
@@ -429,7 +459,7 @@ public static class LinkHelper
         linkSpan = SourceSpan.Empty;
         titleSpan = SourceSpan.Empty;
 
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         if (c == '(')
         {
             text.SkipChar();
@@ -491,6 +521,9 @@ public static class LinkHelper
         return isValid;
     }
 
+    /// <summary>
+    /// Attempts to parse inline link trivia.
+    /// </summary>
     public static bool TryParseInlineLinkTrivia(
         ref StringSlice text,
         [NotNullWhen(true)] out string? link,
@@ -505,10 +538,10 @@ public static class LinkHelper
         out SourceSpan triviaAfterTitle,
         out bool urlHasPointyBrackets)
     {
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         // 2. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
-        // 3. an optional link destination, 
-        // 4. an optional link title separated from the link destination by whitespace, 
+        // 3. an optional link destination,
+        // 4. an optional link title separated from the link destination by whitespace,
         // 5. optional whitespace,  TODO: specs: is it whitespace or multiple whitespaces?
         // 6. and a right parenthesis )
         bool isValid = false;
@@ -526,7 +559,7 @@ public static class LinkHelper
         urlHasPointyBrackets = false;
         titleEnclosingCharacter = '\0';
 
-        // 1. An inline link consists of a link text followed immediately by a left parenthesis (, 
+        // 1. An inline link consists of a link text followed immediately by a left parenthesis (,
         if (c == '(')
         {
             text.SkipChar();
@@ -597,11 +630,17 @@ public static class LinkHelper
         return isValid;
     }
 
+    /// <summary>
+    /// Attempts to parse title t.
+    /// </summary>
     public static bool TryParseTitle<T>(T text, out string? title) where T : ICharIterator
     {
         return TryParseTitle(ref text, out title, out _);
     }
 
+    /// <summary>
+    /// Attempts to parse title t.
+    /// </summary>
     public static bool TryParseTitle<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
     {
         var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
@@ -681,6 +720,9 @@ public static class LinkHelper
         return false;
     }
 
+    /// <summary>
+    /// Attempts to parse title trivia t.
+    /// </summary>
     public static bool TryParseTitleTrivia<T>(ref T text, out string? title, out char enclosingCharacter) where T : ICharIterator
     {
         var buffer = new ValueStringBuilder(stackalloc char[ValueStringBuilder.StackallocThreshold]);
@@ -760,11 +802,17 @@ public static class LinkHelper
         return false;
     }
 
+    /// <summary>
+    /// Attempts to parse url t.
+    /// </summary>
     public static bool TryParseUrl<T>(T text, [NotNullWhen(true)] out string? link) where T : ICharIterator
     {
         return TryParseUrl(ref text, out link, out _);
     }
 
+    /// <summary>
+    /// Attempts to parse url t.
+    /// </summary>
     public static bool TryParseUrl<T>(ref T text, [NotNullWhen(true)] out string? link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
     {
         bool isValid = false;
@@ -773,7 +821,7 @@ public static class LinkHelper
 
         var c = text.CurrentChar;
 
-        // a sequence of zero or more characters between an opening < and a closing > 
+        // a sequence of zero or more characters between an opening < and a closing >
         // that contains no line breaks, or unescaped < or > characters, or
         if (c == '<')
         {
@@ -820,9 +868,9 @@ public static class LinkHelper
         else
         {
             // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
-            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
-            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
-            // parentheses. 
+            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a
+            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped
+            // parentheses.
             bool hasEscape = false;
             int openedParent = 0;
             while (true)
@@ -914,6 +962,9 @@ public static class LinkHelper
         return isValid;
     }
 
+    /// <summary>
+    /// Attempts to parse url trivia t.
+    /// </summary>
     public static bool TryParseUrlTrivia<T>(ref T text, out string? link, out bool hasPointyBrackets, bool isAutoLink = false) where T : ICharIterator
     {
         bool isValid = false;
@@ -922,7 +973,7 @@ public static class LinkHelper
 
         var c = text.CurrentChar;
 
-        // a sequence of zero or more characters between an opening < and a closing > 
+        // a sequence of zero or more characters between an opening < and a closing >
         // that contains no line breaks, or unescaped < or > characters, or
         if (c == '<')
         {
@@ -969,9 +1020,9 @@ public static class LinkHelper
         else
         {
             // a nonempty sequence of characters that does not start with <, does not include ASCII space or control characters,
-            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a 
-            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped 
-            // parentheses. 
+            // and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a
+            // balanced pair of unescaped parentheses that is not itself inside a balanced pair of unescaped
+            // parentheses.
             bool hasEscape = false;
             int openedParent = 0;
             while (true)
@@ -1076,6 +1127,9 @@ public static class LinkHelper
         return c == '\0' || c.IsSpaceOrTab() || c.IsControl() || (isAutoLink && c == '<'); // TODO: specs unclear. space is strict or relaxed? (includes tabs?)
     }
 
+    /// <summary>
+    /// Determines whether valid domain.
+    /// </summary>
     public static bool IsValidDomain(string link, int prefixLength, bool allowDomainWithoutPeriod = false)
     {
         // https://github.github.com/gfm/#extended-www-autolink
@@ -1127,6 +1181,9 @@ public static class LinkHelper
             segmentCount - lastUnderscoreSegment >= 2; // No underscores are present in the last two segments of the domain
     }
 
+    /// <summary>
+    /// Attempts to parse link reference definition t.
+    /// </summary>
     public static bool TryParseLinkReferenceDefinition<T>(ref T text,
         out string? label,
         out string? url,
@@ -1201,7 +1258,7 @@ public static class LinkHelper
 
         if (c != '\0' && c != '\n' && c != '\r')
         {
-            // If we were able to parse the url but the title doesn't end with space, 
+            // If we were able to parse the url but the title doesn't end with space,
             // we are still returning a valid definition
             if (newLineCount > 0 && title != null)
             {
@@ -1224,6 +1281,9 @@ public static class LinkHelper
         return true;
     }
 
+    /// <summary>
+    /// Attempts to parse link reference definition trivia t.
+    /// </summary>
     public static bool TryParseLinkReferenceDefinitionTrivia<T>(
         ref T text,
         out SourceSpan triviaBeforeLabel,
@@ -1341,7 +1401,7 @@ public static class LinkHelper
 
         if (c != '\0' && c != '\n' && c != '\r')
         {
-            // If we were able to parse the url but the title doesn't end with space, 
+            // If we were able to parse the url but the title doesn't end with space,
             // we are still returning a valid definition
             if (newLineCount > 0 && title != null)
             {
@@ -1381,31 +1441,49 @@ public static class LinkHelper
         return true;
     }
 
+    /// <summary>
+    /// Attempts to parse label t.
+    /// </summary>
     public static bool TryParseLabel<T>(T lines, [NotNullWhen(true)] out string? label) where T : ICharIterator
     {
         return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse label t.
+    /// </summary>
     public static bool TryParseLabel<T>(T lines, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
     {
         return TryParseLabel(ref lines, false, out label, out labelSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse label t.
+    /// </summary>
     public static bool TryParseLabel<T>(ref T lines, [NotNullWhen(true)] out string? label) where T : ICharIterator
     {
         return TryParseLabel(ref lines, false, out label, out SourceSpan labelSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse label t.
+    /// </summary>
     public static bool TryParseLabel<T>(ref T lines, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
     {
         return TryParseLabel(ref lines, false, out label, out labelSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse label trivia t.
+    /// </summary>
     public static bool TryParseLabelTrivia<T>(ref T lines, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
     {
         return TryParseLabelTrivia(ref lines, false, out label, out labelSpan);
     }
 
+    /// <summary>
+    /// Attempts to parse label t.
+    /// </summary>
     public static bool TryParseLabel<T>(ref T lines, bool allowEmpty, [NotNullWhen(true)] out string? label, out SourceSpan labelSpan) where T : ICharIterator
     {
         label = null;
@@ -1521,6 +1599,9 @@ public static class LinkHelper
         return true;
     }
 
+    /// <summary>
+    /// Attempts to parse label trivia t.
+    /// </summary>
     public static bool TryParseLabelTrivia<T>(ref T lines, bool allowEmpty, out string? label, out SourceSpan labelSpan) where T : ICharIterator
     {
         label = null;

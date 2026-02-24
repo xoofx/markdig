@@ -13,6 +13,9 @@ namespace Markdig.Extensions.CustomContainers;
 /// <seealso cref="HtmlObjectRenderer{CustomContainer}" />
 public class HtmlCustomContainerRenderer : HtmlObjectRenderer<CustomContainer>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, CustomContainer obj)
     {
         renderer.EnsureLine();

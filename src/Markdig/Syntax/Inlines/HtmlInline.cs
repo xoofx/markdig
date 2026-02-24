@@ -13,6 +13,9 @@ namespace Markdig.Syntax.Inlines;
 [DebuggerDisplay("{Tag}")]
 public class HtmlInline : LeafInline
 {
+    /// <summary>
+    /// Initializes a new instance of the HtmlInline class.
+    /// </summary>
     public HtmlInline(string tag)
     {
         Tag = tag;

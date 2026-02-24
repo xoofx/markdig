@@ -23,6 +23,9 @@ public class CustomContainerParser : FencedBlockParserBase<CustomContainer>
         InfoPrefix = null;
     }
 
+    /// <summary>
+    /// Performs the create fenced block operation.
+    /// </summary>
     protected override CustomContainer CreateFencedBlock(BlockProcessor processor)
     {
         return new CustomContainer(this);

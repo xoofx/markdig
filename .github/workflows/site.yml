@@ -1,0 +1,23 @@
+name: site
+
+on:
+#  push:
+#    branches:
+#      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.lunet.outputs.page_url }}
+    steps:
+      - id: lunet
+        name: Build and deploy Lunet site
+        uses: lunet-io/actions/lunet-build@v1

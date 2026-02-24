@@ -33,6 +33,9 @@ public class HeadingBlockParser : BlockParser, IAttributesParseable
     /// </summary>
     public TryParseAttributesDelegate? TryParseAttributes { get; set; }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         // If we are in a CodeIndent, early exit
@@ -91,7 +94,7 @@ public class HeadingBlockParser : BlockParser, IAttributesParseable
             {
                 headingBlock.TriviaAfterAtxHeaderChar = trivia;
                 headingBlock.TriviaBefore = processor.UseTrivia(sourcePosition - 1);
-                headingBlock.LinesBefore = processor.UseLinesBefore();
+                headingBlock.LinesBefore = processor.TakeLinesBefore();
                 headingBlock.NewLine = processor.Line.NewLine;
             }
             else
@@ -166,6 +169,9 @@ public class HeadingBlockParser : BlockParser, IAttributesParseable
         return BlockState.None;
     }
 
+    /// <summary>
+    /// Performs the close operation.
+    /// </summary>
     public override bool Close(BlockProcessor processor, Block block)
     {
         if (!processor.TrackTrivia)

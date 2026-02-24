@@ -33,8 +33,14 @@ public class MathBlockParser : FencedBlockParserBase<MathBlock>
         InfoPrefix = null;
     }
 
+    /// <summary>
+    /// Gets or sets the default class.
+    /// </summary>
     public string DefaultClass { get; set; }
 
+    /// <summary>
+    /// Performs the create fenced block operation.
+    /// </summary>
     protected override MathBlock CreateFencedBlock(BlockProcessor processor)
     {
         var block = new MathBlock(this);

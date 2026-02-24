@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Footers;
 /// <seealso cref="HtmlObjectRenderer{FooterBlock}" />
 public class HtmlFooterBlockRenderer : HtmlObjectRenderer<FooterBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, FooterBlock footer)
     {
         renderer.EnsureLine();

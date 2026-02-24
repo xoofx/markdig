@@ -4,6 +4,9 @@
 
 namespace Markdig.Parsers.Inlines;
 
+/// <summary>
+/// Represents the AutolinkOptions type.
+/// </summary>
 public class AutolinkOptions : LinkOptions
 {
     /// <summary>

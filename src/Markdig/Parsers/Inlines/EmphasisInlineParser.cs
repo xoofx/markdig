@@ -21,9 +21,9 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
 {
     private CharacterMap<EmphasisDescriptor>? emphasisMap;
     private readonly DelimitersObjectCache inlinesCache = new();
-
-    [Obsolete("Use TryCreateEmphasisInlineDelegate instead", error: false)]
-    public delegate EmphasisInline CreateEmphasisInlineDelegate(char emphasisChar, bool isStrong);
+    /// <summary>
+    /// Represents the EmphasisInline type.
+    /// </summary>
     public delegate EmphasisInline? TryCreateEmphasisInlineDelegate(char emphasisChar, int delimiterCount);
 
     /// <summary>
@@ -63,12 +63,13 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     }
 
     /// <summary>
-    /// Gets or sets the create emphasis inline delegate (allowing to create a different emphasis inline class)
+    /// Gets or sets the try create emphasis inline list.
     /// </summary>
-    [Obsolete("Use TryCreateEmphasisInlineList instead", error: false)]
-    public CreateEmphasisInlineDelegate? CreateEmphasisInline { get; set; }
     public readonly List<TryCreateEmphasisInlineDelegate> TryCreateEmphasisInlineList = [];
 
+    /// <summary>
+    /// Performs the initialize operation.
+    /// </summary>
     public override void Initialize()
     {
         OpeningCharacters = new char[EmphasisDescriptors.Count];
@@ -91,6 +92,9 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         emphasisMap = new CharacterMap<EmphasisDescriptor>(tempMap);
     }
 
+    /// <summary>
+    /// Performs the post process operation.
+    /// </summary>
     public bool PostProcess(InlineProcessor state, Inline? root, Inline? lastChild, int postInlineProcessorIndex, bool isFinalProcessing)
     {
         if (root is null || !root.IsContainerInline)
@@ -127,7 +131,10 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                 }
 
                 // Follow DelimiterInline (EmphasisDelimiter, TableDelimiter...)
-                child = delimiterInline.FirstChild;
+                // If the delimiter has IsClosed=true (e.g., pipe table delimiter), it has no children
+                // In that case, continue to next sibling instead of stopping
+                var firstChild = delimiterInline.FirstChild;
+                child = firstChild ?? delimiterInline.NextSibling;
             }
             else
             {
@@ -143,6 +150,9 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         return true;
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // First, some definitions.
@@ -294,33 +304,19 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
 
                         // Insert an emph or strong emph node accordingly, after the text node corresponding to the opener.
                         EmphasisInline? emphasis = null;
-                        {
-                            if (delimiterDelta <= 2) // We can try using the legacy delegate
-                            {
-                                #pragma warning disable CS0618 // Support fields marked as obsolete
-                                emphasis = CreateEmphasisInline?.Invoke(closeDelimiter.DelimiterChar, isStrong: delimiterDelta == 2);
-                                #pragma warning restore CS0618 // Support fields marked as obsolete
-                            }
-                            if (emphasis is null)
-                            {
-                                // Go in backwards order to give priority to newer delegates
-                                for (int delegateIndex = TryCreateEmphasisInlineList.Count - 1; delegateIndex >= 0; delegateIndex--)
-                                {
-                                    emphasis = TryCreateEmphasisInlineList[delegateIndex].Invoke(closeDelimiter.DelimiterChar, delimiterDelta);
-                                    if (emphasis != null) break;
-                                }
 
-                                if (emphasis is null)
-                                {
-                                    emphasis = new EmphasisInline()
-                                    {
-                                        DelimiterChar = closeDelimiter.DelimiterChar,
-                                        DelimiterCount = delimiterDelta
-                                    };
-                                }
-                            }
+                        // Go in backwards order to give priority to newer delegates
+                        for (int delegateIndex = TryCreateEmphasisInlineList.Count - 1; delegateIndex >= 0; delegateIndex--)
+                        {
+                            emphasis = TryCreateEmphasisInlineList[delegateIndex].Invoke(closeDelimiter.DelimiterChar, delimiterDelta);
+                            if (emphasis != null) break;
                         }
-                        Debug.Assert(emphasis != null);
+
+                        emphasis ??= new EmphasisInline
+                        {
+                            DelimiterChar = closeDelimiter.DelimiterChar,
+                            DelimiterCount = delimiterDelta
+                        };
 
                         // Update position for emphasis
                         var openDelimitercount = openDelimiter.DelimiterCount;
@@ -430,13 +426,22 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         delimiters.Clear();
     }
 
+    /// <summary>
+    /// Represents the DelimitersObjectCache type.
+    /// </summary>
     public class DelimitersObjectCache : ObjectCache<List<EmphasisDelimiterInline>>
     {
+        /// <summary>
+        /// Performs the new instance operation.
+        /// </summary>
         protected override List<EmphasisDelimiterInline> NewInstance()
         {
             return new List<EmphasisDelimiterInline>(4);
         }
 
+        /// <summary>
+        /// Performs the reset operation.
+        /// </summary>
         protected override void Reset(List<EmphasisDelimiterInline> instance)
         {
             instance.Clear();

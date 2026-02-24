@@ -17,15 +17,27 @@ public abstract class MarkdownObjectRenderer<TRenderer, TObject> : IMarkdownObje
 {
     private OrderedList<TryWriteDelegate>? _tryWriters;
 
+    /// <summary>
+    /// Performs the markdown object renderer operation.
+    /// </summary>
     protected MarkdownObjectRenderer() { }
 
+    /// <summary>
+    /// Represents the bool type.
+    /// </summary>
     public delegate bool TryWriteDelegate(TRenderer renderer, TObject obj);
 
+    /// <summary>
+    /// Performs the accept operation.
+    /// </summary>
     public bool Accept(RendererBase renderer, Type objectType)
     {
         return typeof(TObject).IsAssignableFrom(objectType);
     }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     public virtual void Write(RendererBase renderer, MarkdownObject obj)
     {
         var typedRenderer = (TRenderer)renderer;

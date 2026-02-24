@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Html.Inlines;
 /// <seealso cref="HtmlObjectRenderer{CodeInline}" />
 public class CodeInlineRenderer : HtmlObjectRenderer<CodeInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, CodeInline obj)
     {
         if (renderer.EnableHtmlForInline)

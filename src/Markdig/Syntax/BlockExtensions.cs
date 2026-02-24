@@ -11,6 +11,9 @@ public static class BlockExtensions
 {
     // TODO: Add test for this code
 
+    /// <summary>
+    /// Performs the find block at position operation.
+    /// </summary>
     public static Block? FindBlockAtPosition(this Block rootBlock, int position)
     {
         var contains = rootBlock.CompareToPosition(position) == 0;
@@ -50,12 +53,18 @@ public static class BlockExtensions
         return FindBlockAtPosition(block, position);
     }
 
+    /// <summary>
+    /// Performs the find closest line operation.
+    /// </summary>
     public static int FindClosestLine(this MarkdownDocument root, int line)
     {
         var closestBlock = root.FindClosestBlock(line);
         return closestBlock?.Line ?? 0;
     }
 
+    /// <summary>
+    /// Performs the find closest block operation.
+    /// </summary>
     public static Block? FindClosestBlock(this Block rootBlock, int line)
     {
         if (!(rootBlock is ContainerBlock blocks) || blocks.Count == 0)
@@ -123,11 +132,17 @@ public static class BlockExtensions
     }
 
 
+    /// <summary>
+    /// Performs the contains position operation.
+    /// </summary>
     public static bool ContainsPosition(this Block block, int position)
     {
         return CompareToPosition(block, position) == 0;
     }
 
+    /// <summary>
+    /// Performs the compare to position operation.
+    /// </summary>
     public static int CompareToPosition(this Block block, int position)
     {
         return position < block.Span.Start ? 1 : position > block.Span.End + 1 ? -1 : 0;

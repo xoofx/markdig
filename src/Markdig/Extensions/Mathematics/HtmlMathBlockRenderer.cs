@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Mathematics;
 /// <seealso cref="HtmlObjectRenderer{T}" />
 public class HtmlMathBlockRenderer : HtmlObjectRenderer<MathBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, MathBlock obj)
     {
         renderer.EnsureLine();

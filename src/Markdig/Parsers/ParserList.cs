@@ -19,6 +19,9 @@ public abstract class ParserList<T, TState> : OrderedList<T> where T : notnull, 
     private readonly CharacterMap<T[]> charMap;
     private readonly T[]? globalParsers;
 
+    /// <summary>
+    /// Performs the parser list operation.
+    /// </summary>
     protected ParserList(IEnumerable<T> parsersArg) : base(parsersArg)
     {
         var charCounter = new Dictionary<char, int>();
@@ -38,11 +41,10 @@ public abstract class ParserList<T, TState> : OrderedList<T> where T : notnull, 
             {
                 foreach (var openingChar in parser.OpeningCharacters)
                 {
-                    if (!charCounter.ContainsKey(openingChar))
+                    if (!charCounter.TryAdd(openingChar, 1))
                     {
-                        charCounter[openingChar] = 0;
+                        charCounter[openingChar]++;
                     }
-                    charCounter[openingChar]++;
                 }
             }
             else

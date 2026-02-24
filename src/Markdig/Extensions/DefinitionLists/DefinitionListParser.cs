@@ -21,6 +21,9 @@ public class DefinitionListParser : BlockParser
         OpeningCharacters = [':', '~'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         var paragraphBlock = processor.LastBlock as ParagraphBlock;
@@ -75,7 +78,7 @@ public class DefinitionListParser : BlockParser
         {
             Line = processor.LineIndex,
             Column = column,
-            Span = new SourceSpan(startPosition, processor.Line.End),
+            Span = new SourceSpan(paragraphBlock.Span.Start, processor.Line.End),
             OpeningCharacter = processor.CurrentChar,
         };
 
@@ -121,6 +124,9 @@ public class DefinitionListParser : BlockParser
         return null;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var definitionItem = (DefinitionItem)block;

@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Normalize;
 /// <seealso cref="NormalizeObjectRenderer{QuoteBlock}" />
 public class QuoteBlockRenderer : NormalizeObjectRenderer<QuoteBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, QuoteBlock obj)
     {
         var quoteIndent = renderer.Options.SpaceAfterQuoteBlock ? obj.QuoteChar + " " : obj.QuoteChar.ToString();

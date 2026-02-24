@@ -1,0 +1,8 @@
+home:
+  - {path: readme.md, title: "<i class='bi bi-house-door' aria-hidden='true'></i> Home", self: true}
+  - {path: docs/readme.md, title: "<i class='bi bi-book' aria-hidden='true'></i> Docs", folder: true}
+  - {path: api/readme.md, title: "<i class='bi bi-filetype-cs' aria-hidden='true'></i> API", folder: true}
+
+home2:
+  - {url: "https://github.com/sponsors/xoofx", title: '<i class="bi bi-heart" style="color: pink"></i> Sponsor', link_class: btn btn-outline-secondary }
+  - {url: "https://github.com/xoofx/markdig/", title: '<i class="bi bi-github"></i> GitHub', link_class: btn btn-info}

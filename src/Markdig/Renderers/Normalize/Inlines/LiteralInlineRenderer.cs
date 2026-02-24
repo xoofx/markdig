@@ -13,6 +13,9 @@ namespace Markdig.Renderers.Normalize.Inlines;
 /// <seealso cref="NormalizeObjectRenderer{LiteralInline}" />
 public class LiteralInlineRenderer : NormalizeObjectRenderer<LiteralInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, LiteralInline obj)
     {
         if (obj.IsFirstCharacterEscaped && obj.Content.Length > 0 && obj.Content[obj.Content.Start].IsAsciiPunctuation())

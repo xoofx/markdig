@@ -57,6 +57,9 @@ public class LiteralInline : LeafInline
         set => InternalSpareBit = value;
     }
 
+    /// <summary>
+    /// Performs the to string operation.
+    /// </summary>
     public override string ToString()
     {
         return Content.ToString();

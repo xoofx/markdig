@@ -6,8 +6,14 @@ using Markdig.Syntax;
 
 namespace Markdig.Renderers.Normalize;
 
+/// <summary>
+/// Represents the HtmlBlockRenderer type.
+/// </summary>
 public class HtmlBlockRenderer : NormalizeObjectRenderer<HtmlBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, HtmlBlock obj)
     {
         renderer.WriteLeafRawLines(obj, true, false);

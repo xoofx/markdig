@@ -25,6 +25,9 @@ public class CodeInlineParser : InlineParser
         OpeningCharacters = ['`'];
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         char match = slice.CurrentChar;
@@ -85,7 +88,8 @@ public class CodeInlineParser : InlineParser
                     // We saw the start of a code inline, but the close sticks are not present on the same line.
                     // If the next line starts with a pipe character, this is likely an incomplete CodeInline within a table.
                     // Treat it as regular text to avoid breaking the overall table shape.
-                    if (processor.Inline != null && processor.Inline.ContainsParentOfType<PipeTableDelimiterInline>())
+                    // Use ContainsParentOrSiblingOfType to handle both nested and flat pipe table structures.
+                    if (processor.Inline != null && processor.Inline.ContainsParentOrSiblingOfType<PipeTableDelimiterInline>())
                     {
                         slice.Start = openingStart;
                         return false;

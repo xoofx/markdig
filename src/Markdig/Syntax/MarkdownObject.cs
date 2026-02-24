@@ -63,6 +63,9 @@ public abstract class MarkdownObject : IMarkdownObject
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the MarkdownObject class.
+    /// </summary>
     protected MarkdownObject()
     {
         Span = SourceSpan.Empty;

@@ -14,6 +14,9 @@ namespace Markdig.Parsers.Inlines;
 /// <seealso cref="InlineParser" />
 public sealed class LiteralInlineParser : InlineParser
 {
+    /// <summary>
+    /// Represents the void type.
+    /// </summary>
     public delegate void PostMatchDelegate(InlineProcessor processor, ref StringSlice slice);
 
     /// <summary>
@@ -30,6 +33,9 @@ public sealed class LiteralInlineParser : InlineParser
     /// </summary>
     public PostMatchDelegate? PostMatch { get; set; }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         string text = slice.Text;

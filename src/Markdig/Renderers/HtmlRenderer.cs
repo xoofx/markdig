@@ -73,6 +73,9 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     /// </remarks>
     public bool EnableHtmlForBlock { get; set; }
 
+    /// <summary>
+    /// Gets or sets the enable html escape.
+    /// </summary>
     public bool EnableHtmlEscape { get; set; }
 
     /// <summary>
@@ -80,6 +83,9 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     /// </summary>
     public bool ImplicitParagraph { get; set; }
 
+    /// <summary>
+    /// Gets or sets the use non ascii no escape.
+    /// </summary>
     public bool UseNonAsciiNoEscape { get; set; }
 
     /// <summary>

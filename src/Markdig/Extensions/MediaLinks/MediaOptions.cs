@@ -9,6 +9,9 @@ namespace Markdig.Extensions.MediaLinks;
 /// </summary>
 public class MediaOptions
 {
+    /// <summary>
+    /// Initializes a new instance of the MediaOptions class.
+    /// </summary>
     public MediaOptions()
     {
         Width = "500";
@@ -84,15 +87,33 @@ public class MediaOptions
         Hosts = new List<IHostProvider>(HostProviderBuilder.KnownHosts);
     }
 
+    /// <summary>
+    /// Gets or sets the width.
+    /// </summary>
     public string Width { get; set; }
 
+    /// <summary>
+    /// Gets or sets the height.
+    /// </summary>
     public string Height { get; set; }
 
+    /// <summary>
+    /// Gets or sets the add controls property.
+    /// </summary>
     public bool AddControlsProperty { get; set; }
 
+    /// <summary>
+    /// Gets or sets the class.
+    /// </summary>
     public string Class { get; set; }
 
+    /// <summary>
+    /// Gets the extension to mime type.
+    /// </summary>
     public Dictionary<string, string> ExtensionToMimeType { get; }
 
+    /// <summary>
+    /// Gets the hosts.
+    /// </summary>
     public List<IHostProvider> Hosts { get; }
 }

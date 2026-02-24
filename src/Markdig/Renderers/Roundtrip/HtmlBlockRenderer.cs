@@ -6,8 +6,14 @@ using Markdig.Syntax;
 
 namespace Markdig.Renderers.Roundtrip;
 
+/// <summary>
+/// Represents the HtmlBlockRenderer type.
+/// </summary>
 public class HtmlBlockRenderer : RoundtripObjectRenderer<HtmlBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, HtmlBlock obj)
     {
         renderer.RenderLinesBefore(obj);

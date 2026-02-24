@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 
 using Markdig.Helpers;
 using Markdig.Parsers;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Syntax;
 
@@ -71,6 +72,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return GetEnumerator();
     }
 
+    /// <summary>
+    /// Performs the add operation.
+    /// </summary>
     public void Add(Block item)
     {
         if (item is null)
@@ -108,6 +112,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
+    /// <summary>
+    /// Performs the clear operation.
+    /// </summary>
     public void Clear()
     {
         BlockWrapper[] children = _children;
@@ -119,11 +126,50 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         Count = 0;
     }
 
+    /// <summary>
+    /// Transfers all children from this container to <paramref name="destination"/>.
+    /// </summary>
+    /// <param name="destination">The destination container.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="destination"/> is null.</exception>
+    /// <remarks>
+    /// Child order is preserved. This method does not recompute source or destination spans/trivia.
+    /// </remarks>
+    public void TransferChildrenTo(ContainerBlock destination)
+    {
+        if (destination is null)
+        {
+            ThrowHelper.ArgumentNullException(nameof(destination));
+        }
+
+        if (ReferenceEquals(this, destination))
+        {
+            return;
+        }
+
+        var children = _children;
+        int count = Count;
+        for (int i = 0; i < count && i < children.Length; i++)
+        {
+            var child = children[i].Block;
+            child.Parent = null;
+            children[i] = default;
+            destination.Add(child);
+        }
+
+        Count = 0;
+    }
+
+    /// <summary>
+    /// Performs the contains operation.
+    /// </summary>
     public bool Contains(Block item)
     {
         return IndexOf(item) >= 0;
     }
 
+    /// <summary>
+    /// Performs the copy to operation.
+    /// </summary>
     public void CopyTo(Block[] array, int arrayIndex)
     {
         BlockWrapper[] children = _children;
@@ -133,6 +179,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
+    /// <summary>
+    /// Performs the remove operation.
+    /// </summary>
     public bool Remove(Block item)
     {
         int index = IndexOf(item);
@@ -144,10 +193,19 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return false;
     }
 
+    /// <summary>
+    /// Gets or sets the count.
+    /// </summary>
     public int Count { get; private set; }
 
+    /// <summary>
+    /// Gets or sets the is read only.
+    /// </summary>
     public bool IsReadOnly => false;
 
+    /// <summary>
+    /// Performs the index of operation.
+    /// </summary>
     public int IndexOf(Block item)
     {
         if (item is null)
@@ -164,6 +222,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         return -1;
     }
 
+    /// <summary>
+    /// Performs the insert operation.
+    /// </summary>
     public void Insert(int index, Block item)
     {
         if (item is null)
@@ -190,6 +251,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         item.Parent = this;
     }
 
+    /// <summary>
+    /// Removes at.
+    /// </summary>
     public void RemoveAt(int index)
     {
         if ((uint)index >= (uint)Count)
@@ -206,6 +270,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         _children[Count] = default;
     }
 
+    /// <summary>
+    /// Gets the value at the specified index.
+    /// </summary>
     public Block this[int index]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -238,12 +305,136 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         }
     }
 
+    /// <summary>
+    /// Checks whether this container span is valid with respect to child block spans.
+    /// </summary>
+    /// <param name="recursive">
+    /// When <c>true</c>, validates descendant container blocks and inline containers recursively.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> when this container span contains all direct child spans and recursive checks (if enabled) succeed;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    public bool HasValidSpan(bool recursive = false)
+    {
+        var children = _children;
+        for (int i = 0; i < Count && i < children.Length; i++)
+        {
+            var child = children[i].Block;
+            if (!ContainsSpan(Span, child.Span))
+            {
+                return false;
+            }
+
+            if (!recursive)
+            {
+                continue;
+            }
+
+            if (child is ContainerBlock containerBlock)
+            {
+                if (!containerBlock.HasValidSpan(recursive: true))
+                {
+                    return false;
+                }
+            }
+            else if (child is LeafBlock leafBlock && leafBlock.Inline is ContainerInline inline)
+            {
+                if (!ContainsSpan(leafBlock.Span, inline.Span))
+                {
+                    return false;
+                }
+
+                if (!inline.HasValidSpan(recursive: true))
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Updates this container span from its child block spans.
+    /// </summary>
+    /// <param name="recursive">
+    /// When <c>true</c>, updates descendant container blocks and inline containers recursively before updating this container.
+    /// </param>
+    /// <param name="preserveSelfSpan">
+    /// When <c>true</c>, preserves this container current span and only expands it to include children.
+    /// When <c>false</c>, recomputes from children only.
+    /// </param>
+    /// <returns><c>true</c> when this container span changed; otherwise, <c>false</c>.</returns>
+    public bool UpdateSpanFromChildren(bool recursive = false, bool preserveSelfSpan = true)
+    {
+        var updatedSpan = SourceSpan.Empty;
+        bool hasUpdatedSpan = false;
+
+        if (preserveSelfSpan && !Span.IsEmpty)
+        {
+            updatedSpan = Span;
+            hasUpdatedSpan = true;
+        }
+
+        var children = _children;
+        for (int i = 0; i < Count && i < children.Length; i++)
+        {
+            var child = children[i].Block;
+
+            if (recursive)
+            {
+                if (child is ContainerBlock containerBlock)
+                {
+                    containerBlock.UpdateSpanFromChildren(recursive: true, preserveSelfSpan: preserveSelfSpan);
+                }
+                else if (child is LeafBlock leafBlock && leafBlock.Inline is ContainerInline inline)
+                {
+                    inline.UpdateSpanFromChildren(recursive: true, preserveSelfSpan: preserveSelfSpan);
+
+                    if (!ContainsSpan(leafBlock.Span, inline.Span))
+                    {
+                        if (preserveSelfSpan && !leafBlock.Span.IsEmpty)
+                        {
+                            leafBlock.UpdateSpanToInclude(inline.Span);
+                        }
+                        else
+                        {
+                            leafBlock.Span = inline.Span;
+                        }
+                    }
+                }
+            }
+
+            AppendSpan(ref updatedSpan, ref hasUpdatedSpan, child.Span);
+        }
+
+        if (!hasUpdatedSpan)
+        {
+            updatedSpan = SourceSpan.Empty;
+        }
+
+        if (updatedSpan == Span)
+        {
+            return false;
+        }
+
+        Span = updatedSpan;
+        return true;
+    }
+
+    /// <summary>
+    /// Performs the sort operation.
+    /// </summary>
     public void Sort(IComparer<Block> comparer)
     {
         if (comparer is null) ThrowHelper.ArgumentNullException(nameof(comparer));
         Array.Sort(_children, 0, Count, new BlockComparerWrapper(comparer));
     }
 
+    /// <summary>
+    /// Performs the sort operation.
+    /// </summary>
     public void Sort(Comparison<Block> comparison)
     {
         if (comparison is null) ThrowHelper.ArgumentNullException(nameof(comparison));
@@ -252,6 +443,9 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
 
     #region Nested type: Enumerator
 
+    /// <summary>
+    /// Represents the Enumerator type.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Enumerator : IEnumerator<Block>
     {
@@ -266,14 +460,23 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
             current = null;
         }
 
+        /// <summary>
+        /// Gets or sets the current.
+        /// </summary>
         public Block Current => current!;
 
         object IEnumerator.Current => Current;
 
+        /// <summary>
+        /// Performs the dispose operation.
+        /// </summary>
         public void Dispose()
         {
         }
 
+        /// <summary>
+        /// Performs the move next operation.
+        /// </summary>
         public bool MoveNext()
         {
             if (index < block.Count)
@@ -318,6 +521,38 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
         public int Compare(BlockWrapper x, BlockWrapper y)
         {
             return _comparer.Compare(x.Block, y.Block);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ContainsSpan(in SourceSpan containerSpan, in SourceSpan childSpan)
+    {
+        return childSpan.IsEmpty || (!containerSpan.IsEmpty && childSpan.Start >= containerSpan.Start && childSpan.End <= containerSpan.End);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void AppendSpan(ref SourceSpan destinationSpan, ref bool hasDestinationSpan, in SourceSpan spanToAppend)
+    {
+        if (spanToAppend.IsEmpty)
+        {
+            return;
+        }
+
+        if (!hasDestinationSpan)
+        {
+            destinationSpan = spanToAppend;
+            hasDestinationSpan = true;
+            return;
+        }
+
+        if (spanToAppend.Start < destinationSpan.Start)
+        {
+            destinationSpan.Start = spanToAppend.Start;
+        }
+
+        if (spanToAppend.End > destinationSpan.End)
+        {
+            destinationSpan.End = spanToAppend.End;
         }
     }
 }

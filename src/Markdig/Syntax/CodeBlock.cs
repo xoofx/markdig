@@ -15,12 +15,21 @@ namespace Markdig.Syntax;
 /// </remarks>
 public class CodeBlock : LeafBlock
 {
+    /// <summary>
+    /// Represents the CodeBlockLine type.
+    /// </summary>
     public class CodeBlockLine
     {
+        /// <summary>
+        /// Gets or sets the trivia before.
+        /// </summary>
         public StringSlice TriviaBefore { get; set; }
     }
 
     private List<CodeBlockLine>? _codeBlockLines;
+    /// <summary>
+    /// Gets or sets the code block lines.
+    /// </summary>
     public List<CodeBlockLine> CodeBlockLines => _codeBlockLines ??= [];
 
     /// <summary>

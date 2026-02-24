@@ -17,6 +17,9 @@ namespace Markdig.Extensions.Bootstrap;
 /// <seealso cref="IMarkdownExtension" />
 public class BootstrapExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         // Make sure we don't have a delegate twice
@@ -24,6 +27,9 @@ public class BootstrapExtension : IMarkdownExtension
         pipeline.DocumentProcessed += PipelineOnDocumentProcessed;
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

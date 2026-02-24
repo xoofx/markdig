@@ -36,11 +36,17 @@ public class AutoLinkParser : InlineParser
         _validPreviousCharacters = SearchValues.Create(options.ValidPreviousCharacters);
     }
 
+    /// <summary>
+    /// Gets or sets the options.
+    /// </summary>
     public readonly AutoLinkOptions Options;
 
     private readonly SearchValues<char> _validPreviousCharacters;
 
     // This is a particularly expensive parser as it gets called for many common letters.
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // Previous char must be a whitespace or a punctuation

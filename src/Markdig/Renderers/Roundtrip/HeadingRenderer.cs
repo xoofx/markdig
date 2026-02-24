@@ -21,6 +21,9 @@ public class HeadingRenderer : RoundtripObjectRenderer<HeadingBlock>
         "######",
     ];
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, HeadingBlock obj)
     {
         if (obj.IsSetext)

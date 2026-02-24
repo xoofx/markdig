@@ -34,19 +34,22 @@ public class LinkReferenceDefinitionGroup : ContainerBlock
     /// </summary>
     public Dictionary<string, LinkReferenceDefinition> Links { get; }
 
+    /// <summary>
+    /// Performs the set operation.
+    /// </summary>
     public void Set(string label, LinkReferenceDefinition link)
     {
         if (link is null) ThrowHelper.ArgumentNullException(nameof(link));
         if (!Contains(link))
         {
             Add(link);
-            if (!Links.ContainsKey(label))
-            {
-                Links[label] = link;
-            }
+            Links.TryAdd(label, link);
         }
     }
 
+    /// <summary>
+    /// Attempts to get.
+    /// </summary>
     public bool TryGet(string label, [NotNullWhen(true)] out LinkReferenceDefinition? link)
     {
         return Links.TryGetValue(label, out link);

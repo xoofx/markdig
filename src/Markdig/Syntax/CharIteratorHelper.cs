@@ -11,11 +11,17 @@ namespace Markdig.Syntax;
 /// </summary>
 public static class CharIteratorHelper
 {
+    /// <summary>
+    /// Performs the trim start and count new lines t operation.
+    /// </summary>
     public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines) where T : ICharIterator
     {
         return TrimStartAndCountNewLines(ref iterator, out countNewLines, out _);
     }
 
+    /// <summary>
+    /// Performs the trim start and count new lines t operation.
+    /// </summary>
     public static bool TrimStartAndCountNewLines<T>(ref T iterator, out int countNewLines, out NewLine lastLine) where T : ICharIterator
     {
         countNewLines = 0;

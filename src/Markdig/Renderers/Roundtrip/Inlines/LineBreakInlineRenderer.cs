@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{LineBreakInline}" />
 public class LineBreakInlineRenderer : RoundtripObjectRenderer<LineBreakInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, LineBreakInline obj)
     {
         if (obj.IsHard && obj.IsBackslash)

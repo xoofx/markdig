@@ -27,6 +27,9 @@ public class PipeTableExtension : IMarkdownExtension
     /// </summary>
     public PipeTableOptions Options { get; }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         // Pipe tables require precise source location
@@ -38,10 +41,13 @@ public class PipeTableExtension : IMarkdownExtension
         var lineBreakParser = pipeline.InlineParsers.FindExact<LineBreakInlineParser>();
         if (!pipeline.InlineParsers.Contains<PipeTableParser>())
         {
-            pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
+            pipeline.InlineParsers.InsertAfter<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer && !htmlRenderer.ObjectRenderers.Contains<HtmlTableRenderer>())

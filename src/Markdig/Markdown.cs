@@ -19,6 +19,9 @@ namespace Markdig;
 /// </summary>
 public static class Markdown
 {
+    /// <summary>
+    /// Gets or sets the version.
+    /// </summary>
     [field: MaybeNull]
     public static string Version => field ??= typeof(Markdown).Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
 

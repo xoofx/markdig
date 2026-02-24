@@ -17,11 +17,17 @@ public class JiraLinkExtension : IMarkdownExtension
 {
     private readonly JiraLinkOptions _options;
 
+    /// <summary>
+    /// Initializes a new instance of the JiraLinkExtension class.
+    /// </summary>
     public JiraLinkExtension(JiraLinkOptions options)
     {
         _options = options;
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.InlineParsers.Contains<JiraLinkInlineParser>())
@@ -31,6 +37,9 @@ public class JiraLinkExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         // No HTML renderer required, since JiraLink type derives from InlineLink (which already has an HTML renderer)

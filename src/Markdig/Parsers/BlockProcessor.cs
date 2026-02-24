@@ -39,6 +39,9 @@ public class BlockProcessor
 
     private BlockProcessor() { }
 
+    /// <summary>
+    /// Gets or sets the skip first unwind space.
+    /// </summary>
     public bool SkipFirstUnwindSpace { get; set; }
 
     /// <summary>
@@ -177,14 +180,15 @@ public class BlockProcessor
     }
 
     /// <summary>
-    /// Returns the current stack of <see cref="LinesBefore"/> to assign it to a <see cref="Block"/>.
-    /// Afterwards, the <see cref="LinesBefore"/> is set to null.
+    /// Takes the current stack of <see cref="LinesBefore"/> to assign it to a <see cref="Block"/>.
+    /// Afterwards, <see cref="LinesBefore"/> is set to null.
     /// </summary>
-    internal List<StringSlice> UseLinesBefore()
+    /// <returns>The pending list of lines before the current block, or <c>null</c> if none.</returns>
+    public List<StringSlice>? TakeLinesBefore()
     {
         var linesBefore = LinesBefore;
         LinesBefore = null;
-        return linesBefore!;
+        return linesBefore;
     }
 
     /// <summary>
@@ -470,15 +474,30 @@ public class BlockProcessor
     /// <param name="block">The block.</param>
     public void Discard(Block block)
     {
+        _ = TryDiscard(block);
+    }
+
+    /// <summary>
+    /// Tries to discard the specified block from the open stack and remove it from its parent.
+    /// </summary>
+    /// <param name="block">The block to discard.</param>
+    /// <returns><c>true</c> if the block was discarded; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="block"/> is null.</exception>
+    public bool TryDiscard(Block block)
+    {
+        if (block is null) ThrowHelper.ArgumentNullException(nameof(block));
+
         for (int i = OpenedBlocks.Count - 1; i >= 1; i--)
         {
             if (ReferenceEquals(OpenedBlocks[i].Block, block))
             {
                 block.Parent!.Remove(block);
                 OpenedBlocks.RemoveAt(i);
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     /// <summary>
@@ -530,8 +549,14 @@ public class BlockProcessor
         CloseAll(false);
     }
 
-    internal bool IsOpen(Block block)
+    /// <summary>
+    /// Checks whether the specified block is currently part of the open block stack.
+    /// </summary>
+    /// <param name="block">The block to check.</param>
+    /// <returns><c>true</c> if the block is open; otherwise <c>false</c>.</returns>
+    public bool IsOpen(Block block)
     {
+        if (block is null) ThrowHelper.ArgumentNullException(nameof(block));
         return OpenedBlocks.Contains(block);
     }
 
@@ -589,16 +614,22 @@ public class BlockProcessor
                     if (LinesBefore.Count == 1)
                     {
                         block.LinesAfter ??= new List<StringSlice>();
-                        var linesBefore = UseLinesBefore();
-                        block.LinesAfter.AddRange(linesBefore);
+                        var linesBefore = TakeLinesBefore();
+                        if (linesBefore != null)
+                        {
+                            block.LinesAfter.AddRange(linesBefore);
+                        }
                     }
                     else
                     {
                         // attach multiple lines after to the root most parent ContainerBlock
                         var rootMostContainerBlock = Block.FindRootMostContainerParent(block);
                         rootMostContainerBlock.LinesAfter ??= new List<StringSlice>();
-                        var linesBefore = UseLinesBefore();
-                        rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        var linesBefore = TakeLinesBefore();
+                        if (linesBefore != null)
+                        {
+                            rootMostContainerBlock.LinesAfter.AddRange(linesBefore);
+                        }
                     }
                 }
             }
@@ -921,6 +952,7 @@ public class BlockProcessor
         while (newBlocks.Count > 0)
         {
             var block = newBlocks.Pop();
+            Debug.Assert(block.Parser is not null, $"The new block [{block.GetType()}] must have a valid Parser property");
 
             if (block.Parser is null)
             {
@@ -947,6 +979,7 @@ public class BlockProcessor
 
                 if (newBlocks.Count > 0)
                 {
+                    Debug.Assert(false, "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
                     ThrowHelper.InvalidOperationException(
                         "The NewBlocks is not empty. This is happening if a LeafBlock is not the last to be pushed");
                 }
@@ -1033,8 +1066,14 @@ public class BlockProcessor
         LinesBefore = null;
     }
 
+    /// <summary>
+    /// Performs the create child operation.
+    /// </summary>
     public BlockProcessor CreateChild() => Rent(Document, Parsers, Context, TrackTrivia);
 
+    /// <summary>
+    /// Performs the release child operation.
+    /// </summary>
     public void ReleaseChild() => Release(this);
 
     private static readonly BlockProcessorCache _cache = new();

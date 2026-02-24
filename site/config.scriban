@@ -1,0 +1,65 @@
+# Markdig documentation site.
+# Build from this folder with:
+#   lunet build
+#   lunet serve
+#
+# This site uses the shared template published as a Lunet extension.
+extend "lunet-io/templates"
+
+template_theme_default_mode = "dark"
+
+# -----------------------------------------------------------------------------
+# SITE SECTION (project-specific values only)
+# -----------------------------------------------------------------------------
+
+# Canonical base URL used for `lunet build` (links, og:meta, sitemap...).
+site_project_baseurl = "https://xoofx.github.io"
+site_project_basepath = "/markdig"
+site_project_name = "Markdig"
+site_project_description = "A fast, powerful, CommonMark compliant, extensible Markdown processor for .NET."
+site_project_logo_path = "/img/markdig.svg"
+site_project_social_banner_path = "/img/github-banner.png"
+site_project_package_id = "Markdig"
+site_project_github_user = "xoofx"
+site_project_github_repo = "markdig"
+site_project_owner_name = "Alexandre Mutel"
+site_project_owner_alias = "xoofx"
+site_project_owner_url = "https://xoofx.github.io"
+
+site_project_init
+
+# Playground API URL - override with https://localhost:5001 for local development
+playground_api_url = environment == "dev" ? "https://localhost:5001" : "https://markdig.azurewebsites.net/"
+log.info $"Using playground API URL: {playground_api_url}"
+
+# -----------------------------------------------------------------------------
+# Customize the template bundle (e.g., add custom JS/CSS resources)
+# -----------------------------------------------------------------------------
+with bundle
+    mermaid = resource "npm:mermaid" "11.12.3"
+    js mermaid "/dist/mermaid.min.js"
+
+    katex = resource "npm:katex" "0.16.28"
+    js katex "/dist/katex.min.js"
+    js katex "/dist/contrib/auto-render.min.js"
+    css katex "/dist/katex.min.css"
+end
+
+# -----------------------------------------------------------------------------
+# API reference (.NET)
+# -----------------------------------------------------------------------------
+with api.dotnet
+    title = "Markdig .NET API Reference"
+    path = "/api"
+    menu_name = "api"
+    menu_title = "API Reference"
+    properties = {
+        TargetFramework: "net10.0"
+    }
+    projects = [
+        {
+            name: "Markdig",
+            path: "../src/Markdig/Markdig.csproj"
+        }
+    ]
+end

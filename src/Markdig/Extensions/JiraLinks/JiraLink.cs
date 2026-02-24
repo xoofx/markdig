@@ -14,6 +14,9 @@ namespace Markdig.Extensions.JiraLinks;
 [DebuggerDisplay("{ProjectKey}-{Issue}")]
 public class JiraLink : LinkInline
 {
+    /// <summary>
+    /// Initializes a new instance of the JiraLink class.
+    /// </summary>
     public JiraLink()
     {
         IsClosed = true;

@@ -34,6 +34,9 @@ public class TaskListInlineParser : InlineParser
     /// </summary>
     public string ListItemClass { get; set; }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // A tasklist is either

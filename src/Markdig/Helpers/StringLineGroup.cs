@@ -113,6 +113,9 @@ public struct StringLineGroup : IEnumerable
         Lines[Count++] = new StringLine(ref slice);
     }
 
+    /// <summary>
+    /// Performs the to string operation.
+    /// </summary>
     public readonly override string ToString()
     {
         return ToSlice().ToString();
@@ -187,24 +190,42 @@ public struct StringLineGroup : IEnumerable
         }
     }
 
+    /// <summary>
+    /// Gets or sets the enumerator.
+    /// </summary>
+    /// <summary>
+    /// Represents the Enumerator type.
+    /// </summary>
     public struct Enumerator(StringLineGroup parent) : IEnumerator
     {
         private readonly StringLineGroup _parent = parent;
         private int _index = -1;
 
+        /// <summary>
+        /// Gets or sets the current.
+        /// </summary>
         public object Current => _parent.Lines[_index];
 
+        /// <summary>
+        /// Performs the move next operation.
+        /// </summary>
         public bool MoveNext()
         {
             return ++_index < _parent.Count;
         }
 
+        /// <summary>
+        /// Performs the reset operation.
+        /// </summary>
         public void Reset()
         {
             _index = -1;
         }
     }
     
+    /// <summary>
+    /// Gets enumerator.
+    /// </summary>
     public Enumerator GetEnumerator()
     {
         return new Enumerator(this);
@@ -245,6 +266,9 @@ public struct StringLineGroup : IEnumerable
         private StringSlice _currentSlice;
         private int _offset;
 
+        /// <summary>
+        /// Initializes a new instance of the Iterator class.
+        /// </summary>
         public Iterator(StringLineGroup stringLineGroup)
         {
             _lines = stringLineGroup;
@@ -263,16 +287,34 @@ public struct StringLineGroup : IEnumerable
             SkipChar();
         }
 
+        /// <summary>
+        /// Gets or sets the start.
+        /// </summary>
         public int Start { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the current char.
+        /// </summary>
         public char CurrentChar { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the end.
+        /// </summary>
         public int End { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the is empty.
+        /// </summary>
         public readonly bool IsEmpty => Start > End;
 
+        /// <summary>
+        /// Gets or sets the slice index.
+        /// </summary>
         public int SliceIndex { get; private set; }
 
+        /// <summary>
+        /// Performs the remaining operation.
+        /// </summary>
         public StringLineGroup Remaining()
         {
             StringLineGroup lines = _lines;
@@ -295,6 +337,9 @@ public struct StringLineGroup : IEnumerable
             return lines;
         }
 
+        /// <summary>
+        /// Performs the next char operation.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public char NextChar()
         {
@@ -376,11 +421,20 @@ public struct StringLineGroup : IEnumerable
             return '\0';
         }
 
+        /// <summary>
+        /// Performs the skip char operation.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SkipChar() => NextChar();
 
+        /// <summary>
+        /// Performs the peek char operation.
+        /// </summary>
         public readonly char PeekChar() => PeekChar(1);
 
+        /// <summary>
+        /// Performs the peek char operation.
+        /// </summary>
         public readonly char PeekChar(int offset)
         {
             if (offset < 0) ThrowHelper.ArgumentOutOfRangeException("Negative offset are not supported for StringLineGroup", nameof(offset));
@@ -435,6 +489,9 @@ public struct StringLineGroup : IEnumerable
             return slice[slice.Start + offset];
         }
 
+        /// <summary>
+        /// Performs the trim start operation.
+        /// </summary>
         public bool TrimStart()
         {
             var c = CurrentChar;
@@ -446,6 +503,12 @@ public struct StringLineGroup : IEnumerable
         }
     }
 
+    /// <summary>
+    /// Gets or sets the line offset.
+    /// </summary>
+    /// <summary>
+    /// Represents the LineOffset type.
+    /// </summary>
     public readonly struct LineOffset(
         int linePosition,
         int column,
@@ -453,14 +516,29 @@ public struct StringLineGroup : IEnumerable
         int start,
         int end)
     {
+        /// <summary>
+        /// Gets or sets the line position.
+        /// </summary>
         public readonly int LinePosition = linePosition;
 
+        /// <summary>
+        /// Gets or sets the column.
+        /// </summary>
         public readonly int Column = column;
 
+        /// <summary>
+        /// Gets or sets the offset.
+        /// </summary>
         public readonly int Offset = offset;
 
+        /// <summary>
+        /// Gets or sets the start.
+        /// </summary>
         public readonly int Start = start;
 
+        /// <summary>
+        /// Gets or sets the end.
+        /// </summary>
         public readonly int End = end;
     }
 }

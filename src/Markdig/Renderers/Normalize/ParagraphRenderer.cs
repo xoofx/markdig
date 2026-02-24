@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Normalize;
 /// <seealso cref="NormalizeObjectRenderer{ParagraphBlock}" />
 public class ParagraphRenderer : NormalizeObjectRenderer<ParagraphBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, ParagraphBlock obj)
     {
         renderer.WriteLeafInline(obj);

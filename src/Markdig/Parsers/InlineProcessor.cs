@@ -115,6 +115,9 @@ public class InlineProcessor
     /// </summary>
     public LiteralInlineParser LiteralInlineParser { get; } = new();
 
+    /// <summary>
+    /// Gets source position from local span.
+    /// </summary>
     public SourceSpan GetSourcePositionFromLocalSpan(SourceSpan span)
     {
         if (span.IsEmpty)
@@ -206,13 +209,22 @@ public class InlineProcessor
     }
 
     /// <summary>
-    /// Replace a parent container. This method is experimental and should be used with caution.
+    /// Requests a replacement for a parent container while processing the current leaf block.
     /// </summary>
-    /// <param name="previousParentContainer">The previous parent container to replace</param>
-    /// <param name="newParentContainer">The new parent container</param>
-    /// <exception cref="InvalidOperationException">If a new parent container has been already setup.</exception>
-    internal void ReplaceParentContainer(ContainerBlock previousParentContainer, ContainerBlock newParentContainer)
+    /// <param name="previousParentContainer">The parent container that has already been replaced in the block tree.</param>
+    /// <param name="newParentContainer">The replacement parent container.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="previousParentContainer"/> or <paramref name="newParentContainer"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if a replacement has already been requested for this leaf processing pass.</exception>
+    /// <remarks>
+    /// This method does not perform the replacement in the block tree. Callers must already update
+    /// the AST (replace the parent block and transfer children as needed). This method only synchronizes
+    /// the traversal state used by <see cref="MarkdownParser.ProcessInlines"/>.
+    /// </remarks>
+    public void ReplaceParentContainer(ContainerBlock previousParentContainer, ContainerBlock newParentContainer)
     {
+        if (previousParentContainer is null) ThrowHelper.ArgumentNullException(nameof(previousParentContainer));
+        if (newParentContainer is null) ThrowHelper.ArgumentNullException(nameof(newParentContainer));
+
         // Limitation for now, only one parent container can be replaced.
         if (PreviousContainerToReplace != null)
         {
@@ -375,6 +387,9 @@ public class InlineProcessor
         }
     }
 
+    /// <summary>
+    /// Performs the post process inlines operation.
+    /// </summary>
     public void PostProcessInlines(int startingIndex, Inline? root, Inline? lastChild, bool isFinalProcessing)
     {
         for (int i = startingIndex; i < Parsers.PostInlineProcessors.Length; i++)
@@ -385,6 +400,92 @@ public class InlineProcessor
                 break;
             }
         }
+    }
+
+    /// <summary>
+    /// Gets or creates a parser state instance scoped to the current leaf processing pass.
+    /// </summary>
+    /// <typeparam name="TState">The type of state to get or create.</typeparam>
+    /// <param name="parser">The parser requesting the state.</param>
+    /// <param name="factory">A factory used to create a state instance when none exists yet.</param>
+    /// <returns>The existing or newly created state instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="parser"/> or <paramref name="factory"/> is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if <paramref name="factory"/> returns <c>null</c>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public TState GetParserState<TState>(InlineParser parser, Func<TState> factory) where TState : class
+    {
+        if (parser is null) ThrowHelper.ArgumentNullException(nameof(parser));
+        if (factory is null) ThrowHelper.ArgumentNullException(nameof(factory));
+
+        ref var slot = ref ParserStates[parser.Index];
+        if (slot is TState state)
+        {
+            return state;
+        }
+
+        state = factory();
+        if (state is null)
+        {
+            ThrowHelper.InvalidOperationException($"The state factory for [{typeof(TState)}] returned null");
+        }
+
+        slot = state;
+        return state;
+    }
+
+    /// <summary>
+    /// Gets or creates a parser state instance scoped to the current leaf processing pass.
+    /// </summary>
+    /// <typeparam name="TState">The type of state to get or create.</typeparam>
+    /// <param name="parser">The parser requesting the state.</param>
+    /// <returns>The existing or newly created state instance.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public TState GetParserState<TState>(InlineParser parser) where TState : class, new()
+    {
+        return GetParserState(parser, static () => new TState());
+    }
+
+    /// <summary>
+    /// Emits an inline into the deepest open inline container for the current leaf.
+    /// </summary>
+    /// <param name="inline">The inline to emit.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="inline"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="inline"/> is already attached to a parent.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Emit(Inline inline)
+    {
+        if (inline is null) ThrowHelper.ArgumentNullException(nameof(inline));
+        if (inline.Parent is not null)
+        {
+            ThrowHelper.ArgumentException("Inline has already a parent", nameof(inline));
+        }
+
+        var container = FindLastContainer();
+        container.AppendChild(inline);
+
+        if (ReferenceEquals(container, Root) && !inline.Span.IsEmpty)
+        {
+            if (container.Span.IsEmpty)
+            {
+                container.Span = inline.Span;
+            }
+            else
+            {
+                if (inline.Span.Start < container.Span.Start)
+                {
+                    container.Span.Start = inline.Span.Start;
+                }
+
+                if (inline.Span.End > container.Span.End)
+                {
+                    container.Span.End = inline.Span.End;
+                }
+            }
+
+            Block?.UpdateSpanToInclude(inline.Span);
+        }
+
+        Inline = inline;
     }
 
     private ContainerInline FindLastContainer()

@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Tables;
 /// <seealso cref="DelimiterInline" />
 public class PipeTableDelimiterInline : DelimiterInline
 {
+    /// <summary>
+    /// Initializes a new instance of the PipeTableDelimiterInline class.
+    /// </summary>
     public PipeTableDelimiterInline(InlineParser parser) : base(parser)
     {
     }
@@ -22,6 +25,9 @@ public class PipeTableDelimiterInline : DelimiterInline
     /// </summary>
     public int LocalLineIndex { get; set; }
 
+    /// <summary>
+    /// Performs the to literal operation.
+    /// </summary>
     public override string ToLiteral()
     {
         return "|";

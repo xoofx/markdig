@@ -20,11 +20,17 @@ public class FootnoteParser : BlockParser
     /// </summary>
     private static readonly object DocumentKey = typeof(Footnote);
 
+    /// <summary>
+    /// Initializes a new instance of the FootnoteParser class.
+    /// </summary>
     public FootnoteParser()
     {
         OpeningCharacters = ['['];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         return TryOpen(processor, false);
@@ -86,6 +92,9 @@ public class FootnoteParser : BlockParser
         return BlockState.Continue;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         var footnote = (Footnote) block;

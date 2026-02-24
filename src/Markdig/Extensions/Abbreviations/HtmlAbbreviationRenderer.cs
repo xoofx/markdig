@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Abbreviations;
 /// <seealso cref="HtmlObjectRenderer{CustomContainer}" />
 public class HtmlAbbreviationRenderer : HtmlObjectRenderer<AbbreviationInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, AbbreviationInline obj)
     {
         // <abbr title="Hyper Text Markup Language">HTML</abbr>

@@ -13,6 +13,9 @@ namespace Markdig.Extensions.Figures;
 /// <seealso cref="HtmlObjectRenderer{Figure}" />
 public class HtmlFigureRenderer : HtmlObjectRenderer<Figure>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, Figure obj)
     {
         renderer.EnsureLine();

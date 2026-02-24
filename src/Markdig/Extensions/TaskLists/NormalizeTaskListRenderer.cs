@@ -6,8 +6,14 @@ using Markdig.Renderers.Normalize;
 
 namespace Markdig.Extensions.TaskLists;
 
+/// <summary>
+/// Represents the NormalizeTaskListRenderer type.
+/// </summary>
 public class NormalizeTaskListRenderer : NormalizeObjectRenderer<TaskList>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, TaskList obj)
     {
         renderer.Write("[");

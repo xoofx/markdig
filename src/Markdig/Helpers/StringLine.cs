@@ -90,6 +90,9 @@ public struct StringLine
         return line.Slice;
     }
 
+    /// <summary>
+    /// Performs the to string operation.
+    /// </summary>
     public readonly override string ToString()
     {
         return Slice.ToString();

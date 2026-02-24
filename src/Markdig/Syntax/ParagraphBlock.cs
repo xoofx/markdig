@@ -32,5 +32,8 @@ public class ParagraphBlock : LeafBlock
         IsParagraphBlock = true;
     }
 
+    /// <summary>
+    /// Gets or sets the last line.
+    /// </summary>
     public int LastLine => Line + Lines.Count - 1;
 }

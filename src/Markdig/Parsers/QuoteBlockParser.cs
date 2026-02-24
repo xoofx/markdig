@@ -21,6 +21,9 @@ public class QuoteBlockParser : BlockParser
         OpeningCharacters = ['>'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         if (processor.IsCodeIndent)
@@ -45,7 +48,7 @@ public class QuoteBlockParser : BlockParser
 
         if (processor.TrackTrivia)
         {
-            quoteBlock.LinesBefore = processor.UseLinesBefore();
+            quoteBlock.LinesBefore = processor.TakeLinesBefore();
         }
 
         bool hasSpaceAfterQuoteChar = false;
@@ -91,6 +94,9 @@ public class QuoteBlockParser : BlockParser
         return BlockState.Continue;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         if (processor.IsCodeIndent)

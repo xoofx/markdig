@@ -17,6 +17,9 @@ public class LineBreakInlineRenderer : HtmlObjectRenderer<LineBreakInline>
     /// </summary>
     public bool RenderAsHardlineBreak { get; set; }
 
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(HtmlRenderer renderer, LineBreakInline obj)
     {
         if (renderer.IsLastInContainer) return;

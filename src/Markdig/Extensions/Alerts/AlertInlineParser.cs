@@ -26,6 +26,9 @@ public class AlertInlineParser : InlineParser
         OpeningCharacters = ['['];
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         if (slice.PeekChar() != '!')
@@ -113,20 +116,7 @@ public class AlertInlineParser : InlineParser
         attributes.AddClass("markdown-alert");
         attributes.AddClass(s_alertTypeClassCache.Get(alertType.AsSpan()));
 
-        // Replace the quote block with the alert block
-        var parentQuoteBlock = quoteBlock.Parent!;
-        var indexOfQuoteBlock = parentQuoteBlock.IndexOf(quoteBlock);
-        parentQuoteBlock[indexOfQuoteBlock] = alertBlock;
-
-        while (quoteBlock.Count > 0)
-        {
-            var block = quoteBlock[0];
-            quoteBlock.RemoveAt(0);
-            alertBlock.Add(block);
-        }
-
-        // Workaround to replace the parent container
-        // Experimental API, so we are keeping it internal for now until we are sure it's the way we want to go
+        quoteBlock.ReplaceBy(alertBlock);
         processor.ReplaceParentContainer(quoteBlock, alertBlock);
 
         return true;

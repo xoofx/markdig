@@ -25,6 +25,9 @@ public class PipeTableBlockParser : BlockParser
         OpeningCharacters = ['-'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         // Only if we have already a paragraph

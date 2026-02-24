@@ -12,6 +12,9 @@ namespace Markdig.Extensions.Mathematics;
 /// <seealso cref="IMarkdownExtension" />
 public class MathExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         // Adds the inline parser
@@ -28,6 +31,9 @@ public class MathExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

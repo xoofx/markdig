@@ -15,11 +15,17 @@ namespace Markdig.Parsers;
 /// <seealso cref="BlockParser" />
 public class IndentedCodeBlockParser : BlockParser
 {
+    /// <summary>
+    /// Determines whether interrupt.
+    /// </summary>
     public override bool CanInterrupt(BlockProcessor processor, Block block)
     {
         return !block.IsParagraphBlock;
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         var result = TryContinue(processor, null);
@@ -40,7 +46,7 @@ public class IndentedCodeBlockParser : BlockParser
 
             if (processor.TrackTrivia)
             {
-                codeBlock.LinesBefore = processor.UseLinesBefore();
+                codeBlock.LinesBefore = processor.TakeLinesBefore();
                 codeBlock.NewLine = processor.Line.NewLine;
             }
 
@@ -57,6 +63,9 @@ public class IndentedCodeBlockParser : BlockParser
         return result;
     }
 
+    /// <summary>
+    /// Attempts to continue parsing the specified block.
+    /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block? block)
     {
         if (!processor.IsCodeIndent || processor.IsBlankLine)
@@ -115,6 +124,9 @@ public class IndentedCodeBlockParser : BlockParser
         return BlockState.Continue;
     }
 
+    /// <summary>
+    /// Performs the close operation.
+    /// </summary>
     public override bool Close(BlockProcessor processor, Block block)
     {
         var codeBlock = (CodeBlock)block;

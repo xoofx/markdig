@@ -23,5 +23,8 @@ public class AbbreviationInline : LeafInline
         Abbreviation = abbreviation;
     }
 
+    /// <summary>
+    /// Gets or sets the abbreviation.
+    /// </summary>
     public Abbreviation Abbreviation { get; set; }
 }

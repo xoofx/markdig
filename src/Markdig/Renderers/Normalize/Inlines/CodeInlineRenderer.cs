@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Normalize.Inlines;
 /// <seealso cref="NormalizeObjectRenderer{CodeInline}" />
 public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, CodeInline obj)
     {
         var delimiterCount = 0;

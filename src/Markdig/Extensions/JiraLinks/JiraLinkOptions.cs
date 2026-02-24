@@ -22,6 +22,9 @@ public class JiraLinkOptions : LinkOptions
     /// </summary>
     public string BasePath { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the JiraLinkOptions class.
+    /// </summary>
     public JiraLinkOptions(string baseUrl)
     {
         OpenInNewWindow = true; //default

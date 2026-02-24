@@ -12,6 +12,9 @@ namespace Markdig.Extensions.Footnotes;
 /// <seealso cref="Inline" />
 public class FootnoteLink : Inline
 {
+    /// <summary>
+    /// Initializes a new instance of the FootnoteLink class.
+    /// </summary>
     public FootnoteLink(Footnote footnote)
     {
         Footnote = footnote;

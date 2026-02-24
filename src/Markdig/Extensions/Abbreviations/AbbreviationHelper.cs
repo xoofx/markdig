@@ -14,11 +14,17 @@ public static class AbbreviationHelper
 {
     private static readonly object DocumentKey = typeof (Abbreviation);
 
+    /// <summary>
+    /// Determines whether abbreviations.
+    /// </summary>
     public static bool HasAbbreviations(this MarkdownDocument document)
     {
         return document.GetAbbreviations() != null;
     }
 
+    /// <summary>
+    /// Adds abbreviation.
+    /// </summary>
     public static void AddAbbreviation(this MarkdownDocument document, string label, Abbreviation abbr)
     {
         if (document is null) ThrowHelper.ArgumentNullException(nameof(document));
@@ -34,6 +40,9 @@ public static class AbbreviationHelper
         map[label] = abbr;
     }
 
+    /// <summary>
+    /// Gets abbreviations.
+    /// </summary>
     public static Dictionary<string, Abbreviation>? GetAbbreviations(this MarkdownDocument document)
     {
         return document.GetData(DocumentKey) as Dictionary<string, Abbreviation>;

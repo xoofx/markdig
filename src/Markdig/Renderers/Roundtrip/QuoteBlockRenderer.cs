@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip;
 /// </summary>
 public class QuoteBlockRenderer : RoundtripObjectRenderer<QuoteBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, QuoteBlock quoteBlock)
     {
         renderer.RenderLinesBefore(quoteBlock);

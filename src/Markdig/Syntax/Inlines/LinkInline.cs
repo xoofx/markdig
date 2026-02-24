@@ -7,10 +7,22 @@ using System.Diagnostics;
 
 namespace Markdig.Syntax.Inlines;
 
+/// <summary>
+/// Defines the LocalLabel enumeration.
+/// </summary>
 public enum LocalLabel : byte
 {
+    /// <summary>
+    /// Gets or sets the local.
+    /// </summary>
     Local, // [foo][bar]
+    /// <summary>
+    /// Gets or sets the empty.
+    /// </summary>
     Empty, // [foo][]
+    /// <summary>
+    /// Gets or sets the none.
+    /// </summary>
     None, // [foo]
 }
 

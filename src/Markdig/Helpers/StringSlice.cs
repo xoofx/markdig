@@ -112,6 +112,9 @@ public struct StringSlice : ICharIterator
     /// </summary>
     public readonly int Length => End - Start + 1;
 
+    /// <summary>
+    /// Gets or sets the new line.
+    /// </summary>
     public NewLine NewLine;
 
     /// <summary>
@@ -615,6 +618,9 @@ public struct StringSlice : ICharIterator
         return text.Substring(start, length);
     }
 
+    /// <summary>
+    /// Performs the as span operation.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ReadOnlySpan<char> AsSpan()
     {
@@ -653,6 +659,9 @@ public struct StringSlice : ICharIterator
         return true;
     }
 
+    /// <summary>
+    /// Performs the overlaps operation.
+    /// </summary>
     public bool Overlaps(StringSlice other)
     {
         if (IsEmpty || other.IsEmpty)

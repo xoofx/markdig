@@ -13,11 +13,17 @@ namespace Markdig.Parsers.Inlines;
 /// <seealso cref="InlineParser" />
 public class EscapeInlineParser : InlineParser
 {
+    /// <summary>
+    /// Initializes a new instance of the EscapeInlineParser class.
+    /// </summary>
     public EscapeInlineParser()
     {
         OpeningCharacters = ['\\'];
     }
 
+    /// <summary>
+    /// Attempts to match the parser at the current position.
+    /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         var startPosition = slice.Start;

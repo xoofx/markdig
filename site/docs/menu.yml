@@ -1,0 +1,7 @@
+doc:
+  - {path: readme.md, title: "<i class='bi bi-book' aria-hidden='true'></i> User Guide"}
+  - {path: getting-started.md, title: "<i class='bi bi-rocket-takeoff' aria-hidden='true'></i> Getting started"}
+  - {path: usage.md, title: "<i class='bi bi-play-circle' aria-hidden='true'></i> Usage"}
+  - {path: commonmark.md, title: "<i class='bi bi-markdown' aria-hidden='true'></i> CommonMark syntax"}
+  - {path: extensions/readme.md, title: "<i class='bi bi-puzzle' aria-hidden='true'></i> Extensions", folder: true}
+  - {path: advanced/readme.md, title: "<i class='bi bi-gear' aria-hidden='true'></i> Developer guide", folder: true}

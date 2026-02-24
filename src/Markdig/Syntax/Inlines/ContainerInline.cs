@@ -5,8 +5,10 @@
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 using Markdig.Helpers;
+using Markdig.Syntax;
 
 namespace Markdig.Syntax.Inlines;
 
@@ -16,6 +18,9 @@ namespace Markdig.Syntax.Inlines;
 /// <seealso cref="Inline" />
 public class ContainerInline : Inline, IEnumerable<Inline>
 {
+    /// <summary>
+    /// Initializes a new instance of the ContainerInline class.
+    /// </summary>
     public ContainerInline() : base(dummySkipTypeKind: true)
     {
         SetTypeKind(isInline: true, isContainer: true);
@@ -150,6 +155,30 @@ public class ContainerInline : Inline, IEnumerable<Inline>
     }
 
     /// <summary>
+    /// Transfers all children from this container to <paramref name="destination"/>.
+    /// </summary>
+    /// <param name="destination">The destination container.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="destination"/> is null.</exception>
+    public void TransferChildrenTo(ContainerInline destination)
+    {
+        if (destination is null) ThrowHelper.ArgumentNullException(nameof(destination));
+
+        if (ReferenceEquals(this, destination))
+        {
+            return;
+        }
+
+        var child = FirstChild;
+        while (child != null)
+        {
+            var next = child.NextSibling;
+            child.Remove();
+            destination.AppendChild(child);
+            child = next;
+        }
+    }
+
+    /// <summary>
     /// Moves all the children of this container after the specified inline.
     /// </summary>
     /// <param name="parent">The parent.</param>
@@ -189,6 +218,9 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         AppendChild(container);
     }
 
+    /// <summary>
+    /// Performs the on child insert operation.
+    /// </summary>
     protected override void OnChildInsert(Inline child)
     {
         // A child is inserted before the FirstChild
@@ -211,6 +243,9 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         }
     }
 
+    /// <summary>
+    /// Performs the on child remove operation.
+    /// </summary>
     protected override void OnChildRemove(Inline child)
     {
         if (child == FirstChild)
@@ -231,6 +266,9 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         }
     }
 
+    /// <summary>
+    /// Performs the dump child to operation.
+    /// </summary>
     protected override void DumpChildTo(TextWriter writer, int level)
     {
         if (FirstChild != null)
@@ -240,12 +278,125 @@ public class ContainerInline : Inline, IEnumerable<Inline>
         }
     }
 
+    /// <summary>
+    /// Checks whether this container span is valid with respect to child inline spans.
+    /// </summary>
+    /// <param name="recursive">When <c>true</c>, validates descendant container inline spans recursively.</param>
+    /// <returns>
+    /// <c>true</c> when this container span contains all direct child spans and recursive checks (if enabled) succeed;
+    /// otherwise, <c>false</c>.
+    /// </returns>
+    public bool HasValidSpan(bool recursive = false)
+    {
+        var child = FirstChild;
+        while (child is not null)
+        {
+            if (!ContainsSpan(Span, child.Span))
+            {
+                return false;
+            }
+
+            if (recursive && child is ContainerInline childContainer && !childContainer.HasValidSpan(recursive: true))
+            {
+                return false;
+            }
+
+            child = child.NextSibling;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Updates this container span from its child inline spans.
+    /// </summary>
+    /// <param name="recursive">When <c>true</c>, updates descendant container inline spans recursively before updating this container.</param>
+    /// <param name="preserveSelfSpan">
+    /// When <c>true</c>, preserves this container current span and only expands it to include children.
+    /// When <c>false</c>, recomputes from children only.
+    /// </param>
+    /// <returns><c>true</c> when this container span changed; otherwise, <c>false</c>.</returns>
+    public bool UpdateSpanFromChildren(bool recursive = false, bool preserveSelfSpan = true)
+    {
+        var updatedSpan = SourceSpan.Empty;
+        bool hasUpdatedSpan = false;
+
+        if (preserveSelfSpan && !Span.IsEmpty)
+        {
+            updatedSpan = Span;
+            hasUpdatedSpan = true;
+        }
+
+        var child = FirstChild;
+        while (child is not null)
+        {
+            if (recursive && child is ContainerInline childContainer)
+            {
+                childContainer.UpdateSpanFromChildren(recursive: true, preserveSelfSpan: preserveSelfSpan);
+            }
+
+            AppendSpan(ref updatedSpan, ref hasUpdatedSpan, child.Span);
+            child = child.NextSibling;
+        }
+
+        if (!hasUpdatedSpan)
+        {
+            updatedSpan = SourceSpan.Empty;
+        }
+
+        if (updatedSpan == Span)
+        {
+            return false;
+        }
+
+        Span = updatedSpan;
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ContainsSpan(in SourceSpan containerSpan, in SourceSpan childSpan)
+    {
+        return childSpan.IsEmpty || (!containerSpan.IsEmpty && childSpan.Start >= containerSpan.Start && childSpan.End <= containerSpan.End);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void AppendSpan(ref SourceSpan destinationSpan, ref bool hasDestinationSpan, in SourceSpan spanToAppend)
+    {
+        if (spanToAppend.IsEmpty)
+        {
+            return;
+        }
+
+        if (!hasDestinationSpan)
+        {
+            destinationSpan = spanToAppend;
+            hasDestinationSpan = true;
+            return;
+        }
+
+        if (spanToAppend.Start < destinationSpan.Start)
+        {
+            destinationSpan.Start = spanToAppend.Start;
+        }
+
+        if (spanToAppend.End > destinationSpan.End)
+        {
+            destinationSpan.End = spanToAppend.End;
+        }
+    }
+
+    /// <summary>
+    /// Represents the Enumerator type.
+    /// </summary>
     public struct Enumerator : IEnumerator<Inline>
     {
         private readonly ContainerInline container;
         private Inline? currentChild;
         private Inline? nextChild;
 
+        /// <summary>
+        /// Initializes a new instance of the Enumerator class.
+        /// </summary>
         public Enumerator(ContainerInline container) : this()
         {
             if (container is null) ThrowHelper.ArgumentNullException(nameof(container));
@@ -253,14 +404,23 @@ public class ContainerInline : Inline, IEnumerable<Inline>
             currentChild = nextChild = container.FirstChild;
         }
 
+        /// <summary>
+        /// Gets or sets the current.
+        /// </summary>
         public Inline Current => currentChild!;
 
         object IEnumerator.Current => Current;
 
+        /// <summary>
+        /// Performs the dispose operation.
+        /// </summary>
         public void Dispose()
         {
         }
 
+        /// <summary>
+        /// Performs the move next operation.
+        /// </summary>
         public bool MoveNext()
         {
             currentChild = nextChild;
@@ -273,12 +433,18 @@ public class ContainerInline : Inline, IEnumerable<Inline>
             return false;
         }
 
+        /// <summary>
+        /// Performs the reset operation.
+        /// </summary>
         public void Reset()
         {
             currentChild = nextChild = container.FirstChild;
         }
     }
 
+    /// <summary>
+    /// Gets enumerator.
+    /// </summary>
     public Enumerator GetEnumerator()
     {
         return new Enumerator(this);

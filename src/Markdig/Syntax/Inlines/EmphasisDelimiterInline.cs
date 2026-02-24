@@ -67,6 +67,9 @@ public class EmphasisDelimiterInline : DelimiterInline
     /// </summary>
     public StringSlice Content;
 
+    /// <summary>
+    /// Performs the to literal operation.
+    /// </summary>
     public override string ToLiteral()
     {
         if (DelimiterCount == 1)
@@ -86,6 +89,9 @@ public class EmphasisDelimiterInline : DelimiterInline
         return new string(DelimiterChar, DelimiterCount);
     }
 
+    /// <summary>
+    /// Performs the as literal inline operation.
+    /// </summary>
     public LiteralInline AsLiteralInline()
     {
         return new LiteralInline()

@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{LinkInline}" />
 public class LinkInlineRenderer : RoundtripObjectRenderer<LinkInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, LinkInline link)
     {
         if (link.IsImage)

@@ -26,6 +26,9 @@ public class ThematicBreakParser : BlockParser
         OpeningCharacters = ['-', '_', '*'];
     }
 
+    /// <summary>
+    /// Attempts to open a block at the current parser position.
+    /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
     {
         if (processor.IsCodeIndent)
@@ -99,7 +102,7 @@ public class ThematicBreakParser : BlockParser
 
         if (processor.TrackTrivia)
         {
-            thematicBreak.LinesBefore = processor.UseLinesBefore();
+            thematicBreak.LinesBefore = processor.TakeLinesBefore();
             thematicBreak.NewLine = processor.Line.NewLine;
         }
 

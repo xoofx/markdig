@@ -36,6 +36,9 @@ public class AutoIdentifierExtension : IMarkdownExtension
         _processInlinesEnd = HeadingBlock_ProcessInlinesEnd;
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         var headingBlockParser = pipeline.BlockParsers.Find<HeadingBlockParser>();
@@ -54,6 +57,9 @@ public class AutoIdentifierExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }

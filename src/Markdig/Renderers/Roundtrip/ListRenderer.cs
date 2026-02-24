@@ -13,6 +13,9 @@ namespace Markdig.Renderers.Roundtrip;
 /// <seealso cref="RoundtripObjectRenderer{ListBlock}" />
 public class ListRenderer : RoundtripObjectRenderer<ListBlock>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, ListBlock listBlock)
     {
         renderer.RenderLinesBefore(listBlock);

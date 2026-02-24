@@ -6,8 +6,14 @@ using Markdig.Syntax;
 
 namespace Markdig.Renderers.Normalize;
 
+/// <summary>
+/// Represents the LinkReferenceDefinitionGroupRenderer type.
+/// </summary>
 public class LinkReferenceDefinitionGroupRenderer : NormalizeObjectRenderer<LinkReferenceDefinitionGroup>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(NormalizeRenderer renderer, LinkReferenceDefinitionGroup obj)
     {
         renderer.EnsureLine();

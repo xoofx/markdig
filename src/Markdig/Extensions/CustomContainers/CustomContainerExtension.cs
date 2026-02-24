@@ -13,6 +13,9 @@ namespace Markdig.Extensions.CustomContainers;
 /// <seealso cref="IMarkdownExtension" />
 public class CustomContainerExtension : IMarkdownExtension
 {
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<CustomContainerParser>())
@@ -41,6 +44,9 @@ public class CustomContainerExtension : IMarkdownExtension
         }
     }
 
+    /// <summary>
+    /// Configures this extension for the specified pipeline stage.
+    /// </summary>
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
         if (renderer is HtmlRenderer htmlRenderer)

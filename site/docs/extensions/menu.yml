@@ -1,0 +1,21 @@
+doc:
+  - {path: readme.md, title: "<i class='bi bi-puzzle' aria-hidden='true'></i> Overview"}
+  - {path: tables.md, title: "Tables"}
+  - {path: emphasis-extras.md, title: "Emphasis extras"}
+  - {path: task-lists.md, title: "Task lists"}
+  - {path: mathematics.md, title: "Mathematics"}
+  - {path: alert-blocks.md, title: "Alert blocks"}
+  - {path: diagrams.md, title: "Diagrams"}
+  - {path: footnotes.md, title: "Footnotes"}
+  - {path: generic-attributes.md, title: "Generic attributes"}
+  - {path: custom-containers.md, title: "Custom containers"}
+  - {path: abbreviations.md, title: "Abbreviations"}
+  - {path: definition-lists.md, title: "Definition lists"}
+  - {path: auto-identifiers.md, title: "Auto-identifiers"}
+  - {path: auto-links.md, title: "Auto-links"}
+  - {path: figures-footers-citations.md, title: "Figures, footers & citations"}
+  - {path: emoji-smartypants.md, title: "Emoji & SmartyPants"}
+  - {path: media-links.md, title: "Media links"}
+  - {path: list-extras.md, title: "List extras"}
+  - {path: yaml-frontmatter.md, title: "YAML front matter"}
+  - {path: other.md, title: "Other extensions"}

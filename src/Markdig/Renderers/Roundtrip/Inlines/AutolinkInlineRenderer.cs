@@ -12,6 +12,9 @@ namespace Markdig.Renderers.Roundtrip.Inlines;
 /// <seealso cref="RoundtripObjectRenderer{AutolinkInline}" />
 public class AutolinkInlineRenderer : RoundtripObjectRenderer<AutolinkInline>
 {
+    /// <summary>
+    /// Writes the object to the specified renderer.
+    /// </summary>
     protected override void Write(RoundtripRenderer renderer, AutolinkInline obj)
     {
         renderer.Write('<').Write(obj.Url).Write('>');
