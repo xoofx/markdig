@@ -43,6 +43,10 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
     /// </summary>
     public List<EmphasisDescriptor> EmphasisDescriptors { get; }
 
+    /// <summary>
+    /// Gets or toggles whether the emphasis parser should be CJK-friendly.
+    /// </summary>
+    /// <seealso href="https://github.com/tats-u/markdown-it-cjk"/>
     public bool CjkFriendlyEmphasis { get; set; } = false;
 
     /// <summary>

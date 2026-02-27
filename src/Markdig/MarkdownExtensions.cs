@@ -515,6 +515,12 @@ public static class MarkdownExtensions
         return pipeline;
     }
 
+/// <summary>
+/// Enables CJK-friendly emphasis. <c>**</c> around punctuation in CJK text will be much more likely to be parsed as emphasis as intended.
+/// </summary>
+/// <param name="pipeline">The pipeline</param>
+/// <returns>The modified pipeline</returns>
+/// <see href="https://github.com/tats-u/markdown-cjk-friendly/"/>
     public static MarkdownPipelineBuilder UseCjkFriendlyEmphasis(this MarkdownPipelineBuilder pipeline)
     {
         pipeline.InlineParsers.FindExact<EmphasisInlineParser>()?.CjkFriendlyEmphasis = true;
