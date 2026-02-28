@@ -545,14 +545,31 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                     continue;
                 }
 
+                if (IsLine(delimiter))
+                {
+                    var previousSignificantSibling = SkipTrailingWhitespace(delimiter.PreviousSibling);
+
+                    // Trailing pipe at end-of-line (`| --- |`) is valid and does not add a new column.
+                    if (previousSignificantSibling is PipeTableDelimiterInline)
+                    {
+                        isValidRow = columnDefinitions is { Count: > 0 };
+                        break;
+                    }
+
+                    if (!TryParseHeaderColumn(previousSignificantSibling, out var align, out var delimiterCount))
+                    {
+                        break;
+                    }
+
+                    columnDefinitions ??= [];
+                    totalDelimiterCount += delimiterCount;
+                    columnDefinitions.Add(new TableColumnDefinition() { Alignment = align, Width = delimiterCount });
+                    isValidRow = true;
+                    break;
+                }
+
                 // Parse the content before this delimiter as a column definition (e.g., `:---`, `---:`, `:---:`)
-                // Skip if previous sibling is a pipe (empty cell) or whitespace
-                TableColumnAlign? align = null;
-                int delimiterCount = 0;
-                if (delimiter.PreviousSibling != null &&
-                    !(delimiter.PreviousSibling is PipeTableDelimiterInline) &&
-                    !(delimiter.PreviousSibling is LiteralInline li && li.Content.IsEmptyOrWhitespace()) &&
-                    !ParseHeaderString(delimiter.PreviousSibling, out align, out delimiterCount))
+                if (!TryParseHeaderColumn(delimiter.PreviousSibling, out var pipeAlign, out var pipeDelimiterCount))
                 {
                     break;
                 }
@@ -560,8 +577,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 // Create aligns until we may have a header row
 
                 columnDefinitions ??= new List<TableColumnDefinition>();
-                totalDelimiterCount += delimiterCount;
-                columnDefinitions.Add(new TableColumnDefinition() { Alignment =  align, Width = delimiterCount});
+                totalDelimiterCount += pipeDelimiterCount;
+                columnDefinitions.Add(new TableColumnDefinition() { Alignment =  pipeAlign, Width = pipeDelimiterCount});
 
                 // If this is the last pipe, check for a trailing column definition (row without trailing pipe)
                 // e.g., `| :--- | ---:` has content after the last pipe
@@ -576,20 +593,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                         break;
                     }
 
-                    if (!ParseHeaderString(nextSibling, out align, out delimiterCount))
+                    if (!TryParseHeaderColumn(nextSibling, out var trailingAlign, out var trailingDelimiterCount))
                     {
                         break;
                     }
-                    totalDelimiterCount += delimiterCount;
+                    totalDelimiterCount += trailingDelimiterCount;
                     isValidRow = true;
-                    columnDefinitions.Add(new TableColumnDefinition() { Alignment = align, Width = delimiterCount});
-                    break;
-                }
-
-                // If we are on a Line delimiter, exit
-                if (IsLine(delimiter))
-                {
-                    isValidRow = true;
+                    columnDefinitions.Add(new TableColumnDefinition() { Alignment = trailingAlign, Width = trailingDelimiterCount });
                     break;
                 }
             }
@@ -597,7 +607,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         }
 
         // calculate the width of the columns in percent based on the delimiter count
-        if (!isValidRow || columnDefinitions == null)
+        if (!isValidRow || columnDefinitions == null || totalDelimiterCount == 0)
         {
             return null;
         }
@@ -617,6 +627,34 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             }
         }
         return columnDefinitions;
+    }
+
+    private static bool TryParseHeaderColumn(Inline? inline, out TableColumnAlign? align, out int delimiterCount)
+    {
+        align = null;
+        delimiterCount = 0;
+
+        if (inline is null || inline is PipeTableDelimiterInline)
+        {
+            return false;
+        }
+
+        if (inline is LiteralInline literal && literal.Content.IsEmptyOrWhitespace())
+        {
+            return false;
+        }
+
+        return ParseHeaderString(inline, out align, out delimiterCount);
+    }
+
+    private static Inline? SkipTrailingWhitespace(Inline? inline)
+    {
+        while (inline is LiteralInline literal && literal.Content.IsEmptyOrWhitespace())
+        {
+            inline = inline.PreviousSibling;
+        }
+
+        return inline;
     }
 
     private static bool IsLine(Inline inline)

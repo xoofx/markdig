@@ -782,3 +782,15 @@ Lorem ipsum ...</p>
 </table></li>
 </ol>
 ````````````````````````````````
+
+A sequence of rows containing only pipes is not a table separator row and must remain a paragraph:
+
+```````````````````````````````` example
+|||
+|||
+|||
+.
+<p>|||
+|||
+|||</p>
+````````````````````````````````

@@ -1010,5 +1010,25 @@ namespace Markdig.Tests.Specs.PipeTables
 
             TestParser.TestSpec("Bullet list\n* Table 1\n\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n* Table 2\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n* Table 3\n  Lorem ipsum ...\n  Lorem ipsum ...\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n\nOrdered list\n1. Table 1\n\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n2. Table 2\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |\n\n3. Table 3\n   Lorem ipsum ...\n   Lorem ipsum ...\n    | Header 1       | Header 2       |\n    |----------------|----------------|\n    | Row 1 Column 1 | Row 1 Column 2 |", "<p>Bullet list</p>\n<ul>\n<li><p>Table 1</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 2</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 3\nLorem ipsum ...\nLorem ipsum ...</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n</ul>\n<p>Ordered list</p>\n<ol>\n<li><p>Table 1</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 2</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n<li><p>Table 3\nLorem ipsum ...\nLorem ipsum ...</p>\n<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Row 1 Column 1</td>\n<td>Row 1 Column 2</td>\n</tr>\n</tbody>\n</table></li>\n</ol>", "pipetables|advanced", context: "Example 27\nSection Extensions / Pipe Table\n");
         }
+
+        // A sequence of rows containing only pipes is not a table separator row and must remain a paragraph:
+        [Test]
+        public void ExtensionsPipeTable_Example028()
+        {
+            // Example 28
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     |||
+            //     |||
+            //     |||
+            //
+            // Should be rendered as:
+            //     <p>|||
+            //     |||
+            //     |||</p>
+
+            TestParser.TestSpec("|||\n|||\n|||", "<p>|||\n|||\n|||</p>", "pipetables|advanced", context: "Example 28\nSection Extensions / Pipe Table\n");
+        }
     }
 }
