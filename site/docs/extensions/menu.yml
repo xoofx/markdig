@@ -2,6 +2,7 @@ doc:
   - {path: readme.md, title: "<i class='bi bi-puzzle' aria-hidden='true'></i> Overview"}
   - {path: tables.md, title: "Tables"}
   - {path: emphasis-extras.md, title: "Emphasis extras"}
+  - {path: cjk-friendly-emphasis.md, title: "CJK friendly emphasis"}
   - {path: task-lists.md, title: "Task lists"}
   - {path: mathematics.md, title: "Mathematics"}
   - {path: alert-blocks.md, title: "Alert blocks"}

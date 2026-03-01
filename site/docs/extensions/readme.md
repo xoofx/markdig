@@ -69,6 +69,7 @@ var pipeline = new MarkdownPipelineBuilder()
 | [Self pipeline](other.md) | `.UseSelfPipeline()` | Auto-configure pipeline from document |
 | [Pragma lines](other.md) | `.UsePragmaLines()` | Line number pragma IDs |
 | [Non-ASCII no escape](other.md) | `.UseNonAsciiNoEscape()` | Disable URI escaping for non-ASCII |
+| [CJK friendly emphasis](cjk-friendly-emphasis.md) | `.UseCjkFriendlyEmphasis()` | Improved emphasis delimiter rules for CJK text |
 
 ## Extension ordering
 

@@ -8,6 +8,8 @@ Enable with `.UseEmphasisExtras()` (included in `UseAdvancedExtensions()`).
 
 This extension adds several emphasis styles beyond standard bold and italic.
 
+If you need improved emphasis parsing for Chinese/Japanese/Korean (CJK) text, see [CJK friendly emphasis](cjk-friendly-emphasis.md).
+
 ## Strikethrough
 
 Wrap text with `~~` for strikethrough:
