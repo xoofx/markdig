@@ -111,7 +111,7 @@ class Program
             }
 
             string source = ParseSpecification(spec, File.ReadAllText(spec.Path)).Replace("\r\n", "\n"
-#if false
+#if NET
                 , StringComparison.Ordinal
 #endif
                 );
