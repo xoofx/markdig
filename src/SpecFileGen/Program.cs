@@ -110,20 +110,12 @@ class Program
                 continue;
             }
 
-            string source = ParseSpecification(spec, File.ReadAllText(spec.Path)).Replace("\r\n", "\n"
-#if false
-                , StringComparison.Ordinal
-#endif
-                );
+            string source = ParseSpecification(spec, File.ReadAllText(spec.Path)).Replace("\r\n", "\n", StringComparison.Ordinal);
             totalTests += spec.TestCount;
 
             if (File.Exists(spec.OutputPath))  // If the source hasn't changed, don't bump the generated tag
             {
-                string previousSource = File.ReadAllText(spec.OutputPath).Replace("\r\n", "\n"
-#if NET
-                    , StringComparison.Ordinal
-#endif
-                    );
+                string previousSource = File.ReadAllText(spec.OutputPath).Replace("\r\n", "\n", StringComparison.Ordinal);
                 if (previousSource == source && File.GetLastWriteTime(spec.OutputPath) > File.GetLastWriteTime(spec.Path))
                 {
                     continue;
@@ -205,13 +197,7 @@ class Program
                 string line = lines[i];
                 if (line.Length > 2 && line[0] == '#')
                 {
-                    int level = line.IndexOf(
-#if NET
-                        ' '
-                        #else
-                        " "
-#endif
-                        , StringComparison.Ordinal);
+                    int level = line.IndexOf(' ', StringComparison.Ordinal);
                     while (headings.Count != 0)
                     {
                         if (headings.Last.Value.Level < level) break;
@@ -373,13 +359,7 @@ class Program
     static string CompressedName(string name)
     {
         string compressedName = "";
-        foreach (var part in name.Replace(',' , ' ').Replace('-', ' ').Split(
-#if NET
-            ' '
-            #else
-            [' ']
-#endif
-            , StringSplitOptions.RemoveEmptyEntries))
+        foreach (var part in name.Replace(',' , ' ').Replace('-', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries))
         {
             compressedName += char.IsLower(part[0])
                 ? char.ToUpper(part[0]) + (part.Length > 1 ? part.Substring(1) : "")
