@@ -7,7 +7,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
-#if NET && !MARKDIG_NO_RUNE_TESTS
+#if !NET || !MARKDIG_NO_RUNE_TESTS
 using System.Text;
 #endif
 using System.Threading.Tasks;
@@ -106,7 +106,7 @@ namespace Markdig.Tests
             Assert.AreEqual(expected, actual);
         }
 
-#if NET && !MARKDIG_NO_RUNE_TESTS
+#if !NET || !MARKDIG_NO_RUNE_TESTS
         // delimiter: '*', '_' = each character, '?' = either
         // can open/close = whether the places can be in the range of emphasis
         // 2 before, previous, can close, delimiter, can open, next
