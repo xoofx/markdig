@@ -108,7 +108,7 @@ public static class MarkdownExtensions
         pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind });
         return pipeline;
     }
-    
+
     /// <summary>
     /// Uses this extension to enable autolinks from text `http://`, `https://`, `ftp://`, `mailto:`, `www.xxx.yyy`
     /// </summary>
@@ -516,6 +516,18 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
+    /// Enables CJK-friendly emphasis. <c>**</c> around punctuation in CJK text will be much more likely to be parsed as emphasis as intended.
+    /// </summary>
+    /// <param name="pipeline">The pipeline</param>
+    /// <returns>The modified pipeline</returns>
+    /// <see href="https://github.com/tats-u/markdown-cjk-friendly/"/>
+    public static MarkdownPipelineBuilder UseCjkFriendlyEmphasis(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.InlineParsers.FindExact<EmphasisInlineParser>()?.CjkFriendlyEmphasis = true;
+        return pipeline;
+    }
+
+    /// <summary>
     /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
     /// </summary>
     /// <param name="pipeline">The pipeline.</param>
@@ -652,6 +664,9 @@ public static class MarkdownExtensions
                     break;
                 case "globalization":
                     pipeline.UseGlobalization();
+                    break;
+                case "cjk-friendly-emphasis":
+                    pipeline.UseCjkFriendlyEmphasis();
                     break;
                 default:
                     throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));

@@ -9,7 +9,7 @@ namespace Markdig.Tests;
 [TestFixture]
 public class TestStringSlice
 {
-#if NET
+#if !NET || !MARKDIG_NO_RUNE_TESTS
     [Test]
     public void TestRuneBmp()
     {

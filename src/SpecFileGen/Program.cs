@@ -87,6 +87,7 @@ class Program
         new Spec("Jira Links",          "JiraLinks.md",                 "jiralinks"),
         new Spec("Globalization",       "GlobalizationSpecs.md",        "globalization+advanced+emojis"),
         new Spec("Figures, Footers and Cites", "FigureFooterAndCiteSpecs.md", "figures+footers+citations|advanced"),
+        new Spec("CJK-friendly Emphasis", "CJKFriendlyEmphasis.md",     "cjk-friendly-emphasis"),
 
         new NormalizeSpec("Headings", "Headings.md", ""),
 
@@ -358,7 +359,7 @@ class Program
     static string CompressedName(string name)
     {
         string compressedName = "";
-        foreach (var part in name.Replace(',', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        foreach (var part in name.Replace(',' , ' ').Replace('-', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries))
         {
             compressedName += char.IsLower(part[0])
                 ? char.ToUpper(part[0]) + (part.Length > 1 ? part.Substring(1) : "")

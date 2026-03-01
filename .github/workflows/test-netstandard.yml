@@ -35,10 +35,10 @@ jobs:
 
     - name: Test Debug
       run: |
-        dotnet build src/Markdig.Tests/Markdig.Tests.csproj -c Debug --no-restore
+        dotnet build src/Markdig.Tests/Markdig.Tests.csproj -c Debug --no-restore -p:MarkdigNoRuneTests=true
         dotnet test src/Markdig.Tests/Markdig.Tests.csproj -c Debug --no-build
 
     - name: Test Release
       run: |
-        dotnet build src/Markdig.Tests/Markdig.Tests.csproj -c Release --no-restore
+        dotnet build src/Markdig.Tests/Markdig.Tests.csproj -c Release --no-restore -p:MarkdigNoRuneTests=true
         dotnet test src/Markdig.Tests/Markdig.Tests.csproj -c Release --no-build
