@@ -121,4 +121,20 @@ public class TestCustomEmojis
         smileyToEmoji.Add("a", "c"); // "a" already exists in emojiToUnicode
         Assert.Throws<ArgumentException>(() => new EmojiMapping(emojiToUnicode, smileyToEmoji));
     }
+
+    [Test]
+    [TestCase("|test|\n|-|\n|:x:|", "<table>\n<thead>\n<tr>\n<th>test</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>❌</td>\n</tr>\n</tbody>\n</table>\n")]
+    [TestCase("|test|\n|-|\n| :x: |", "<table>\n<thead>\n<tr>\n<th>test</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>❌</td>\n</tr>\n</tbody>\n</table>\n")]
+    [TestCase("|test|\n|-|\n|1:x:|", "<table>\n<thead>\n<tr>\n<th>test</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1:x:</td>\n</tr>\n</tbody>\n</table>\n")]
+    [TestCase("|test|\n|-|\n|w:x:y|", "<table>\n<thead>\n<tr>\n<th>test</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>w:x:y</td>\n</tr>\n</tbody>\n</table>\n")]
+    public void TestEmojiInPipeTable(string input, string expected)
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseEmojiAndSmiley()
+            .UsePipeTables()
+            .Build();
+
+        var actual = Markdown.ToHtml(input, pipeline);
+        Assert.AreEqual(expected, actual);
+    }
 }

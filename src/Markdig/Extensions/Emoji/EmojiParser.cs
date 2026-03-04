@@ -29,8 +29,9 @@ public class EmojiParser : InlineParser
     /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
-        // Previous char must be a space
-        if (!slice.PeekCharExtra(-1).IsWhiteSpaceOrZero())
+        // Previous char must be a space or non-alphanumeric.
+        var prevChar = slice.PeekCharExtra(-1);
+        if (!prevChar.IsWhiteSpaceOrZero() && char.IsLetterOrDigit(prevChar))
         {
             return false;
         }
