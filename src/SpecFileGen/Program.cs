@@ -71,7 +71,7 @@ class Program
         new Spec("Grid Tables",         "GridTableSpecs.md",            "gridtables|advanced"),
         new Spec("Custom Containers",   "CustomContainerSpecs.md",      "customcontainers+attributes|advanced"),
         new Spec("Definition Lists",    "DefinitionListSpecs.md",       "definitionlists+attributes|advanced"),
-        new Spec("Emoji",               "EmojiSpecs.md",                "emojis|advanced+emojis"),
+        new Spec("Emoji",               "EmojiSpecs.md",                "pipetables+emojis|advanced+emojis"),
         new Spec("Abbreviations",       "AbbreviationSpecs.md",         "abbreviations|advanced"),
         new Spec("List Extras",         "ListExtraSpecs.md",            "listextras|advanced"),
         new Spec("Math",                "MathSpecs.md",                 "mathematics|advanced"),

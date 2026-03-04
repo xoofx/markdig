@@ -12,7 +12,7 @@ This is a test with a :) and a :angry: smiley
 <p>This is a test with a 😃 and a 😠 smiley</p>
 ````````````````````````````````
 
-An emoji needs to be preceded by a space:
+An emoji must not be preceded by a letter or digit:
 
 ```````````````````````````````` example
 These are not:) an emoji with a:) x:angry:x
@@ -36,4 +36,46 @@ and keeps going to the next line :)
 .
 <p>This is a sentence 👌
 and keeps going to the next line 😃</p>
+````````````````````````````````
+
+Emojis are rendered inside pipe table cells with surrounding spaces:
+
+```````````````````````````````` example
+| header |
+|--------|
+| :x: |
+.
+<table>
+<thead>
+<tr>
+<th>header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+Emojis are rendered inside pipe table cells without surrounding spaces:
+
+```````````````````````````````` example
+| header |
+|--------|
+|:x:|
+.
+<table>
+<thead>
+<tr>
+<th>header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
 ````````````````````````````````
