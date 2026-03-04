@@ -31,7 +31,7 @@ public class EmojiParser : InlineParser
     {
         // Previous char must be a space or non-alphanumeric.
         var prevChar = slice.PeekCharExtra(-1);
-        if (!prevChar.IsWhiteSpaceOrZero() && char.IsLetterOrDigit(prevChar))
+        if (char.IsLetterOrDigit(prevChar))
         {
             return false;
         }
