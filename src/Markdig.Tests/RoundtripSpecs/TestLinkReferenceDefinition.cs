@@ -209,4 +209,13 @@ public class TestLinkReferenceDefinition
     {
         RoundTrip(value);
     }
+
+    [TestCase("> [foo]: /url 'the title'\n")]
+    [TestCase("> [foo]: /url\n> 'the title'\n")]
+    [TestCase("> [foo]:\n> /url 'the title'\n")]
+    [TestCase("> [foo]:\n> /url\n> 'the title'\n")]
+    public void TestMultilineInBlockquote(string value)
+    {
+        RoundTrip(value);
+    }
 }

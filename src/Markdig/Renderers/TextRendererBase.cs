@@ -320,6 +320,10 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
         {
             WriteIndent();
             WriteRaw(content);
+            if (content[content.Length - 1] == '\n')
+            {
+                previousWasLine = true;
+            }
         }
     }
 
