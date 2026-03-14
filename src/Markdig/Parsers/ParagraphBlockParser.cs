@@ -295,7 +295,7 @@ public class ParagraphBlockParser : BlockParser
         if (span.IsEmpty) return span;
 
         var startPosition = GetAbsolutePosition(lines, span.Start);
-        var endPosition = startPosition + span.End - span.Start;
+        var endPosition = GetAbsolutePosition(lines, span.End);
 
         return new SourceSpan(startPosition, endPosition);
     }
