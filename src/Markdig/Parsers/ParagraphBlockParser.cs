@@ -213,10 +213,10 @@ public class ParagraphBlockParser : BlockParser
                 // Correct the locations of each field
                 linkReferenceDefinition.Line = lines.Lines[0].Line;
 
-                linkReferenceDefinition.Span = ConvertToAbsoluteSpan(lines, linkReferenceDefinition.Span);
-                linkReferenceDefinition.LabelSpan = ConvertToAbsoluteSpan(lines, linkReferenceDefinition.LabelSpan);
-                linkReferenceDefinition.UrlSpan = ConvertToAbsoluteSpan(lines, linkReferenceDefinition.UrlSpan);
-                linkReferenceDefinition.TitleSpan = ConvertToAbsoluteSpan(lines, linkReferenceDefinition.TitleSpan);
+                linkReferenceDefinition.Span = lines.ConvertToAbsoluteSpan(linkReferenceDefinition.Span);
+                linkReferenceDefinition.LabelSpan = lines.ConvertToAbsoluteSpan(linkReferenceDefinition.LabelSpan);
+                linkReferenceDefinition.UrlSpan = lines.ConvertToAbsoluteSpan(linkReferenceDefinition.UrlSpan);
+                linkReferenceDefinition.TitleSpan = lines.ConvertToAbsoluteSpan(linkReferenceDefinition.TitleSpan);
                 lines = iterator.Remaining();
             }
             else
@@ -255,22 +255,22 @@ public class ParagraphBlockParser : BlockParser
                 lrd.Line = lines.Lines[0].Line;
                 var text = lines.Lines[0].Slice.Text;
 
-                triviaBeforeLabel = ConvertToAbsoluteSpan(lines, triviaBeforeLabel);
-                labelWithTrivia = ConvertToAbsoluteSpan(lines, labelWithTrivia);
-                triviaBeforeUrl = ConvertToAbsoluteSpan(lines, triviaBeforeUrl);
-                unescapedUrl = ConvertToAbsoluteSpan(lines, unescapedUrl);
-                triviaBeforeTitle = ConvertToAbsoluteSpan(lines, triviaBeforeTitle);
-                unescapedTitle = ConvertToAbsoluteSpan(lines, unescapedTitle);
-                triviaAfterTitle = ConvertToAbsoluteSpan(lines, triviaAfterTitle);
-                lrd.Span = ConvertToAbsoluteSpan(lines, lrd.Span);
+                triviaBeforeLabel = lines.ConvertToAbsoluteSpan(triviaBeforeLabel);
+                labelWithTrivia = lines.ConvertToAbsoluteSpan(labelWithTrivia);
+                triviaBeforeUrl = lines.ConvertToAbsoluteSpan(triviaBeforeUrl);
+                unescapedUrl = lines.ConvertToAbsoluteSpan(unescapedUrl);
+                triviaBeforeTitle = lines.ConvertToAbsoluteSpan(triviaBeforeTitle);
+                unescapedTitle = lines.ConvertToAbsoluteSpan(unescapedTitle);
+                triviaAfterTitle = lines.ConvertToAbsoluteSpan(triviaAfterTitle);
+                lrd.Span = lines.ConvertToAbsoluteSpan(lrd.Span);
                 lrd.TriviaBefore = new StringSlice(text, triviaBeforeLabel.Start, triviaBeforeLabel.End);
-                lrd.LabelSpan = ConvertToAbsoluteSpan(lines, lrd.LabelSpan);
+                lrd.LabelSpan = lines.ConvertToAbsoluteSpan(lrd.LabelSpan);
                 lrd.LabelWithTrivia = new StringSlice(text, labelWithTrivia.Start, labelWithTrivia.End);
                 lrd.TriviaBeforeUrl = new StringSlice(text, triviaBeforeUrl.Start, triviaBeforeUrl.End);
-                lrd.UrlSpan = ConvertToAbsoluteSpan(lines, lrd.UrlSpan);
+                lrd.UrlSpan = lines.ConvertToAbsoluteSpan(lrd.UrlSpan);
                 lrd.UnescapedUrl = new StringSlice(text, unescapedUrl.Start, unescapedUrl.End);
                 lrd.TriviaBeforeTitle = new StringSlice(text, triviaBeforeTitle.Start, triviaBeforeTitle.End);
-                lrd.TitleSpan = ConvertToAbsoluteSpan(lines, lrd.TitleSpan);
+                lrd.TitleSpan = lines.ConvertToAbsoluteSpan(lrd.TitleSpan);
                 lrd.UnescapedTitle = new StringSlice(text, unescapedTitle.Start, unescapedTitle.End);
                 lrd.TriviaAfter = new StringSlice(text, triviaAfterTitle.Start, triviaAfterTitle.End);
                 lrd.LinesBefore = paragraph.LinesBefore;
@@ -290,30 +290,4 @@ public class ParagraphBlockParser : BlockParser
         return atLeastOneFound;
     }
 
-    private static SourceSpan ConvertToAbsoluteSpan(StringLineGroup lines, SourceSpan span)
-    {
-        if (span.IsEmpty) return span;
-
-        var startPosition = GetAbsolutePosition(lines, span.Start);
-        var endPosition = GetAbsolutePosition(lines, span.End);
-
-        return new SourceSpan(startPosition, endPosition);
-    }
-
-    private static int GetAbsolutePosition(StringLineGroup lines, int position)
-    {
-        int offset = 0;
-        for (int i = 0; i < lines.Count; i++)
-        {
-            ref StringSlice slice = ref lines.Lines[i].Slice;
-            var lineLength = slice.Length + slice.NewLine.Length();
-
-            if (i == lines.Count - 1 || position < offset + lineLength)
-            {
-                return slice.Start + (position - offset);
-            }
-            offset += lineLength;
-        }
-        return lines.Lines[lines.Count - 1].Slice.End + 1;
-    }
 }

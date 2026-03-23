@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Syntax;
 using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -188,6 +189,33 @@ public struct StringLineGroup : IEnumerable
         {
             Lines[i].Slice.Trim();
         }
+    }
+
+    internal SourceSpan ConvertToAbsoluteSpan(SourceSpan span)
+    {
+        if (span.IsEmpty || Count == 0) return span;
+
+        var startPosition = GetAbsolutePosition(span.Start);
+        var endPosition = GetAbsolutePosition(span.End);
+
+        return new SourceSpan(startPosition, endPosition);
+    }
+
+    private int GetAbsolutePosition(int position)
+    {
+        int offset = 0;
+        for (int i = 0; i < Count; i++)
+        {
+            ref StringSlice slice = ref Lines[i].Slice;
+            var lineLength = slice.Length + slice.NewLine.Length();
+
+            if (i == Count - 1 || position < offset + lineLength)
+            {
+                return slice.Start + (position - offset);
+            }
+            offset += lineLength;
+        }
+        return Lines[Count - 1].Slice.End + 1;
     }
 
     /// <summary>
