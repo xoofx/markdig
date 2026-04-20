@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 using Markdig.Helpers;
@@ -28,7 +29,7 @@ public static class MarkdownParser
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>An AST Markdown document</returns>
     /// <exception cref="ArgumentNullException">if reader variable is null</exception>
-    public static MarkdownDocument Parse(string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static MarkdownDocument Parse([StringSyntax("Markdown")] string text, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (text is null) ThrowHelper.ArgumentNullException_text();
 

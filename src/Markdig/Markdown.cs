@@ -54,7 +54,7 @@ public static class Markdown
     /// <param name="pipeline">The pipeline.</param>
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>A normalized markdown text.</returns>
-    public static string Normalize(string markdown, NormalizeOptions? options = null, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static string Normalize([StringSyntax("Markdown")] string markdown, NormalizeOptions? options = null, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         var writer = new StringWriter();
         Normalize(markdown, writer, options, pipeline, context);
@@ -70,7 +70,7 @@ public static class Markdown
     /// <param name="pipeline">The pipeline.</param>
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>A normalized markdown text.</returns>
-    public static MarkdownDocument Normalize(string markdown, TextWriter writer, NormalizeOptions? options = null, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static MarkdownDocument Normalize([StringSyntax("Markdown")] string markdown, TextWriter writer, NormalizeOptions? options = null, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
 
@@ -95,7 +95,7 @@ public static class Markdown
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>The HTML string.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="markdown"/> is null.</exception>
-    public static string ToHtml(string markdown, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static string ToHtml([StringSyntax("Markdown")] string markdown, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
 
@@ -159,7 +159,7 @@ public static class Markdown
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>The Markdown document that has been parsed</returns>
     /// <exception cref="ArgumentNullException">if reader or writer variable are null</exception>
-    public static MarkdownDocument ToHtml(string markdown, TextWriter writer, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static MarkdownDocument ToHtml([StringSyntax("Markdown")] string markdown, TextWriter writer, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
         if (writer is null) ThrowHelper.ArgumentNullException_writer();
@@ -181,7 +181,7 @@ public static class Markdown
     /// <param name="pipeline">The pipeline used for the conversion.</param>
     /// <param name="context">A parser context used for the parsing.</param>
     /// <exception cref="ArgumentNullException">if markdown or writer variable are null</exception>
-    public static object Convert(string markdown, IMarkdownRenderer renderer, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static object Convert([StringSyntax("Markdown")] string markdown, IMarkdownRenderer renderer, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
         if (renderer is null) ThrowHelper.ArgumentNullException(nameof(renderer));
@@ -201,7 +201,7 @@ public static class Markdown
     /// <param name="trackTrivia">Whether to parse trivia such as whitespace, extra heading characters and unescaped string values.</param>
     /// <returns>An AST Markdown document</returns>
     /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
-    public static MarkdownDocument Parse(string markdown, bool trackTrivia = false)
+    public static MarkdownDocument Parse([StringSyntax("Markdown")] string markdown, bool trackTrivia = false)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
 
@@ -218,7 +218,7 @@ public static class Markdown
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>An AST Markdown document</returns>
     /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
-    public static MarkdownDocument Parse(string markdown, MarkdownPipeline? pipeline, MarkdownParserContext? context = null)
+    public static MarkdownDocument Parse([StringSyntax("Markdown")] string markdown, MarkdownPipeline? pipeline, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
 
@@ -236,7 +236,7 @@ public static class Markdown
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>The Markdown document that has been parsed</returns>
     /// <exception cref="ArgumentNullException">if reader or writer variable are null</exception>
-    public static MarkdownDocument ToPlainText(string markdown, TextWriter writer, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static MarkdownDocument ToPlainText([StringSyntax("Markdown")] string markdown, TextWriter writer, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
         if (writer is null) ThrowHelper.ArgumentNullException_writer();
@@ -268,7 +268,7 @@ public static class Markdown
     /// <param name="context">A parser context used for the parsing.</param>
     /// <returns>The result of the conversion</returns>
     /// <exception cref="ArgumentNullException">if markdown variable is null</exception>
-    public static string ToPlainText(string markdown, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
+    public static string ToPlainText([StringSyntax("Markdown")] string markdown, MarkdownPipeline? pipeline = null, MarkdownParserContext? context = null)
     {
         if (markdown is null) ThrowHelper.ArgumentNullException_markdown();
         var writer = new StringWriter();
