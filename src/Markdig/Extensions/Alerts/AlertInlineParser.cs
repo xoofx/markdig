@@ -27,6 +27,13 @@ public class AlertInlineParser : InlineParser
     }
 
     /// <summary>
+    /// Gets or sets a value indicating whether alerts can be nested inside other blocks (e.g. inside a blockquote or a list item).
+    /// Alerts are never allowed inside another alert block regardless of this setting.
+    /// Default is <c>false</c>.
+    /// </summary>
+    public bool AllowNestedAlerts { get; set; }
+
+    /// <summary>
     /// Attempts to match the parser at the current position.
     /// </summary>
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
@@ -43,7 +50,8 @@ public class AlertInlineParser : InlineParser
             paragraphBlock.Parent is not QuoteBlock quoteBlock ||
             paragraphBlock.Inline?.FirstChild != null ||
             quoteBlock is AlertBlock ||
-            quoteBlock.Parent is not MarkdownDocument)
+            IsInsideAlertBlock(quoteBlock) ||
+            (!AllowNestedAlerts && quoteBlock.Parent is not MarkdownDocument))
         {
             return false;
         }
@@ -120,5 +128,21 @@ public class AlertInlineParser : InlineParser
         processor.ReplaceParentContainer(quoteBlock, alertBlock);
 
         return true;
+    }
+
+    private static bool IsInsideAlertBlock(Block block)
+    {
+        var parent = block.Parent;
+        while (parent != null)
+        {
+            if (parent is AlertBlock)
+            {
+                return true;
+            }
+
+            parent = parent.Parent;
+        }
+
+        return false;
     }
 }

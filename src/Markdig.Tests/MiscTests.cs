@@ -337,7 +337,7 @@ $$
 ";
         TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
     }
-  
+
     [Test]
     public void TestDefinitionListInListItemWithBlankLine()
     {
@@ -387,6 +387,91 @@ Also not a note.</p>
         TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseAlertBlocks().Build());
     }
 
+    [Test]
+    public void TestNestedAlertInsideBlockquote()
+    {
+        // >>[!NOTE] should become a blockquote wrapping an alert when AllowNestedAlerts is enabled
+        var input = @">>[!NOTE]
+Also a note.
+";
+
+        var expected = @"<blockquote>
+<div class=""markdown-alert markdown-alert-note"">
+<p class=""markdown-alert-title""><svg viewBox=""0 0 16 16"" version=""1.1"" width=""16"" height=""16"" aria-hidden=""true""><path d=""M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z""></path></svg>Note</p>
+<p>Also a note.</p>
+</div>
+</blockquote>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseAlertBlocks(allowNestedAlerts: true).Build());
+    }
+
+    [Test]
+    public void TestNestedAlertInsideAlert()
+    {
+        // An alert inside another alert is never recognized, even with AllowNestedAlerts
+        var input = @">[!NOTE]
+> >[!TIP]
+> > A tip inside a note
+";
+
+        var expected = @"<div class=""markdown-alert markdown-alert-note"">
+<p class=""markdown-alert-title""><svg viewBox=""0 0 16 16"" version=""1.1"" width=""16"" height=""16"" aria-hidden=""true""><path d=""M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z""></path></svg>Note</p>
+<p></p>
+<blockquote>
+<p>[!TIP]
+A tip inside a note</p>
+</blockquote>
+</div>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseAlertBlocks(allowNestedAlerts: true).Build());
+    }
+
+    [Test]
+    public void TestAlertInsideListItem()
+    {
+        // Alerts inside list items require AllowNestedAlerts
+        var input = @"- > [!NOTE]
+  > A note inside a list item
+";
+
+        var expected = @"<ul>
+<li>
+<div class=""markdown-alert markdown-alert-note"">
+<p class=""markdown-alert-title""><svg viewBox=""0 0 16 16"" version=""1.1"" width=""16"" height=""16"" aria-hidden=""true""><path d=""M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z""></path></svg>Note</p>
+<p>A note inside a list item</p>
+</div>
+</li>
+</ul>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseAlertBlocks(allowNestedAlerts: true).Build());
+    }
+
+    [Test]
+    public void TestAlertInsideNestedListItem()
+    {
+        // Alert inside a nested list item (list item indented under another list item) requires AllowNestedAlerts
+        var input = @"- list item 1
+- list item 2
+  - > [!NOTE]
+    > A note inside a nested list item
+";
+
+        var expected = @"<ul>
+<li>list item 1</li>
+<li>list item 2
+<ul>
+<li>
+<div class=""markdown-alert markdown-alert-note"">
+<p class=""markdown-alert-title""><svg viewBox=""0 0 16 16"" version=""1.1"" width=""16"" height=""16"" aria-hidden=""true""><path d=""M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z""></path></svg>Note</p>
+<p>A note inside a nested list item</p>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseAlertBlocks(allowNestedAlerts: true).Build());
+    }
 
     [Test]
     public void TestIssue845ListItemBlankLine()
