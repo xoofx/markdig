@@ -101,11 +101,12 @@ public static class MarkdownExtensions
     /// Uses this extension to enable alert blocks.
     /// </summary>
     /// <param name="pipeline">The pipeline.</param>
-    /// <param name="renderKind">Replace the default renderer for the kind with a custom renderer</param>
+    /// <param name="renderKind">Replace the default renderer for the kind with a custom renderer.</param>
+    /// <param name="allowNestedAlerts">Allow alerts to be nested inside other blocks (e.g. inside a blockquote or a list item). Alerts inside another alert are never allowed. Default is <c>false</c>.</param>
     /// <returns>The modified pipeline</returns>
-    public static MarkdownPipelineBuilder UseAlertBlocks(this MarkdownPipelineBuilder pipeline, Action<HtmlRenderer, StringSlice>? renderKind = null)
+    public static MarkdownPipelineBuilder UseAlertBlocks(this MarkdownPipelineBuilder pipeline, Action<HtmlRenderer, StringSlice>? renderKind = null, bool allowNestedAlerts = false)
     {
-        pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind });
+        pipeline.Extensions.ReplaceOrAdd<AlertExtension>(new AlertExtension() { RenderKind = renderKind, AllowNestedAlerts = allowNestedAlerts });
         return pipeline;
     }
 

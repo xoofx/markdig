@@ -19,13 +19,24 @@ public class AlertExtension : IMarkdownExtension
     /// </summary>
     public Action<HtmlRenderer, StringSlice>? RenderKind { get; set; }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether alerts can be nested inside other blocks (e.g. inside a blockquote or a list item).
+    /// Alerts are never allowed inside another alert block regardless of this setting.
+    /// Default is <c>false</c>.
+    /// </summary>
+    public bool AllowNestedAlerts { get; set; }
+
     /// <inheritdoc />
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         var inlineParser = pipeline.InlineParsers.Find<AlertInlineParser>();
         if (inlineParser == null)
         {
-            pipeline.InlineParsers.InsertBefore<LinkInlineParser>(new AlertInlineParser());
+            pipeline.InlineParsers.InsertBefore<LinkInlineParser>(new AlertInlineParser() { AllowNestedAlerts = AllowNestedAlerts });
+        }
+        else
+        {
+            inlineParser.AllowNestedAlerts = AllowNestedAlerts;
         }
     }
 
