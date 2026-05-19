@@ -99,6 +99,32 @@ var pipeline = new MarkdownPipelineBuilder()
     .Build();
 ```
 
+| Option                           | Default | Description |
+|----------------------------------|---------|-------------|
+| `RequireHeaderSeparator`         | `true`  | Whether the dashed separator row is required. Set to `false` for Kramdown-style tables that allow headerless tables. |
+| `UseHeaderForColumnCount`        | `false` | When `true`, the header row's column count is authoritative — short rows are padded with empty cells and extra cells in wider rows are dropped. When `false`, the widest row determines the column count. |
+| `InferColumnWidthsFromSeparator` | `false` | When `true`, populates `TableColumnDefinition.Width` based on the dash count of each column in the separator row, normalized to percentages that sum to 100. When `false`, `Width` stays `0` and no width information is emitted. |
+
+#### Inferring column widths from the separator
+
+With `InferColumnWidthsFromSeparator = true`, the width of each column is proportional to the number of `-` characters under it in the separator row. This is useful when you want authors to control relative column widths directly in the Markdown source.
+
+```csharp
+var pipeline = new MarkdownPipelineBuilder()
+    .UsePipeTables(new PipeTableOptions { InferColumnWidthsFromSeparator = true })
+    .Build();
+```
+
+Given this input:
+
+```markdown
+| A | B |
+|---|--------|
+| 1 | 2      |
+```
+
+the first column gets `Width = 25` and the second `Width = 75` (a 3:9 ratio of dashes, normalized to 100). The HTML renderer emits a `<colgroup>` with `<col style="width:N%" />` entries so the widths flow through to the rendered table. The values are also available on `Table.ColumnDefinitions[i].Width` for custom renderers.
+
 ## Grid tables
 
 Enable with `.UseGridTables()` (included in `UseAdvancedExtensions()`).
