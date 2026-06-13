@@ -153,6 +153,11 @@ public class BlockProcessor
     public bool IsLazy { get; private set; }
 
     /// <summary>
+    /// Gets a value indicating whether the current line failed to continue one of the open containers.
+    /// </summary>
+    internal bool HasUnmatchedBlocks { get; private set; }
+
+    /// <summary>
     /// Gets the current stack of <see cref="Block"/> being processed.
     /// </summary>
     private List<BlockWrapper> OpenedBlocks { get; } = [];
@@ -689,6 +694,7 @@ public class BlockProcessor
     private void TryContinueBlocks()
     {
         IsLazy = false;
+        HasUnmatchedBlocks = false;
 
         // Set all blocks non opened.
         // They will be marked as open in the following loop
@@ -723,6 +729,7 @@ public class BlockProcessor
 
             if (result == BlockState.None)
             {
+                HasUnmatchedBlocks = true;
                 break;
             }
 
@@ -1049,6 +1056,7 @@ public class BlockProcessor
         SkipFirstUnwindSpace = false;
         ContinueProcessingLine = false;
         IsLazy = false;
+        HasUnmatchedBlocks = false;
 
         currentStackIndex = 0;
         originalLineStart = 0;

@@ -482,6 +482,61 @@ A tip inside a note</p>
     }
 
     [Test]
+    public void TestIssue887ListAfterNestedBlockQuote()
+    {
+        var input = @"> >* _Unordered 1_ QL2 level 1 no space sep
+> >  Continued 1
+> > * Unordered 2 level 1
+> > 1. **Ordered 1** QL2 level 1
+> >    Continued 1
+> > > Not continued QL3
+> > 2. Ordered 2 QL2 level 1
+> > Continued 2a
+> >
+> >    Continued 2b
+> >
+> >    Continued 2c
+> >
+> >    3. Ordered 3 QL2 level 2
+> >       Continued 3a
+> >
+> >       Continued 3b
+";
+
+        var expected = @"<blockquote>
+<blockquote>
+<ul>
+<li><em>Unordered 1</em> QL2 level 1 no space sep
+Continued 1</li>
+<li>Unordered 2 level 1</li>
+</ul>
+<ol>
+<li><strong>Ordered 1</strong> QL2 level 1
+Continued 1</li>
+</ol>
+<blockquote>
+<p>Not continued QL3</p>
+</blockquote>
+<ol start=""2"">
+<li><p>Ordered 2 QL2 level 1
+Continued 2a</p>
+<p>Continued 2b</p>
+<p>Continued 2c</p>
+<ol start=""3"">
+<li><p>Ordered 3 QL2 level 2
+Continued 3a</p>
+<p>Continued 3b</p>
+</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+</blockquote>";
+
+        TestParser.TestSpec(input, expected);
+    }
+
+    [Test]
     public void TestIssue845ListItemBlankLine()
     {
         TestParser.TestSpec("-\n\n  foo",@"

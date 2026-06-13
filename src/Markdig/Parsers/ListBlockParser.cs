@@ -275,8 +275,13 @@ public class ListBlockParser : BlockParser
         block ??= state.LastBlock;
         if (block is not null && block.IsParagraphBlock)
         {
+            bool isOrderedListInterruptingParagraph = !state.HasUnmatchedBlocks &&
+                state.IsOpen(block) &&
+                listInfo.BulletType == '1' &&
+                listInfo.OrderedStart is not "1";
+
             if (state.IsBlankLine ||
-                state.IsOpen(block) && listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
+                isOrderedListInterruptingParagraph)
             {
                 state.GoToColumn(initColumn);
                 state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state
