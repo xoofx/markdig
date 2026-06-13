@@ -3,6 +3,7 @@
     <File Path="../.editorconfig" />
     <File Path="../.gitattributes" />
     <File Path="../.gitignore" />
+    <File Path="../AGENTS.md" />
     <File Path="../changelog.md" />
     <File Path="../license.txt" />
     <File Path="../readme.md" />
