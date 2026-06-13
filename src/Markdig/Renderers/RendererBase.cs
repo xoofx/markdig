@@ -33,6 +33,7 @@ public abstract class RendererBase : IMarkdownRenderer
     private readonly RendererEntry[][] _renderersPerType;
 
     internal int _childrenDepth = 0;
+    private int _maximumNestingDepth = ThrowHelper.DefaultDepthLimit;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static IntPtr GetKeyForType(MarkdownObject obj) => Type.GetTypeHandle(obj).Value;
@@ -97,6 +98,22 @@ public abstract class RendererBase : IMarkdownRenderer
     public bool IsLastInContainer { get; private set; }
 
     /// <summary>
+    /// Gets or sets the maximum nesting depth allowed while rendering Markdown objects.
+    /// </summary>
+    /// <remarks>The default value is 128. Raising this value allows deeper documents but can increase rendering stack usage.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is less than or equal to zero.</exception>
+    public int MaximumNestingDepth
+    {
+        get => _maximumNestingDepth;
+        set
+        {
+            if (value <= 0) ThrowHelper.ArgumentOutOfRangeException("The maximum nesting depth must be greater than zero.", nameof(value));
+
+            _maximumNestingDepth = value;
+        }
+    }
+
+    /// <summary>
     /// Occurs before writing an object.
     /// </summary>
     public event Action<IMarkdownRenderer, MarkdownObject>? ObjectWriteBefore;
@@ -117,7 +134,7 @@ public abstract class RendererBase : IMarkdownRenderer
             return;
         }
 
-        ThrowHelper.CheckDepthLimit(_childrenDepth++);
+        ThrowHelper.CheckDepthLimit(_childrenDepth++, MaximumNestingDepth);
 
         bool saveIsFirstInContainer = IsFirstInContainer;
         bool saveIsLastInContainer = IsLastInContainer;
@@ -146,7 +163,7 @@ public abstract class RendererBase : IMarkdownRenderer
             return;
         }
 
-        ThrowHelper.CheckDepthLimit(_childrenDepth++);
+        ThrowHelper.CheckDepthLimit(_childrenDepth++, MaximumNestingDepth);
 
         bool saveIsFirstInContainer = IsFirstInContainer;
         bool saveIsLastInContainer = IsLastInContainer;

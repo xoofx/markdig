@@ -64,12 +64,23 @@ public sealed class MarkdownPipeline
     public bool TrackTrivia { get; internal set; }
 
     /// <summary>
+    /// Gets the maximum nesting depth allowed for the Markdown syntax tree during parsing and rendering.
+    /// </summary>
+    /// <remarks>The default value is 128. Raising this value allows deeper documents but can increase parsing cost and rendering stack usage.</remarks>
+    public int MaximumNestingDepth { get; internal set; } = ThrowHelper.DefaultDepthLimit;
+
+    /// <summary>
     /// Allows to setup a <see cref="IMarkdownRenderer"/>.
     /// </summary>
     /// <param name="renderer">The markdown renderer to setup</param>
     public void Setup(IMarkdownRenderer renderer)
     {
         if (renderer is null) ThrowHelper.ArgumentNullException(nameof(renderer));
+        if (renderer is RendererBase rendererBase)
+        {
+            rendererBase.MaximumNestingDepth = MaximumNestingDepth;
+        }
+
         foreach (var extension in Extensions)
         {
             extension.Setup(this, renderer);

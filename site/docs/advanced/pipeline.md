@@ -40,7 +40,23 @@ The `MarkdownPipeline` contains:
 | Inline parsers | `InlineParserList` | Ordered list of `InlineParser` objects |
 | Extensions | `OrderedList<IMarkdownExtension>` | Registered extensions |
 | TrackTrivia | `bool` | Whether trivia parsing is enabled |
+| MaximumNestingDepth | `int` | Maximum AST nesting depth allowed while parsing and rendering |
 | DocumentProcessed | `ProcessDocumentDelegate?` | Callback after parsing completes |
+
+## Nesting depth limit
+
+Markdig protects parsing and rendering with a conservative default nesting limit of 128 levels. If you process trusted input that can legitimately produce deeper trees, configure `MaximumNestingDepth` before calling `Build()`:
+
+```csharp
+var pipeline = new MarkdownPipelineBuilder
+{
+    MaximumNestingDepth = 512,
+}
+    .UseListExtras()
+    .Build();
+```
+
+Only raise this for trusted content: a larger limit allows deeper documents but can increase parsing cost and rendering stack usage.
 
 ## How Build() works
 

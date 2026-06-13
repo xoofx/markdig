@@ -86,6 +86,30 @@ public class MiscTests
     }
 
     [Test]
+    public void MaximumNestingDepthCanBeRaisedForDeepListExtras()
+    {
+        var markdown = "Krankenhaus\nD. " + string.Join(" ", Enumerable.Repeat("M.", 160));
+        var pipeline = new MarkdownPipelineBuilder
+        {
+            MaximumNestingDepth = 512,
+        }.UseListExtras().Build();
+
+        Assert.DoesNotThrow(() => Markdown.ToHtml(markdown, pipeline));
+    }
+
+    [Test]
+    public void MaximumNestingDepthCanBeLowered()
+    {
+        var pipeline = new MarkdownPipelineBuilder
+        {
+            MaximumNestingDepth = 16,
+        }.Build();
+
+        Exception e = Assert.Throws<ArgumentException>(() => Markdown.ToHtml(new string('>', 20), pipeline));
+        Assert.True(e.Message.Contains("depth limit"));
+    }
+
+    [Test]
     public void IsIssue356Corrected()
     {
         string input = @"https://foo.bar/path/\#m4mv5W0GYKZpGvfA.97";

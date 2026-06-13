@@ -73,7 +73,7 @@ public static class MarkdownParser
         inlineProcessor.DebugLog = pipeline.DebugLog;
         try
         {
-            ProcessInlines(inlineProcessor, document);
+            ProcessInlines(inlineProcessor, document, pipeline.MaximumNestingDepth);
         }
         finally
         {
@@ -149,7 +149,7 @@ public static class MarkdownParser
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void ProcessInlines(InlineProcessor inlineProcessor, MarkdownDocument document)
+    private static void ProcessInlines(InlineProcessor inlineProcessor, MarkdownDocument document, int maximumNestingDepth)
     {
         // "stackless" processor
         int blockCount = 1;
@@ -235,8 +235,8 @@ public static class MarkdownParser
 
                     if (blockCount == blocks.Length)
                     {
+                        ThrowHelper.CheckDepthLimit(blockCount + 1, maximumNestingDepth);
                         Array.Resize(ref blocks, blockCount * 2);
-                        ThrowHelper.CheckDepthLimit(blocks.Length);
                     }
                     blocks[blockCount++] = new ContainerItem(Unsafe.As<ContainerBlock>(block));
                     block.OnProcessInlinesBegin(inlineProcessor);

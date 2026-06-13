@@ -14,6 +14,16 @@ namespace Markdig.Helpers;
 [ExcludeFromCodeCoverage]
 internal static class ThrowHelper
 {
+    // Very conservative limit used to limit nesting in the final AST.
+    // Used to avoid a StackOverflow in the recursive rendering process.
+    internal const int DefaultDepthLimit = 128;
+
+    // Limit used for reducing the maximum execution time for pathological-case inputs.
+    // Applies to:
+    // a) inputs that would fail depth checks in the future (for example "[[[[[..." or ">>>>>>...")
+    // b) very large pipe tables.
+    internal const int LargeDepthLimit = 10 * 1024;
+
     [DoesNotReturn]
     public static void ArgumentNullException(string paramName) => throw new ArgumentNullException(paramName);
 
@@ -65,18 +75,14 @@ internal static class ThrowHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CheckDepthLimit(int depth, bool useLargeLimit = false)
     {
-        // Very conservative limit used to limit nesting in the final AST
-        // Used to avoid a StackOverflow in the recursive rendering process
-        const int DepthLimit = 128;
+        int limit = useLargeLimit ? LargeDepthLimit : DefaultDepthLimit;
 
-        // Limit used for reducing the maximum execution time for pathological-case inputs
-        // Applies to:
-        // a) inputs that would fail depth checks in the future (for example "[[[[[..." or ">>>>>>...")
-        // b) very large pipe tables
-        const int LargeDepthLimit = 10 * 1024;
+        CheckDepthLimit(depth, limit);
+    }
 
-        int limit = useLargeLimit ? LargeDepthLimit : DepthLimit;
-
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void CheckDepthLimit(int depth, int limit)
+    {
         if (depth > limit)
             DepthLimitExceeded();
 

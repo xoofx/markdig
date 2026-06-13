@@ -17,6 +17,7 @@ namespace Markdig;
 public class MarkdownPipelineBuilder
 {
     private MarkdownPipeline? _pipeline;
+    private int _maximumNestingDepth = ThrowHelper.DefaultDepthLimit;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MarkdownPipeline" /> class.
@@ -83,6 +84,22 @@ public class MarkdownPipelineBuilder
     public bool TrackTrivia { get; set; }
 
     /// <summary>
+    /// Gets or sets the maximum nesting depth allowed for the Markdown syntax tree during parsing and rendering.
+    /// </summary>
+    /// <remarks>The default value is 128. Raising this value allows deeper documents but can increase parsing cost and rendering stack usage.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the value is less than or equal to zero.</exception>
+    public int MaximumNestingDepth
+    {
+        get => _maximumNestingDepth;
+        set
+        {
+            if (value <= 0) ThrowHelper.ArgumentOutOfRangeException("The maximum nesting depth must be greater than zero.", nameof(value));
+
+            _maximumNestingDepth = value;
+        }
+    }
+
+    /// <summary>
     /// Occurs when a document has been processed after the <see cref="MarkdownParser.Parse"/> method.
     /// </summary>
     public event ProcessDocumentDelegate? DocumentProcessed;
@@ -124,6 +141,7 @@ public class MarkdownPipelineBuilder
         {
             PreciseSourceLocation = PreciseSourceLocation,
             TrackTrivia = TrackTrivia,
+            MaximumNestingDepth = MaximumNestingDepth,
         };
         return _pipeline;
     }
