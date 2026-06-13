@@ -107,6 +107,19 @@ public class TestNormalize
     }
 
     [Test]
+    public void AutoIdentifiersDoNotEmitGeneratedLinkReferenceDefinitions()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers().Build();
+        var document = Markdown.Parse("# Test\n\n## Test", pipeline);
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+
+        renderer.Render(document);
+
+        Assert.AreEqual("# Test\n\n## Test", writer.ToString());
+    }
+
+    [Test]
     public void Backslash()
     {
         AssertNormalizeNoTrim("This is a hardline  \nAnd this is another hardline\\\nThis is standard newline");
