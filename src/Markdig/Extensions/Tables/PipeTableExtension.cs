@@ -41,7 +41,12 @@ public class PipeTableExtension : IMarkdownExtension
         var lineBreakParser = pipeline.InlineParsers.FindExact<LineBreakInlineParser>();
         if (!pipeline.InlineParsers.Contains<PipeTableParser>())
         {
-            pipeline.InlineParsers.InsertAfter<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
+            // Pipe table post-processing must split the paragraph into isolated table cells before emphasis
+            // post-processing can pair delimiters across the paragraph. Otherwise an unmatched emphasis-extra
+            // delimiter inside a cell, e.g. the subscript `~` in `**~$1.50**`, can leave pipe delimiters nested
+            // in an emphasis delimiter tree and make the table parser see phantom cells. PipeTableParser re-runs
+            // inline post-processors inside each extracted cell after the table structure has been fixed.
+            pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
         }
     }
 

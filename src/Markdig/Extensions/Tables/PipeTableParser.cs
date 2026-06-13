@@ -240,9 +240,17 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         var cells = tableState.Cells;
         cells.Clear();
 
-        // Pipes may end up nested inside unmatched emphasis delimiters, e.g.:
-        //     *a | b*|
-        // Promote them to root level so we have a flat sibling structure.
+        // Pipe tables are post-processed before emphasis is resolved so that table boundaries win over
+        // emphasis/subscript spans. At this point unmatched emphasis-extra delimiters may still be open
+        // containers; for example `**~$0.0015**` leaves an unresolved `~` delimiter inside the delimiter
+        // structure for the bold cell.
+        // If a pipe or line break was emitted while such a container was open, it is not a root-level
+        // sibling and cannot be used reliably as a cell/row boundary. Normalize these delimiters first;
+        // cell contents are post-processed for emphasis again after each cell has been isolated.
+        if (HasNestedDelimiters(delimiters, container))
+        {
+            PromoteNestedLineBreaksToRootLevel(container);
+        }
         PromoteNestedPipesToRootLevel(delimiters, container);
 
         // The inline tree is now flat: all pipes and line breaks are siblings at root level.
@@ -288,8 +296,11 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
                 firstRow ??= row;
 
-                // Skip leading pipe at start of row (e.g., `| a | b` or `| a | b |`)
-                if (pipeSeparator != null && (delimiter.PreviousSibling is null || delimiter.PreviousSibling is LineBreakInline))
+                // Skip leading pipe at start of row (e.g., `| a | b` or `| a | b |`). Delimiter promotion
+                // can leave empty wrapper inlines before the pipe; ignore them so a leading pipe is not
+                // mistaken for an empty first cell.
+                var previousSignificantSibling = SkipPreviousEmptyInlines(delimiter.PreviousSibling);
+                if (pipeSeparator != null && (previousSignificantSibling is null || previousSignificantSibling is LineBreakInline))
                 {
                     delimiter.Remove();
                     if (table.Span.IsEmpty)
@@ -325,13 +336,10 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 cellContentIt = cellContentIt.PreviousSibling;
             }
 
-            // If the current delimiter is a pipe `|` OR
-            // the beginOfCell/endOfCell are not null and
-            // either they are:
-            // - different
-            // - they contain a single element, but it is not a line break (\n) or an empty/whitespace Literal.
-            // Then we can add a cell to the current row
-            if (!isLine || (beginOfCell != null && endOfCell != null && ( beginOfCell != endOfCell || !(beginOfCell is LineBreakInline || (beginOfCell is LiteralInline beingOfCellLiteral && beingOfCellLiteral.Content.IsEmptyOrWhitespace())))))
+            // A pipe delimiter always starts a new cell. A line break only closes a cell when there is real
+            // content between it and the previous boundary. Delimiter promotion may leave only whitespace or
+            // empty plain containers in that range; treating those as empty avoids phantom cells at row ends.
+            if (!isLine || (beginOfCell != null && endOfCell != null && !IsEmptyInlineRange(beginOfCell, endOfCell)))
             {
                 // We trim whitespace at the beginning and ending of the cell
                 TrimStart(beginOfCell);
@@ -346,8 +354,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                 {
                     var nextSibling = cellIt.NextSibling;
 
-                    // Skip empty literals (can result from trimming)
-                    if (cellIt is LiteralInline { Content.IsEmpty: true })
+                    // Skip empty inlines (can result from trimming or delimiter promotion)
+                    if (IsEmptyInline(cellIt))
                     {
                         cellIt.Remove();
                         cellIt = nextSibling;
@@ -355,16 +363,13 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
                     }
 
                     cellIt.Remove();
-                    if (cellContainer.Span.IsEmpty)
-                    {
-                        cellContainer.Line = cellIt.Line;
-                        cellContainer.Column = cellIt.Column;
-                        cellContainer.Span = cellIt.Span;
-                    }
-                    cellContainer.AppendChild(cellIt);
-                    cellContainer.Span.End = cellIt.Span.End;
+                    AppendCellInline(cellContainer, cellIt);
                     cellIt = nextSibling;
                 }
+
+                TrimStart(cellContainer.FirstChild);
+                TrimEnd(cellContainer.LastChild);
+                RemoveEmptyBoundaryInlines(cellContainer);
 
                 if (!isLine)
                 {
@@ -437,9 +442,10 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             table.ColumnDefinitions.AddRange(aligns);
         }
 
-        // Perform all post-processors on cell content
-        // With InsertAfter, emphasis runs before pipe table, so we need to re-run from index 0
-        // to ensure emphasis delimiters in cells are properly matched
+        // Perform all post-processors on cell content. The first pass deliberately ran pipe tables before
+        // emphasis so an unresolved emphasis/subscript delimiter could not claim pipes from neighboring
+        // cells. Now each cell has its own inline root, so re-running from index 0 lets emphasis, links, and
+        // other post-processors resolve normally, but only within that cell.
         foreach (var cell in cells)
         {
             var paragraph = (ParagraphBlock) cell[0];
@@ -657,6 +663,77 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         return inline;
     }
 
+    private static Inline? SkipPreviousEmptyInlines(Inline? inline)
+    {
+        // Promotion can split an unresolved delimiter container into an empty plain ContainerInline followed
+        // by the promoted pipe. Such containers are structural leftovers, not table content.
+        while (inline is not null && IsEmptyOrWhitespaceInline(inline))
+        {
+            inline = inline.PreviousSibling;
+        }
+
+        return inline;
+    }
+
+    private static bool IsEmptyInlineRange(Inline begin, Inline end)
+    {
+        var inline = begin;
+        while (inline is not null)
+        {
+            if (!IsEmptyOrWhitespaceInline(inline))
+            {
+                return false;
+            }
+
+            if (inline == end)
+            {
+                return true;
+            }
+
+            inline = inline.NextSibling;
+        }
+
+        return true;
+    }
+
+    private static bool IsEmptyInline(Inline inline)
+    {
+        return IsEmptyInline(inline, whitespaceIsEmpty: false);
+    }
+
+    private static bool IsEmptyOrWhitespaceInline(Inline inline)
+    {
+        return IsEmptyInline(inline, whitespaceIsEmpty: true);
+    }
+
+    private static bool IsEmptyInline(Inline inline, bool whitespaceIsEmpty)
+    {
+        if (inline is LiteralInline literal)
+        {
+            return whitespaceIsEmpty ? literal.Content.IsEmptyOrWhitespace() : literal.Content.IsEmpty;
+        }
+
+        // Only a plain ContainerInline is considered synthetic/transparent here. Derived containers such as
+        // EmphasisInline or PipeTableDelimiterInline carry markdown semantics and must remain visible.
+        if (inline.GetType() == typeof(ContainerInline))
+        {
+            var child = ((ContainerInline)inline).FirstChild;
+            while (child is not null)
+            {
+                if (!IsEmptyInline(child, whitespaceIsEmpty))
+                {
+                    return false;
+                }
+
+                child = child.NextSibling;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     private static bool IsLine(Inline inline)
     {
         return inline is LineBreakInline;
@@ -728,12 +805,130 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         return false;
     }
 
+    private static void AppendCellInline(ContainerInline cellContainer, Inline inline)
+    {
+        // SplitContainerAtDelimiter introduces plain wrappers for content that used to live after a promoted
+        // boundary inside an unresolved delimiter. Flatten those wrappers while moving content into the cell;
+        // keeping them would make trimming/emptiness checks see artificial cell content. Semantic containers
+        // are preserved because the type check below only matches exactly ContainerInline.
+        if (inline.GetType() == typeof(ContainerInline))
+        {
+            var container = (ContainerInline)inline;
+            var child = container.FirstChild;
+            while (child is not null)
+            {
+                var next = child.NextSibling;
+                child.Remove();
+                AppendCellInline(cellContainer, child);
+                child = next;
+            }
+
+            return;
+        }
+
+        if (IsEmptyInline(inline))
+        {
+            return;
+        }
+
+        if (cellContainer.Span.IsEmpty)
+        {
+            cellContainer.Line = inline.Line;
+            cellContainer.Column = inline.Column;
+            cellContainer.Span = inline.Span;
+        }
+
+        cellContainer.AppendChild(inline);
+        cellContainer.Span.End = inline.Span.End;
+    }
+
+    private static void RemoveEmptyBoundaryInlines(ContainerInline container)
+    {
+        // After flattening, trimming can expose empty synthetic wrappers at the cell boundaries. Drop them so
+        // the cell span and later inline post-processing are based on real cell content.
+        while (container.FirstChild is not null && IsEmptyOrWhitespaceInline(container.FirstChild))
+        {
+            container.FirstChild.Remove();
+        }
+
+        while (container.LastChild is not null && IsEmptyOrWhitespaceInline(container.LastChild))
+        {
+            container.LastChild.Remove();
+        }
+
+        container.UpdateSpanFromChildren(preserveSelfSpan: false);
+    }
+
+    private static bool HasNestedDelimiters(List<Inline> delimiters, ContainerInline root)
+    {
+        for (int i = 0; i < delimiters.Count; i++)
+        {
+            if (delimiters[i].Parent != root)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /// <summary>
-    /// Promotes nested pipe delimiters and line breaks to root level.
+    /// Promotes nested line breaks to root level.
     /// </summary>
     /// <remarks>
-    /// Handles cases like `*a | b*|` where the pipe ends up inside an unmatched emphasis container.
-    /// After promotion, all delimiters become siblings at root level for consistent cell boundary detection.
+    /// Once any tracked table delimiter is nested, row boundaries may be nested in the same unresolved inline
+    /// container. Promoting pipes without promoting those line breaks would let cell extraction walk across
+    /// physical rows and produce incorrect cells.
+    /// </remarks>
+    private static void PromoteNestedLineBreaksToRootLevel(ContainerInline root)
+    {
+        List<Inline>? nestedLineBreaks = null;
+        var stack = new Stack<Inline>();
+        var child = root.LastChild;
+        while (child is not null)
+        {
+            stack.Push(child);
+            child = child.PreviousSibling;
+        }
+
+        while (stack.Count > 0)
+        {
+            var inline = stack.Pop();
+            if (inline is LineBreakInline && inline.Parent != root)
+            {
+                nestedLineBreaks ??= [];
+                nestedLineBreaks.Add(inline);
+            }
+
+            if (inline is ContainerInline container)
+            {
+                child = container.LastChild;
+                while (child is not null)
+                {
+                    stack.Push(child);
+                    child = child.PreviousSibling;
+                }
+            }
+        }
+
+        if (nestedLineBreaks is null)
+        {
+            return;
+        }
+
+        foreach (var lineBreak in nestedLineBreaks)
+        {
+            PromoteNestedDelimiterToRootLevel(lineBreak, root);
+        }
+    }
+
+    /// <summary>
+    /// Promotes nested pipe delimiters and tracked line breaks to root level.
+    /// </summary>
+    /// <remarks>
+    /// Handles cases like `*a | b*|` and `**~$0.01** |` where a table boundary was emitted while an emphasis
+    /// delimiter container was still open. After promotion, all tracked table delimiters become root-level
+    /// siblings, so the table parser can count columns without depending on unresolved inline structure.
     /// </remarks>
     private static void PromoteNestedPipesToRootLevel(List<Inline> delimiters, ContainerInline root)
     {
@@ -747,23 +942,29 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             if (!isPipe && !isLineBreak)
                 continue;
 
-            // Skip if already at root level
-            if (delimiter.Parent == root)
-                continue;
-
-            // Find the top-level ancestor (direct child of root)
-            var ancestor = delimiter.Parent;
-            while (ancestor?.Parent != null && ancestor.Parent != root)
-            {
-                ancestor = ancestor.Parent;
-            }
-
-            if (ancestor is null || ancestor.Parent != root)
-                continue;
-
-            // Split: promote delimiter to be sibling of ancestor
-            SplitContainerAtDelimiter(delimiter, ancestor);
+            PromoteNestedDelimiterToRootLevel(delimiter, root);
         }
+    }
+
+    private static void PromoteNestedDelimiterToRootLevel(Inline delimiter, ContainerInline root)
+    {
+        // Skip if already at root level
+        if (delimiter.Parent == root)
+            return;
+
+        // Find the top-level ancestor (direct child of root). The delimiter will be inserted after this
+        // ancestor, splitting the open inline container at the exact table boundary.
+        var ancestor = delimiter.Parent;
+        while (ancestor?.Parent != null && ancestor.Parent != root)
+        {
+            ancestor = ancestor.Parent;
+        }
+
+        if (ancestor is null || ancestor.Parent != root)
+            return;
+
+        // Split: promote delimiter to be sibling of ancestor
+        SplitContainerAtDelimiter(delimiter, ancestor);
     }
 
     /// <summary>
@@ -774,6 +975,8 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     ///     EmphasisDelimiter { "a", Pipe, "b" }
     /// After splitting:
     ///     EmphasisDelimiter { "a" }, Pipe, Container { "b" }
+    /// The tail container is intentionally plain. It keeps post-pipe content attached to the root until cell
+    /// extraction moves it into a TableCell, without preserving an unresolved delimiter span across the pipe.
     /// </remarks>
     private static void SplitContainerAtDelimiter(Inline delimiter, Inline ancestor)
     {
@@ -803,8 +1006,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         // If there's content after, wrap in new container and insert after delimiter
         if (contentAfter.Count > 0)
         {
-            // Create new container matching the original parent type
-            var newContainer = CreateMatchingContainer(parent);
+            var newContainer = CreateSplitContainer(parent);
             foreach (var inline in contentAfter)
             {
                 newContainer.AppendChild(inline);
@@ -814,12 +1016,12 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     }
 
     /// <summary>
-    /// Creates a container to wrap content split from the source container.
+    /// Creates a plain container to wrap content split from the source container.
     /// </summary>
-    private static ContainerInline CreateMatchingContainer(ContainerInline source)
+    private static ContainerInline CreateSplitContainer(ContainerInline source)
     {
-        // Emphasis processing runs before pipe table processing, so emphasis delimiters
-        // are already resolved. A plain ContainerInline suffices.
+        // The split tail is post-processed after the table cells are isolated.
+        // Use a plain container so unresolved delimiters cannot keep spanning cell boundaries.
         return new ContainerInline
         {
             Span = source.Span,

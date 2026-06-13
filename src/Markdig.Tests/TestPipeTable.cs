@@ -163,6 +163,35 @@ public sealed class TestPipeTable
     }
 
     [Test]
+    public void BoldTableCellWithUnmatchedSubscriptDelimiterDoesNotAddCells()
+    {
+        const string markdown =
+            """
+            | Component | Per query | Per 1,000 queries |
+            |-----------|-----------|-------------------|
+            | Embedding | ~$0.00001 | ~$0.01 |
+            | LLM | ~$0.0015 | ~$1.50 |
+            | **Total** | **~$0.0015** | **~$1.50** |
+            """;
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .Build();
+
+        var document = Markdown.Parse(markdown, pipeline);
+        var table = document.Descendants().OfType<Table>().Single();
+        var rows = table.OfType<TableRow>().ToArray();
+
+        Assert.That(rows, Has.Length.EqualTo(4));
+        Assert.That(rows, Has.All.Count.EqualTo(3));
+
+        var html = Markdown.ToHtml(markdown, pipeline);
+
+        Assert.That(html, Does.Contain("<td><strong>~$0.0015</strong></td>"));
+        Assert.That(html, Does.Contain("<td><strong>~$1.50</strong></td>"));
+    }
+
+    [Test]
     public void CodeInlineWithIndentedContentPreservesWhitespace()
     {
         const string markdown = "`\n   foo\n`";
