@@ -48,7 +48,14 @@ public class LinkInlineRenderer : RoundtripObjectRenderer<LinkInline>
                 {
                     renderer.Write('<');
                 }
-                renderer.Write(link.UnescapedUrl);
+                if (link.UnescapedUrl.IsEmpty)
+                {
+                    renderer.Write(link.Url);
+                }
+                else
+                {
+                    renderer.Write(link.UnescapedUrl);
+                }
                 if (link.UrlHasPointyBrackets)
                 {
                     renderer.Write('>');
