@@ -173,11 +173,12 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         {
             if (htmlEntityInline.Transcoded.Length > 0)
             {
-                pc = htmlEntityInline.Transcoded.RuneAt(htmlEntityInline.Transcoded.End);
+                var transcoded = htmlEntityInline.Transcoded.Text.AsSpan(htmlEntityInline.Transcoded.Start, htmlEntityInline.Transcoded.Length);
+                Rune.DecodeLastFromUtf16(transcoded, out pc, out int charsConsumed);
 
-                if (CjkFriendlyEmphasis)
+                if (CjkFriendlyEmphasis && charsConsumed < transcoded.Length)
                 {
-                    twoPreviousChar = htmlEntityInline.Transcoded.RuneAt(htmlEntityInline.Transcoded.End - pc.Utf16SequenceLength);
+                    Rune.DecodeLastFromUtf16(transcoded.Slice(0, transcoded.Length - charsConsumed), out twoPreviousChar, out _);
                 }
             }
         }

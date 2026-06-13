@@ -106,6 +106,21 @@ namespace Markdig.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        [TestCase("**Start**", "<p><strong>Start</strong></p>\n")]
+        [TestCase("\n**Newline**", "<p><strong>Newline</strong></p>\n")]
+        [TestCase("&#10;**Entity**", "<p>\n<strong>Entity</strong></p>\n")]
+        [TestCase("**First**\n**Second**", "<p><strong>First</strong>\n<strong>Second</strong></p>\n")]
+        [TestCase("**First**&#10;**Second**", "<p><strong>First</strong>\n<strong>Second</strong></p>\n")]
+        [TestCase("&#13;**CarriageReturn**", "<p>\r<strong>CarriageReturn</strong></p>\n")]
+        [TestCase("𠮷**SurrogatePair**", "<p>𠮷<strong>SurrogatePair</strong></p>\n")]
+        public void TestCjkFriendlyEmphasisAfterLineBreaksAndEntities(string source, string expected)
+        {
+            var pipeline = GetPipeline();
+            var actual = Markdown.ToHtml(source, pipeline);
+            Assert.AreEqual(expected, actual);
+        }
+
 #if !NET || !MARKDIG_NO_RUNE_TESTS
         // delimiter: '*', '_' = each character, '?' = either
         // can open/close = whether the places can be in the range of emphasis
