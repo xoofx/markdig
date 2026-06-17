@@ -80,7 +80,7 @@ public static class CharHelper
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPunctuationException(char c) =>
-        c is '−' or '-' or '†' or '‡';
+        c is '−' or '-' or '+' or '†' or '‡';
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsPunctuationException(Rune c) =>

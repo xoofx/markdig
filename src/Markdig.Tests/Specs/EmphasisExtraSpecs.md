@@ -27,10 +27,10 @@ Certain punctuation characters are exempted from the rule forbidding them within
 ```````````````````````````````` example
 One quintillionth can be expressed as 10^-18^
 
-Daggers^†^ and double-daggers^‡^ can be used to denote notes.
+Daggers^†^ and double-daggers^‡^ can be used to denote notes. Plus signs^+^ and entity plus signs^&plus;^ can be used in superscript and subscript: H~+~ and H~&plus;~.
 .
 <p>One quintillionth can be expressed as 10<sup>-18</sup></p>
-<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes.</p>
+<p>Daggers<sup>†</sup> and double-daggers<sup>‡</sup> can be used to denote notes. Plus signs<sup>+</sup> and entity plus signs<sup>+</sup> can be used in superscript and subscript: H<sub>+</sub> and H<sub>+</sub>.</p>
 ````````````````````````````````
 
 ## Inserted
