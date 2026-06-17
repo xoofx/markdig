@@ -61,9 +61,9 @@ public static class LinkHelper
                 continue;
             }
 
-            // Handle German umlauts and Norwegian/Danish characters explicitly (they don't decompose properly)
+            // Handle German and Scandinavian characters explicitly when ASCII-only output is requested.
             ReadOnlySpan<char> normalized;
-            if (IsSpecialScandinavianOrGermanChar(c))
+            if (allowOnlyAscii && IsSpecialScandinavianOrGermanChar(c))
             {
                 normalized = NormalizeScandinavianOrGermanChar(c);
             }
