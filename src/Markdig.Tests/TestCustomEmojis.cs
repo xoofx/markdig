@@ -137,4 +137,54 @@ public class TestCustomEmojis
         var actual = Markdown.ToHtml(input, pipeline);
         Assert.AreEqual(expected, actual);
     }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void TestEmojiDoesNotBreakPipeTableAlignment(bool useEmojiFirst)
+    {
+        const string input = "| Left | Center | Right |\n| ---- |:------:| -----:|\n| a | b | c |";
+        const string expected = "<table>\n<thead>\n<tr>\n<th>Left</th>\n<th style=\"text-align: center;\">Center</th>\n<th style=\"text-align: right;\">Right</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>a</td>\n<td style=\"text-align: center;\">b</td>\n<td style=\"text-align: right;\">c</td>\n</tr>\n</tbody>\n</table>\n";
+
+        var pipelineBuilder = new MarkdownPipelineBuilder();
+        if (useEmojiFirst)
+        {
+            pipelineBuilder.UseEmojiAndSmiley().UsePipeTables();
+        }
+        else
+        {
+            pipelineBuilder.UsePipeTables().UseEmojiAndSmiley();
+        }
+
+        var pipeline = pipelineBuilder.Build();
+        var actual = Markdown.ToHtml(input, pipeline);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void TestEmojiDoesNotBreakGridTableAlignment()
+    {
+        const string input = "+-----+:---:+-----+\n|  A  | :x: |  C  |\n+-----+-----+-----+";
+        const string expected = "<table>\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<col style=\"width:33.33%\" />\n<tbody>\n<tr>\n<td>A</td>\n<td style=\"text-align: center;\">❌</td>\n<td>C</td>\n</tr>\n</tbody>\n</table>\n";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseGridTables()
+            .UseEmojiAndSmiley()
+            .Build();
+
+        var actual = Markdown.ToHtml(input, pipeline);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void TestPipeTableExtensionDoesNotSuppressNeutralFaceInParagraph()
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .UsePipeTables()
+            .UseEmojiAndSmiley()
+            .Build();
+
+        var actual = Markdown.ToHtml("text :|", pipeline);
+        Assert.AreEqual("<p>text 😐</p>\n", actual);
+    }
 }

@@ -29,7 +29,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     public PipeTableParser(LineBreakInlineParser lineBreakParser, PipeTableOptions? options = null)
     {
         _lineBreakParser = lineBreakParser ?? throw new ArgumentNullException(nameof(lineBreakParser));
-        OpeningCharacters = ['|', '\n', '\r'];
+        OpeningCharacters = ['|', '\n', '\r', ':'];
         Options = options ?? new PipeTableOptions();
     }
 
@@ -50,6 +50,18 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         }
 
         var c = slice.CurrentChar;
+
+        if (c == ':')
+        {
+            var tableStateForColon = processor.ParserStates[Index] as TableState;
+            if (tableStateForColon is null || !IsHeaderSeparatorColonBeforePipe(slice))
+            {
+                return false;
+            }
+
+            MatchLiteralColon(processor, ref slice);
+            return true;
+        }
 
         // If we have not a delimiter on the first line of a paragraph, don't bother to continue
         // tracking other delimiters on following lines
@@ -114,6 +126,142 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         }
 
         return true;
+    }
+
+    private static bool IsHeaderSeparatorColonBeforePipe(StringSlice slice)
+    {
+        if (slice.PeekChar() != '|')
+        {
+            return false;
+        }
+
+        var text = slice.Text;
+        int currentLineStart = FindLineStart(text, slice.Start);
+        int currentLineEnd = FindLineEnd(text, slice.Start, slice.End);
+
+        if (!IsHeaderSeparatorLine(text, currentLineStart, currentLineEnd))
+        {
+            return false;
+        }
+
+        int previousLineStart = FindPreviousLineStart(text, currentLineStart);
+        return previousLineStart >= 0 && LineHasPipe(text, previousLineStart, currentLineStart - 1);
+    }
+
+    private static void MatchLiteralColon(InlineProcessor processor, ref StringSlice slice)
+    {
+        int position = processor.GetSourcePosition(slice.Start, out int line, out int column);
+        if (processor.Inline is LiteralInline previousLiteral
+            && ReferenceEquals(previousLiteral.Content.Text, slice.Text)
+            && previousLiteral.Content.End + 1 == slice.Start)
+        {
+            previousLiteral.Content.End = slice.Start;
+            previousLiteral.Span.End = position;
+            processor.Inline = previousLiteral;
+        }
+        else
+        {
+            processor.Inline = new LiteralInline
+            {
+                Content = new StringSlice(slice.Text, slice.Start, slice.Start),
+                Span = new SourceSpan(position, position),
+                Line = line,
+                Column = column,
+            };
+        }
+
+        slice.SkipChar();
+    }
+
+    private static int FindLineStart(string text, int position)
+    {
+        for (int i = position - 1; i >= 0; i--)
+        {
+            if (text[i] == '\r' || text[i] == '\n')
+            {
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
+
+    private static int FindLineEnd(string text, int position, int sliceEnd)
+    {
+        int end = Math.Min(sliceEnd, text.Length - 1);
+        for (int i = position; i <= end; i++)
+        {
+            if (text[i] == '\r' || text[i] == '\n')
+            {
+                return i - 1;
+            }
+        }
+
+        return end;
+    }
+
+    private static int FindPreviousLineStart(string text, int currentLineStart)
+    {
+        int previousLineEnd = currentLineStart - 2;
+        if (previousLineEnd >= 0 && text[previousLineEnd] == '\r')
+        {
+            previousLineEnd--;
+        }
+
+        if (previousLineEnd < 0)
+        {
+            return -1;
+        }
+
+        for (int i = previousLineEnd; i >= 0; i--)
+        {
+            if (text[i] == '\r' || text[i] == '\n')
+            {
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
+
+    private static bool IsHeaderSeparatorLine(string text, int start, int end)
+    {
+        bool hasPipe = false;
+        bool hasDash = false;
+
+        for (int i = start; i <= end; i++)
+        {
+            switch (text[i])
+            {
+                case '|':
+                    hasPipe = true;
+                    break;
+                case '-':
+                    hasDash = true;
+                    break;
+                case ':':
+                case ' ':
+                case '\t':
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        return hasPipe && hasDash;
+    }
+
+    private static bool LineHasPipe(string text, int start, int end)
+    {
+        for (int i = start; i <= end; i++)
+        {
+            if (text[i] == '|')
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>

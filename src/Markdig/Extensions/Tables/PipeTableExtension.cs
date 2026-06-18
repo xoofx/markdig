@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Extensions.Emoji;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 
@@ -46,7 +47,11 @@ public class PipeTableExtension : IMarkdownExtension
             // delimiter inside a cell, e.g. the subscript `~` in `**~$1.50**`, can leave pipe delimiters nested
             // in an emphasis delimiter tree and make the table parser see phantom cells. PipeTableParser re-runs
             // inline post-processors inside each extracted cell after the table structure has been fixed.
-            pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new PipeTableParser(lineBreakParser!, Options));
+            var pipeTableParser = new PipeTableParser(lineBreakParser!, Options);
+            if (!pipeline.InlineParsers.InsertBefore<EmojiParser>(pipeTableParser))
+            {
+                pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(pipeTableParser);
+            }
         }
     }
 

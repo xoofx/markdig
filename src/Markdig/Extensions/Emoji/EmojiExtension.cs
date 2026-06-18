@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 
 namespace Markdig.Extensions.Emoji;
@@ -32,8 +33,9 @@ public class EmojiExtension : IMarkdownExtension
     {
         if (!pipeline.InlineParsers.Contains<EmojiParser>())
         {
-            // Insert the parser before any other parsers
-            pipeline.InlineParsers.Insert(0, new EmojiParser(EmojiMapping));
+            // Insert before emphasis so emoji shortcodes are parsed early, while preserving
+            // precedence for structural parsers registered earlier in the pipeline.
+            pipeline.InlineParsers.InsertBefore<EmphasisInlineParser>(new EmojiParser(EmojiMapping));
         }
     }
 
