@@ -59,7 +59,7 @@ If you are looking for support for an old .NET Framework 3.5 or 4.0, you can dow
 	
 ### Third Party Extensions
 
-- [**WPF/XAML Markdown Renderer**: `markdig.wpf`](https://github.com/Kryptos-FR/markdig.wpf)
+- [**Avalonia Markdown Renderer**: `MarkView.Avalonia`](https://github.com/Kryptos-FR/MarkView.Avalonia)
 - [**WPF/XAML Markdown Renderer**: `Neo.Markdig.Xaml`](https://github.com/neolithos/NeoMarkdigXaml)
 - [**Syntax highlighting**: `Markdig.SyntaxHighlighting`](https://github.com/RichardSlater/Markdig.SyntaxHighlighting)
 - [**Syntax highlighting using ColorCode-Universal**: `Markdown.ColorCode`](https://github.com/wbaldoumas/markdown-colorcode)
