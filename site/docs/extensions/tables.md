@@ -28,6 +28,16 @@ Columns are separated by `|`. A header row is separated from the body by a line 
 | cmark    | C        | 1.6k  |
 | markdown-it | JavaScript | 18k |
 
+For backward compatibility, Markdig allows individual separator cells to be empty or contain only whitespace, provided at least one cell in the separator row contains dashes:
+
+```markdown
+| Field | PersonShared | Person |
+| --- | | --- |
+| Name | Master | Inherit |
+```
+
+An empty separator cell has no explicit alignment. A separator row containing only pipes and whitespace does not define a table. This compatibility behavior is more permissive than strict GFM syntax; use dashes in every separator cell for portability.
+
 ### Column alignment
 
 Use colons in the separator row to control alignment:
@@ -108,6 +118,8 @@ var pipeline = new MarkdownPipelineBuilder()
 #### Inferring column widths from the separator
 
 With `InferColumnWidthsFromSeparator = true`, the width of each column is proportional to the number of `-` characters under it in the separator row. This is useful when you want authors to control relative column widths directly in the Markdown source.
+
+An empty separator cell contributes no dashes and gets `Width = 0`; the nonempty separator cells determine the remaining widths.
 
 ```csharp
 var pipeline = new MarkdownPipelineBuilder()

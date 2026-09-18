@@ -788,14 +788,15 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         align = null;
         delimiterCount = 0;
 
+        // Empty cells are allowed; FindHeaderRow requires at least one dash across the row.
         if (inline is null || inline is PipeTableDelimiterInline)
         {
-            return false;
+            return true;
         }
 
         if (inline is LiteralInline literal && literal.Content.IsEmptyOrWhitespace())
         {
-            return false;
+            return true;
         }
 
         return ParseHeaderString(inline, out align, out delimiterCount);
