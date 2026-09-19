@@ -185,6 +185,61 @@ line3");
         AssertNormalizeNoTrim("- > p");
     }
 
+    [TestCase("- >", "- > ")]
+    [TestCase("1. >", "1. > ")]
+    [TestCase("- >\n- a", "- > \n- a")]
+    [TestCase("1. >\n2. a", "1. > \n2. a")]
+    [TestCase("- > >", "- > > ")]
+    [TestCase("- >\n\ntext", "- > \n\ntext")]
+    [TestCase(">", "> ")]
+    public void EmptyQuotePreservesMarkers(string markdown, string expected)
+    {
+        AssertNormalizeNoTrim(markdown, expected);
+        AssertNormalizeNoTrim(expected);
+    }
+
+    [Test]
+    public void EmptyQuoteWithoutSpacePreservesMarkers()
+    {
+        AssertNormalizeNoTrim("- >", options: new NormalizeOptions { SpaceAfterQuoteBlock = false });
+    }
+
+    [Test]
+    public void ListOrderedWithQuoteBlocks()
+    {
+        AssertNormalizeNoTrim("List of blockquotes\n1. > first\n2. > second\n3. > third",
+            "List of blockquotes\n\n1. > first\n2. > second\n3. > third");
+        AssertNormalizeNoTrim("9. > first\n   > continuation\n10. > second\n    > continuation");
+    }
+
+    [Test]
+    public void HangingIndentUsesMarkerOnceAndComposesWithNestedIndents()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        renderer.PushHangingIndent("10. ");
+        renderer.PushIndent("> ");
+        renderer.WriteLine("first");
+        renderer.WriteLine("second");
+        renderer.PopIndent();
+        renderer.WriteLine("third");
+        renderer.PopIndent();
+        renderer.Write("last");
+
+        Assert.AreEqual("10. > first\n    > second\n    third\nlast", writer.ToString());
+    }
+
+    [Test]
+    public void HangingIndentRejectsNullWithoutChangingState()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        var exception = Assert.Throws<ArgumentNullException>(() => renderer.PushHangingIndent(null));
+        Assert.AreEqual("marker", exception.ParamName);
+        renderer.Write("text");
+        Assert.AreEqual("text", writer.ToString());
+    }
+
     [Test]
     public void ListUnorderedEmpty()
     {

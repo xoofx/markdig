@@ -198,10 +198,17 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     }
 
     /// <summary>
-    /// Pushes a hanging indent. Where the first line's indent is provided and
-    /// subsequent lines will be indented by the same amount with blank spaces
+    /// Pushes an indent that uses the specified marker on its first line and
+    /// the same number of spaces on subsequent lines.
     /// </summary>
     /// <param name="marker">The first line of the hanging indent.</param>
+    /// <remarks>
+    /// Call at the beginning of a line, before writing child content. This method
+    /// marks indents as pending but does not insert a newline; use <see cref="EnsureLine"/>
+    /// first if necessary. The next write emits all active indents, including this marker.
+    /// Call <see cref="PopIndent"/> after writing the indented content.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="marker"/> is null.</exception>
     public void PushHangingIndent(string marker)
     {
         if (marker is null) ThrowHelper.ArgumentNullException(nameof(marker));
