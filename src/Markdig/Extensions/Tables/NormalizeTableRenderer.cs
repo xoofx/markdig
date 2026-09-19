@@ -10,7 +10,6 @@ namespace Markdig.Extensions.Tables;
 public class NormalizeTableRenderer : NormalizeObjectRenderer<Table>
 {
     private const string PipeSeparator = "|";
-    private const string HeaderSeparator = "---";
     private const string AlignmentChar = ":";
     private const string MarginSeparator = " ";
 
@@ -47,19 +46,22 @@ public class NormalizeTableRenderer : NormalizeObjectRenderer<Table>
             {
                 renderer.WriteLine();
 
-                bool alignmentEnabled = obj.ColumnDefinitions.Any(c => c.Alignment != TableColumnAlign.Left);
-
                 renderer.Write(PipeSeparator);
 
-                foreach (var column in obj.ColumnDefinitions)
+                for (var columnIndex = 0; columnIndex < row.Count; columnIndex++)
                 {
+                    var column = columnIndex < obj.ColumnDefinitions.Count ? obj.ColumnDefinitions[columnIndex] : null;
+                    // Match the HTML renderer's alignment fallback for expanded rows.
+                    var alignment = obj.ColumnDefinitions.Count > 0
+                        ? obj.ColumnDefinitions[Math.Min(columnIndex, obj.ColumnDefinitions.Count - 1)].Alignment
+                        : null;
                     renderer.Write(MarginSeparator);
-                    if (alignmentEnabled && (column.Alignment == TableColumnAlign.Left || column.Alignment == TableColumnAlign.Center))
+                    if (alignment == TableColumnAlign.Left || alignment == TableColumnAlign.Center)
                     {
                         renderer.Write(AlignmentChar);
                     }
-                    renderer.Write(HeaderSeparator);
-                    if (alignmentEnabled && (column.Alignment == TableColumnAlign.Right || column.Alignment == TableColumnAlign.Center))
+                    renderer.Write('-', column is { SeparatorDashCount: > 0 } ? column.SeparatorDashCount : 3);
+                    if (alignment == TableColumnAlign.Right || alignment == TableColumnAlign.Center)
                     {
                         renderer.Write(AlignmentChar);
                     }
