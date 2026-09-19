@@ -150,6 +150,13 @@ public class LinkInlineParser : InlineParser
             return false;
         }
 
+        // An implicit definition must not hijack a bracket nested inside a
+        // still-open link, which would break the outer one.
+        if (!linkRef.AllowResolutionInsideOpenLink && HasActiveAncestorLink(parent))
+        {
+            return false;
+        }
+
         Inline? link = null;
         // Try to use a callback directly defined on the LinkReferenceDefinition
         if (linkRef.CreateLinkInline != null)
@@ -428,6 +435,24 @@ public class LinkInlineParser : InlineParser
 
             return null;
         }
+    }
+
+    /// <summary>
+    /// Determines whether the delimiter is nested inside another link/image
+    /// delimiter that may still resolve.
+    /// </summary>
+    private static bool HasActiveAncestorLink(LinkDelimiterInline delimiter)
+    {
+        var inline = delimiter.Parent;
+        while (inline != null)
+        {
+            if (inline is LinkDelimiterInline { IsActive: true })
+            {
+                return true;
+            }
+            inline = inline.Parent;
+        }
+        return false;
     }
 
     private static void MarkParentAsInactive(Inline? inline)

@@ -18,6 +18,9 @@ public class HeadingLinkReferenceDefinition : LinkReferenceDefinition
     public HeadingLinkReferenceDefinition(HeadingBlock headling)
     {
         Heading = headling;
+        // Created implicitly, so it must not resolve inside another still-open
+        // link bracket, e.g. [Some text [Heading]](url).
+        AllowResolutionInsideOpenLink = false;
     }
 
     /// <summary>
