@@ -143,8 +143,8 @@ the first column gets `Width = 25` and the second `Width = 75` (a 3:9 ratio of d
 pipes and consistent cell spacing. It preserves explicit column alignments and
 emits a separator for every header cell, including columns added to accommodate
 wider body rows. With `InferColumnWidthsFromSeparator` enabled, the original
-separator dash counts are retained for parsed columns so their inferred width
-proportions survive normalization. Without width inference, separators use three
+separator dash counts (including zero for empty cells) are retained for parsed
+columns so their inferred width proportions survive normalization. Without width inference, separators use three
 dashes.
 
 This support targets pipe tables, not grid tables. When both extensions are

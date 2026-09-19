@@ -60,7 +60,7 @@ public class NormalizeTableRenderer : NormalizeObjectRenderer<Table>
                     {
                         renderer.Write(AlignmentChar);
                     }
-                    renderer.Write('-', column is { SeparatorDashCount: > 0 } ? column.SeparatorDashCount : 3);
+                    renderer.Write('-', column?.SeparatorDashCount ?? 3);
                     if (alignment == TableColumnAlign.Right || alignment == TableColumnAlign.Center)
                     {
                         renderer.Write(AlignmentChar);

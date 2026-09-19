@@ -647,6 +647,8 @@ Text following the table.");
     [TestCase("---", "---------")]
     [TestCase(":---", "-------:")]
     [TestCase(":-----:", ":-------")]
+    [TestCase("", "---")]
+    [TestCase("---", "")]
     public void PipeTableInferredWidthsSurviveNormalization(string first, string second)
     {
         var pipeline = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions
@@ -665,6 +667,25 @@ Text following the table.");
     {
         AssertNormalizeNoTrim("| A | B |\n| --- | --------- |\n| x | y |",
             "| A | B |\n| --- | --- |\n| x | y |");
+        AssertNormalizeNoTrim("| A | B |\n| --- | |\n| x | y |",
+            "| A | B |\n| --- | --- |\n| x | y |");
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void EmptyMiddleSeparatorPreservesInferredWidths(bool headerOnly)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions
+        {
+            InferColumnWidthsFromSeparator = true
+        }).Build();
+        var markdown = "| A | B | C |\n| --- |  | --- |" + (headerOnly ? "" : "\n| x | y | z |");
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual(markdown, normalized);
+        var table = (Table)Markdown.Parse(normalized, pipeline)[0];
+        Assert.AreEqual(new[] { 50f, 0f, 50f }, table.ColumnDefinitions.Select(column => column.Width).ToArray());
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+        Assert.AreEqual(normalized, Markdown.Normalize(normalized, pipeline: pipeline));
     }
 
     [Test]
@@ -680,7 +701,7 @@ Text following the table.");
         column.Width = column.Width;
         Assert.AreEqual(9, column.SeparatorDashCount);
         column.Width = 0;
-        Assert.AreEqual(0, column.SeparatorDashCount);
+        Assert.IsNull(column.SeparatorDashCount);
     }
 
     private static void AssertSyntax(string expected, MarkdownObject syntax)
