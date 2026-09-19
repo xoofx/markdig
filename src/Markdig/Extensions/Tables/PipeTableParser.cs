@@ -770,7 +770,9 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         {
             foreach (var columnDefinition in columnDefinitions)
             {
+                var dashCount = (int)columnDefinition.Width;
                 columnDefinition.Width = (columnDefinition.Width * 100) / totalDelimiterCount;
+                columnDefinition.SeparatorDashCount = dashCount;
             }
         }
         else

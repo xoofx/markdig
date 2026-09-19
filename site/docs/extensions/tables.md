@@ -137,6 +137,22 @@ Given this input:
 
 the first column gets `Width = 25` and the second `Width = 75` (a 3:9 ratio of dashes, normalized to 100). The HTML renderer emits a `<colgroup>` with `<col style="width:N%" />` entries so the widths flow through to the rendered table. The values are also available on `Table.ColumnDefinitions[i].Width` for custom renderers.
 
+### Normalizing pipe tables
+
+`Markdown.Normalize(markdown, pipeline: pipeline)` writes pipe tables with outer
+pipes and consistent cell spacing. It preserves explicit column alignments and
+emits a separator for every header cell, including columns added to accommodate
+wider body rows. With `InferColumnWidthsFromSeparator` enabled, the original
+separator dash counts are retained for parsed columns so their inferred width
+proportions survive normalization. Without width inference, separators use three
+dashes.
+
+This support targets pipe tables, not grid tables. When both extensions are
+enabled (including via `UseAdvancedExtensions()`), the normalizer also attempts
+to write grid tables as pipe tables. Multiline cells, spans, and richer grid-table
+content are not reliably preserved; do not use this conversion for lossless
+grid-table round-tripping.
+
 ## Grid tables
 
 Enable with `.UseGridTables()` (included in `UseAdvancedExtensions()`).

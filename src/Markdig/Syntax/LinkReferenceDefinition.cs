@@ -34,6 +34,7 @@ public class LinkReferenceDefinition : LeafBlock
     public LinkReferenceDefinition() : base(null)
     {
         IsOpen = false;
+        AllowResolutionInsideOpenLink = true;
     }
 
     /// <summary>
@@ -135,6 +136,16 @@ public class LinkReferenceDefinition : LeafBlock
     /// This callback is called when an inline link is matching this reference definition.
     /// </remarks>
     public CreateLinkInlineDelegate? CreateLinkInline { get; set; }
+
+    /// <summary>
+    /// Gets whether this definition may resolve into a link while its label is
+    /// nested inside another still-open link or image bracket.
+    /// </summary>
+    /// <remarks>
+    /// <c>true</c> for user-authored definitions, preserving CommonMark's "links
+    /// cannot contain links". Implicitly generated ones can initialize it to <c>false</c>.
+    /// </remarks>
+    internal bool AllowResolutionInsideOpenLink { get; private protected init; }
 
     /// <summary>
     /// Tries to the parse the specified text into a definition.

@@ -19,7 +19,15 @@ public class QuoteBlockRenderer : NormalizeObjectRenderer<QuoteBlock>
     {
         var quoteIndent = renderer.Options.SpaceAfterQuoteBlock ? obj.QuoteChar + " " : obj.QuoteChar.ToString();
         renderer.PushIndent(quoteIndent);
-        renderer.WriteChildren(obj);
+        if (obj.Count == 0)
+        {
+            // Emit the quote prefix and any pending list marker even without children.
+            renderer.Write("");
+        }
+        else
+        {
+            renderer.WriteChildren(obj);
+        }
         renderer.PopIndent();
 
         renderer.FinishBlock(true);

@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Extensions.Tables;
 using Markdig.Helpers;
 using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
@@ -174,6 +175,125 @@ line3");
     }
 
     [Test]
+    public void ListUnorderedSingleLineNested()
+    {
+        AssertNormalizeNoTrim("- - a");
+    }
+
+    [Test]
+    public void ListUnorderedWithQuoteBlock()
+    {
+        AssertNormalizeNoTrim("- > p");
+    }
+
+    [TestCase("- >", "- > ")]
+    [TestCase("1. >", "1. > ")]
+    [TestCase("- >\n- a", "- > \n- a")]
+    [TestCase("1. >\n2. a", "1. > \n2. a")]
+    [TestCase("- > >", "- > > ")]
+    [TestCase("- >\n\ntext", "- > \n\ntext")]
+    [TestCase(">", "> ")]
+    public void EmptyQuotePreservesMarkers(string markdown, string expected)
+    {
+        AssertNormalizeNoTrim(markdown, expected);
+        AssertNormalizeNoTrim(expected);
+    }
+
+    [Test]
+    public void EmptyQuoteWithoutSpacePreservesMarkers()
+    {
+        AssertNormalizeNoTrim("- >", options: new NormalizeOptions { SpaceAfterQuoteBlock = false });
+    }
+
+    [Test]
+    public void ListOrderedWithQuoteBlocks()
+    {
+        AssertNormalizeNoTrim("List of blockquotes\n1. > first\n2. > second\n3. > third",
+            "List of blockquotes\n\n1. > first\n2. > second\n3. > third");
+        AssertNormalizeNoTrim("9. > first\n   > continuation\n10. > second\n    > continuation");
+    }
+
+    [Test]
+    public void HangingIndentUsesMarkerOnceAndComposesWithNestedIndents()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        renderer.PushHangingIndent("10. ");
+        renderer.PushIndent("> ");
+        renderer.WriteLine("first");
+        renderer.WriteLine("second");
+        renderer.PopIndent();
+        renderer.WriteLine("third");
+        renderer.PopIndent();
+        renderer.Write("last");
+
+        Assert.AreEqual("10. > first\n    > second\n    third\nlast", writer.ToString());
+    }
+
+    [Test]
+    public void HangingIndentRejectsNullWithoutChangingState()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        var exception = Assert.Throws<ArgumentNullException>(() => renderer.PushHangingIndent(null));
+        Assert.AreEqual("marker", exception.ParamName);
+        renderer.Write("text");
+        Assert.AreEqual("text", writer.ToString());
+    }
+
+    [Test]
+    public void LineSpecificIndentRejectsNullWithoutChangingState()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        renderer.PushIndent("> ");
+        renderer.Write("first");
+
+        var exception = Assert.Throws<ArgumentNullException>(() => renderer.PushIndent((string[])null));
+        Assert.AreEqual("lineSpecific", exception.ParamName);
+        renderer.WriteLine(" second");
+        renderer.Write("third");
+        renderer.PopIndent();
+
+        Assert.AreEqual("> first second\n> third", writer.ToString());
+    }
+
+    [Test]
+    public void LineSpecificIndentStopsAfterLastEntry()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        renderer.PushIndent(new[] { "first: ", "next: " });
+        renderer.WriteLine("a");
+        renderer.WriteLine("b");
+        renderer.Write("c");
+        renderer.PopIndent();
+
+        Assert.AreEqual("first: a\nnext: b\nc", writer.ToString());
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void OrderedListNormalizationRenumbersWithoutSourceBullets(bool trackTrivia)
+    {
+        var builder = new MarkdownPipelineBuilder();
+        if (trackTrivia)
+        {
+            builder.EnableTrackTrivia();
+        }
+        var normalized = Markdown.Normalize("3. first\n9. second\n9. third", pipeline: builder.Build());
+        var list = (ListBlock)Markdown.Parse(normalized)[0];
+        Assert.AreEqual(new[] { 3, 4, 5 }, list.Select(item => ((ListItemBlock)item).Order).ToArray());
+    }
+
+    [Test]
+    public void ListUnorderedEmpty()
+    {
+        AssertNormalizeNoTrim("-", "- ");
+        AssertNormalizeNoTrim("- ");
+    }
+
+    [Test]
     public void ListOrderedLooseAndCodeBlock()
     {
         AssertNormalizeNoTrim(@"1. ```
@@ -238,6 +358,13 @@ line3");
     - Bar
 11. c
 12. c");
+    }
+
+    [Test]
+    public void ListOrderedEmpty()
+    {
+        AssertNormalizeNoTrim("1.", "1. ");
+        AssertNormalizeNoTrim("1. ");
     }
 
     [Test]
@@ -458,6 +585,104 @@ This is a last line";
         AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from mailto:hello@example.com", new NormalizeOptions() { ExpandAutoLinks = false, });
     }
 
+    [Test]
+    public void PipeTables()
+    {
+        AssertNormalizeNoTrim(@"Foo | Bar
+--- | ---
+Hello | *World*",            @"| Foo | Bar |
+| --- | --- |
+| Hello | *World* |");
+        AssertNormalizeNoTrim(@"
+Foo | Bar
+:---: | ---:
+Hello | *World*",             @"| Foo | Bar |
+| :---: | ---: |
+| Hello | *World* |");
+        AssertNormalizeNoTrim(@"| Foo |
+| --- |
+| Hello World |");
+        AssertNormalizeNoTrim(@"| Foo | Bar |
+| --- | --- |
+| Hello World | *World* |");
+        AssertNormalizeNoTrim(@"| Foo | Bar |
+| :--- | ---: |
+| Hello World | *World* |");
+    }
+
+    [Test]
+    public void PipeTablesFollowedByText()
+    {
+        AssertNormalizeNoTrim(@"| Foo |
+| --- |
+| Hello World |
+
+Text following the table.");
+    }
+
+    [TestCase("| A |\n| :--- |\n| x |")]
+    [TestCase("| A | B |\n| :--- | :--- |\n| x | y |")]
+    [TestCase("| A | B |\n| --- | :--- |\n| x | y |")]
+    public void PipeTableAlignmentSurvivesNormalization(string markdown)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual(markdown, normalized);
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+    }
+
+    [TestCase("---")]
+    [TestCase(":---")]
+    [TestCase("---:")]
+    public void PipeTableSeparatorMatchesExpandedHeader(string separator)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+        var markdown = $"| A |\n| {separator} |\n| x | y |";
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual($"| A |  |\n| {separator} | {separator} |\n| x | y |", normalized);
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+        Assert.AreEqual(normalized, Markdown.Normalize(normalized, pipeline: pipeline));
+    }
+
+    [TestCase("---", "---------")]
+    [TestCase(":---", "-------:")]
+    [TestCase(":-----:", ":-------")]
+    public void PipeTableInferredWidthsSurviveNormalization(string first, string second)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions
+        {
+            InferColumnWidthsFromSeparator = true
+        }).Build();
+        var markdown = $"| A | B |\n| {first} | {second} |\n| x | y |";
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual(markdown, normalized);
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+        Assert.AreEqual(normalized, Markdown.Normalize(normalized, pipeline: pipeline));
+    }
+
+    [Test]
+    public void PipeTableWithoutWidthInferenceUsesStandardSeparators()
+    {
+        AssertNormalizeNoTrim("| A | B |\n| --- | --------- |\n| x | y |",
+            "| A | B |\n| --- | --- |\n| x | y |");
+    }
+
+    [Test]
+    public void ChangingInferredWidthDiscardsOriginalSeparatorCount()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions
+        {
+            InferColumnWidthsFromSeparator = true
+        }).Build();
+        var table = (Table)Markdown.Parse("| A | B |\n| --- | --------- |", pipeline)[0];
+        var column = table.ColumnDefinitions[1];
+        Assert.AreEqual(9, column.SeparatorDashCount);
+        column.Width = column.Width;
+        Assert.AreEqual(9, column.SeparatorDashCount);
+        column.Width = 0;
+        Assert.AreEqual(0, column.SeparatorDashCount);
+    }
+
     private static void AssertSyntax(string expected, MarkdownObject syntax)
     {
         var writer = new StringWriter();
@@ -499,6 +724,7 @@ This is a last line";
             .UseAutoLinks()
             .UseJiraLinks(new Extensions.JiraLinks.JiraLinkOptions("https://jira.example.com"))
             .UseTaskLists()
+            .UsePipeTables()
             .Build();
 
         var result = Markdown.Normalize(input, options, pipeline: pipeline);

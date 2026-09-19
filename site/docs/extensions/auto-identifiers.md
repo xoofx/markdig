@@ -28,6 +28,12 @@ You can then link to it:
 See [Getting Started](#getting-started).
 ```
 
+With the default `AutoLink` option, `[Getting Started]` also links to the heading.
+These implicit heading references do not resolve inside another still-open link or
+image bracket. For example, `[Read [Getting Started]](/guide)` links the entire
+label `Read [Getting Started]` to `/guide`. Explicit reference definitions such as
+`[Getting Started]: /guide` retain normal CommonMark reference-link behavior.
+
 ## ID generation rules
 
 1. Convert to lowercase
