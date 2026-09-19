@@ -14,6 +14,7 @@ A pipe table is detected when:
   - followed by a sequence of at least one `-` character
   - followed by an optional `:` to specify right align (or center align if left align is also defined)
   - ending by optional spaces
+- For backward compatibility, individual header column separators may also be empty or contain only whitespace, with no explicit alignment. At least one column separator in the row must contain a dash. This is more permissive than strict GFM table syntax.
  
 Because a list has a higher precedence than a pipe table, a table header row separator requires at least 2 dashes `--` to start a header row:
 
@@ -793,4 +794,158 @@ A sequence of rows containing only pipes is not a table separator row and must r
 <p>|||
 |||
 |||</p>
+````````````````````````````````
+
+A partially empty separator row still defines a table:
+
+```````````````````````````````` example
+| Field | PersonShared | Person |
+| --- | | --- |
+| Name | Master | Inherit |
+.
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>PersonShared</th>
+<th>Person</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Master</td>
+<td>Inherit</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+An empty first separator cell does not shift the alignment of the following columns:
+
+```````````````````````````````` example
+| A | B | C |
+||:---|---:|
+| 1 | 2 | 3 |
+.
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th style="text-align: left;">B</th>
+<th style="text-align: right;">C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+Adjacent pipes may also delimit an empty middle separator cell:
+
+```````````````````````````````` example
+| A | B | C |
+|:---:||---:|
+| 1 | 2 | 3 |
+.
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">A</th>
+<th>B</th>
+<th style="text-align: right;">C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>2</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+An empty last separator cell is distinct from the optional trailing pipe:
+
+```````````````````````````````` example
+| A | B | C |
+|:---|---:||
+| 1 | 2 | 3 |
+.
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">A</th>
+<th style="text-align: right;">B</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">2</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+Empty separator cells also work without outer pipes:
+
+```````````````````````````````` example
+A | B | C
+--- | | ---:
+1 | 2 | 3
+.
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th style="text-align: right;">C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+````````````````````````````````
+
+A header-only table may have multiple empty separator cells:
+
+```````````````````````````````` example
+| A | B | C |
+| |:---:| |
+.
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th style="text-align: center;">B</th>
+<th>C</th>
+</tr>
+</thead>
+</table>
+````````````````````````````````
+
+A separator row containing only whitespace and pipes still remains a paragraph:
+
+```````````````````````````````` example
+| A | B | C |
+| | | |
+| 1 | 2 | 3 |
+.
+<p>| A | B | C |
+| | | |
+| 1 | 2 | 3 |</p>
 ````````````````````````````````

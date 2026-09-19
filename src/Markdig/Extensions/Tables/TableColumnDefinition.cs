@@ -12,7 +12,8 @@ public class TableColumnDefinition
     private float _width;
 
     // Preserve exact source proportions when normalizing inferred pipe-table widths.
-    internal int SeparatorDashCount { get; set; }
+    // Null means unavailable; zero represents a parsed empty separator cell.
+    internal int? SeparatorDashCount { get; set; }
 
     /// <summary>
     /// Gets or sets the width (in percentage) of this column. A value of 0 is unspecified.
@@ -24,7 +25,7 @@ public class TableColumnDefinition
         {
             if (_width != value)
             {
-                SeparatorDashCount = 0;
+                SeparatorDashCount = null;
             }
             _width = value;
         }

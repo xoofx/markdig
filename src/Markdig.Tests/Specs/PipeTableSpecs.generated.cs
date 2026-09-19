@@ -27,6 +27,7 @@ namespace Markdig.Tests.Specs.PipeTables
         //   - followed by a sequence of at least one `-` character
         //   - followed by an optional `:` to specify right align (or center align if left align is also defined)
         //   - ending by optional spaces
+        // - For backward compatibility, individual header column separators may also be empty or contain only whitespace, with no explicit alignment. At least one column separator in the row must contain a dash. This is more permissive than strict GFM table syntax.
         //  
         // Because a list has a higher precedence than a pipe table, a table header row separator requires at least 2 dashes `--` to start a header row:
         [Test]
@@ -1029,6 +1030,216 @@ namespace Markdig.Tests.Specs.PipeTables
             //     |||</p>
 
             TestParser.TestSpec("|||\n|||\n|||", "<p>|||\n|||\n|||</p>", "pipetables|advanced", context: "Example 28\nSection Extensions / Pipe Table\n");
+        }
+
+        // A partially empty separator row still defines a table:
+        [Test]
+        public void ExtensionsPipeTable_Example029()
+        {
+            // Example 29
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     | Field | PersonShared | Person |
+            //     | --- | | --- |
+            //     | Name | Master | Inherit |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>Field</th>
+            //     <th>PersonShared</th>
+            //     <th>Person</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>Name</td>
+            //     <td>Master</td>
+            //     <td>Inherit</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("| Field | PersonShared | Person |\n| --- | | --- |\n| Name | Master | Inherit |", "<table>\n<thead>\n<tr>\n<th>Field</th>\n<th>PersonShared</th>\n<th>Person</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Name</td>\n<td>Master</td>\n<td>Inherit</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 29\nSection Extensions / Pipe Table\n");
+        }
+
+        // An empty first separator cell does not shift the alignment of the following columns:
+        [Test]
+        public void ExtensionsPipeTable_Example030()
+        {
+            // Example 30
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     | A | B | C |
+            //     ||:---|---:|
+            //     | 1 | 2 | 3 |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>A</th>
+            //     <th style="text-align: left;">B</th>
+            //     <th style="text-align: right;">C</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>1</td>
+            //     <td style="text-align: left;">2</td>
+            //     <td style="text-align: right;">3</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("| A | B | C |\n||:---|---:|\n| 1 | 2 | 3 |", "<table>\n<thead>\n<tr>\n<th>A</th>\n<th style=\"text-align: left;\">B</th>\n<th style=\"text-align: right;\">C</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td style=\"text-align: left;\">2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 30\nSection Extensions / Pipe Table\n");
+        }
+
+        // Adjacent pipes may also delimit an empty middle separator cell:
+        [Test]
+        public void ExtensionsPipeTable_Example031()
+        {
+            // Example 31
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     | A | B | C |
+            //     |:---:||---:|
+            //     | 1 | 2 | 3 |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th style="text-align: center;">A</th>
+            //     <th>B</th>
+            //     <th style="text-align: right;">C</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td style="text-align: center;">1</td>
+            //     <td>2</td>
+            //     <td style="text-align: right;">3</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("| A | B | C |\n|:---:||---:|\n| 1 | 2 | 3 |", "<table>\n<thead>\n<tr>\n<th style=\"text-align: center;\">A</th>\n<th>B</th>\n<th style=\"text-align: right;\">C</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: center;\">1</td>\n<td>2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 31\nSection Extensions / Pipe Table\n");
+        }
+
+        // An empty last separator cell is distinct from the optional trailing pipe:
+        [Test]
+        public void ExtensionsPipeTable_Example032()
+        {
+            // Example 32
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     | A | B | C |
+            //     |:---|---:||
+            //     | 1 | 2 | 3 |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th style="text-align: left;">A</th>
+            //     <th style="text-align: right;">B</th>
+            //     <th>C</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td style="text-align: left;">1</td>
+            //     <td style="text-align: right;">2</td>
+            //     <td>3</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("| A | B | C |\n|:---|---:||\n| 1 | 2 | 3 |", "<table>\n<thead>\n<tr>\n<th style=\"text-align: left;\">A</th>\n<th style=\"text-align: right;\">B</th>\n<th>C</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td style=\"text-align: left;\">1</td>\n<td style=\"text-align: right;\">2</td>\n<td>3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 32\nSection Extensions / Pipe Table\n");
+        }
+
+        // Empty separator cells also work without outer pipes:
+        [Test]
+        public void ExtensionsPipeTable_Example033()
+        {
+            // Example 33
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     A | B | C
+            //     --- | | ---:
+            //     1 | 2 | 3
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>A</th>
+            //     <th>B</th>
+            //     <th style="text-align: right;">C</th>
+            //     </tr>
+            //     </thead>
+            //     <tbody>
+            //     <tr>
+            //     <td>1</td>
+            //     <td>2</td>
+            //     <td style="text-align: right;">3</td>
+            //     </tr>
+            //     </tbody>
+            //     </table>
+
+            TestParser.TestSpec("A | B | C\n--- | | ---:\n1 | 2 | 3", "<table>\n<thead>\n<tr>\n<th>A</th>\n<th>B</th>\n<th style=\"text-align: right;\">C</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td>2</td>\n<td style=\"text-align: right;\">3</td>\n</tr>\n</tbody>\n</table>", "pipetables|advanced", context: "Example 33\nSection Extensions / Pipe Table\n");
+        }
+
+        // A header-only table may have multiple empty separator cells:
+        [Test]
+        public void ExtensionsPipeTable_Example034()
+        {
+            // Example 34
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     | A | B | C |
+            //     | |:---:| |
+            //
+            // Should be rendered as:
+            //     <table>
+            //     <thead>
+            //     <tr>
+            //     <th>A</th>
+            //     <th style="text-align: center;">B</th>
+            //     <th>C</th>
+            //     </tr>
+            //     </thead>
+            //     </table>
+
+            TestParser.TestSpec("| A | B | C |\n| |:---:| |", "<table>\n<thead>\n<tr>\n<th>A</th>\n<th style=\"text-align: center;\">B</th>\n<th>C</th>\n</tr>\n</thead>\n</table>", "pipetables|advanced", context: "Example 34\nSection Extensions / Pipe Table\n");
+        }
+
+        // A separator row containing only whitespace and pipes still remains a paragraph:
+        [Test]
+        public void ExtensionsPipeTable_Example035()
+        {
+            // Example 35
+            // Section: Extensions / Pipe Table
+            //
+            // The following Markdown:
+            //     | A | B | C |
+            //     | | | |
+            //     | 1 | 2 | 3 |
+            //
+            // Should be rendered as:
+            //     <p>| A | B | C |
+            //     | | | |
+            //     | 1 | 2 | 3 |</p>
+
+            TestParser.TestSpec("| A | B | C |\n| | | |\n| 1 | 2 | 3 |", "<p>| A | B | C |\n| | | |\n| 1 | 2 | 3 |</p>", "pipetables|advanced", context: "Example 35\nSection Extensions / Pipe Table\n");
         }
     }
 }

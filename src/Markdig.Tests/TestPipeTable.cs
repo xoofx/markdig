@@ -30,6 +30,14 @@ public sealed class TestPipeTable
     [TestCase("A | B\r\n-|---\r\nA | B\r\n---|---", new[] {25.0f, 75.0f})]
     [TestCase("A | B\r\n---|---|---", new[] {33.33f, 33.33f, 33.33f})]
     [TestCase("A | B\r\n---|---|---|", new[] {33.33f, 33.33f, 33.33f})]
+    [TestCase("| A | B | C |\r\n| |---|---|", new[] {0.0f, 50.0f, 50.0f})]
+    [TestCase("| A | B | C |\r\n||---|---|", new[] {0.0f, 50.0f, 50.0f})]
+    [TestCase("| A | B | C |\r\n|---|\t|---|", new[] {50.0f, 0.0f, 50.0f})]
+    [TestCase("| A | B | C |\r\n|---||---|", new[] {50.0f, 0.0f, 50.0f})]
+    [TestCase("| A | B | C |\r\n|---|---| |", new[] {50.0f, 50.0f, 0.0f})]
+    [TestCase("| A | B | C |\r\n|---|---||", new[] {50.0f, 50.0f, 0.0f})]
+    [TestCase("A | B | C\r\n---||------\r\n1 | 2 | 3", new[] {33.33f, 0.0f, 66.67f})]
+    [TestCase("| A | B | C |\r\n||---||\r\n| 1 | 2 | 3 |", new[] {0.0f, 100.0f, 0.0f})]
     public void TestColumnWidthByHeaderLines(string markdown, float[] expectedWidth)
     {
         var pipeline = new MarkdownPipelineBuilder()
@@ -44,6 +52,25 @@ public sealed class TestPipeTable
         {
             Assert.AreEqual(actualWidths[i], expectedWidth[i], 0.01);
         }
+    }
+
+    [Test]
+    public void InvalidSeparatorRemainsParagraph(
+        [Values("|||", "| | | |", "|\t|\t|\t|", "| : | : | : |", "|---|text||", "|---|:||")] string separator,
+        [Values(false, true)] bool inferColumnWidths,
+        [Values(false, true)] bool headerOnly)
+    {
+        var markdown = "| A | B | C |\n" + separator;
+        if (!headerOnly)
+        {
+            markdown += "\n| 1 | 2 | 3 |";
+        }
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UsePipeTables(new PipeTableOptions { InferColumnWidthsFromSeparator = inferColumnWidths })
+            .Build();
+
+        Assert.That(Markdown.ToHtml(markdown, pipeline), Is.EqualTo("<p>" + markdown + "</p>\n"));
     }
 
     [Test]
