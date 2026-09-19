@@ -58,6 +58,21 @@ public class TestEmphasisRoundtrip
         Assert.That(RoundTrip(markdown, pipeline), Is.EqualTo(markdown));
     }
 
+    [TestCase("===a===== tail\n", "<p>=<mark>a===</mark> tail</p>")]
+    [TestCase("===a==== tail\n", "<p>=<mark>a==</mark> tail</p>")]
+    [TestCase("=====a======= tail\n", "<p>=<mark><mark>a===</mark></mark> tail</p>")]
+    [TestCase("+++a+++++ tail\n", "<p>+<ins>a+++</ins> tail</p>")]
+    [TestCase("*===a===== tail*\n", "<p><em>=<mark>a===</mark> tail</em></p>")]
+    [TestCase("===a===== tail ==next==\n", "<p>=<mark>a===</mark> tail <mark>next</mark></p>")]
+    public void UnmatchedCloserPreservesTrailingContent(string markdown, string expectedHtml)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseEmphasisExtras().EnableTrackTrivia().Build();
+
+        Assert.That(RoundTrip(markdown, pipeline), Is.EqualTo(markdown));
+        Assert.That(Markdown.ToHtml(markdown, pipeline).Trim(), Is.EqualTo(expectedHtml));
+        Assert.That(Markdown.ToHtml(markdown, new MarkdownPipelineBuilder().UseEmphasisExtras().Build()).Trim(), Is.EqualTo(expectedHtml));
+    }
+
     // The fix must not prevent balanced "marked" emphasis from being detected.
     [Test]
     public void BalancedMarkedEmphasisStillParses()

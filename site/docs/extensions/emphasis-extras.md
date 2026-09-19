@@ -60,6 +60,11 @@ This is ==highlighted== text.
 
 This is ==highlighted== text.
 
+An unmatched remainder of a closing delimiter run must not pull subsequent text
+into the emphasis. For example, `===a===== tail` renders as
+`=<mark>a===</mark> tail`. This example also round-trips unchanged with
+`EnableTrackTrivia()` and `RoundtripRenderer`.
+
 ## HTML output
 
 {.table}

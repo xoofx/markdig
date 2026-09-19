@@ -407,15 +407,10 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                             i--;
                         }
                     }
-                    else if ((closeDelimiter.Type & DelimiterType.Open) == 0)
-                    {
-                        closeDelimiter.ReplaceBy(closeDelimiter.AsLiteralInline());
-                        delimiters.RemoveAt(i);
-                        i--;
-                        break;
-                    }
                     else
                     {
+                        // Keep unmatched closers attached until their trailing content
+                        // has been moved out below.
                         break;
                     }
                 }
@@ -431,6 +426,13 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
                     }
 
                     closeDelimiter.MoveChildrenAfter(outermostEmphasis);
+                }
+
+                if (closeDelimiter.DelimiterCount > 0 && (closeDelimiter.Type & DelimiterType.Open) == 0)
+                {
+                    closeDelimiter.ReplaceBy(closeDelimiter.AsLiteralInline());
+                    delimiters.RemoveAt(i);
+                    i--;
                 }
             }
         }
