@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using Markdig.Extensions.Tables;
 using Markdig.Helpers;
 using Markdig.Renderers.Normalize;
 using Markdig.Syntax;
@@ -584,6 +585,104 @@ This is a last line";
         AssertNormalizeNoTrim("Hello from mailto:hello@example.com", "Hello from mailto:hello@example.com", new NormalizeOptions() { ExpandAutoLinks = false, });
     }
 
+    [Test]
+    public void PipeTables()
+    {
+        AssertNormalizeNoTrim(@"Foo | Bar
+--- | ---
+Hello | *World*",            @"| Foo | Bar |
+| --- | --- |
+| Hello | *World* |");
+        AssertNormalizeNoTrim(@"
+Foo | Bar
+:---: | ---:
+Hello | *World*",             @"| Foo | Bar |
+| :---: | ---: |
+| Hello | *World* |");
+        AssertNormalizeNoTrim(@"| Foo |
+| --- |
+| Hello World |");
+        AssertNormalizeNoTrim(@"| Foo | Bar |
+| --- | --- |
+| Hello World | *World* |");
+        AssertNormalizeNoTrim(@"| Foo | Bar |
+| :--- | ---: |
+| Hello World | *World* |");
+    }
+
+    [Test]
+    public void PipeTablesFollowedByText()
+    {
+        AssertNormalizeNoTrim(@"| Foo |
+| --- |
+| Hello World |
+
+Text following the table.");
+    }
+
+    [TestCase("| A |\n| :--- |\n| x |")]
+    [TestCase("| A | B |\n| :--- | :--- |\n| x | y |")]
+    [TestCase("| A | B |\n| --- | :--- |\n| x | y |")]
+    public void PipeTableAlignmentSurvivesNormalization(string markdown)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual(markdown, normalized);
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+    }
+
+    [TestCase("---")]
+    [TestCase(":---")]
+    [TestCase("---:")]
+    public void PipeTableSeparatorMatchesExpandedHeader(string separator)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+        var markdown = $"| A |\n| {separator} |\n| x | y |";
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual($"| A |  |\n| {separator} | {separator} |\n| x | y |", normalized);
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+        Assert.AreEqual(normalized, Markdown.Normalize(normalized, pipeline: pipeline));
+    }
+
+    [TestCase("---", "---------")]
+    [TestCase(":---", "-------:")]
+    [TestCase(":-----:", ":-------")]
+    public void PipeTableInferredWidthsSurviveNormalization(string first, string second)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions
+        {
+            InferColumnWidthsFromSeparator = true
+        }).Build();
+        var markdown = $"| A | B |\n| {first} | {second} |\n| x | y |";
+        var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
+        Assert.AreEqual(markdown, normalized);
+        Assert.AreEqual(Markdown.ToHtml(markdown, pipeline), Markdown.ToHtml(normalized, pipeline));
+        Assert.AreEqual(normalized, Markdown.Normalize(normalized, pipeline: pipeline));
+    }
+
+    [Test]
+    public void PipeTableWithoutWidthInferenceUsesStandardSeparators()
+    {
+        AssertNormalizeNoTrim("| A | B |\n| --- | --------- |\n| x | y |",
+            "| A | B |\n| --- | --- |\n| x | y |");
+    }
+
+    [Test]
+    public void ChangingInferredWidthDiscardsOriginalSeparatorCount()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions
+        {
+            InferColumnWidthsFromSeparator = true
+        }).Build();
+        var table = (Table)Markdown.Parse("| A | B |\n| --- | --------- |", pipeline)[0];
+        var column = table.ColumnDefinitions[1];
+        Assert.AreEqual(9, column.SeparatorDashCount);
+        column.Width = column.Width;
+        Assert.AreEqual(9, column.SeparatorDashCount);
+        column.Width = 0;
+        Assert.AreEqual(0, column.SeparatorDashCount);
+    }
+
     private static void AssertSyntax(string expected, MarkdownObject syntax)
     {
         var writer = new StringWriter();
@@ -625,6 +724,7 @@ This is a last line";
             .UseAutoLinks()
             .UseJiraLinks(new Extensions.JiraLinks.JiraLinkOptions("https://jira.example.com"))
             .UseTaskLists()
+            .UsePipeTables()
             .Build();
 
         var result = Markdown.Normalize(input, options, pipeline: pipeline);

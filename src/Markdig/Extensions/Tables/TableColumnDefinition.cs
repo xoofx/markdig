@@ -9,10 +9,26 @@ namespace Markdig.Extensions.Tables;
 /// </summary>
 public class TableColumnDefinition
 {
+    private float _width;
+
+    // Preserve exact source proportions when normalizing inferred pipe-table widths.
+    internal int SeparatorDashCount { get; set; }
+
     /// <summary>
     /// Gets or sets the width (in percentage) of this column. A value of 0 is unspecified.
     /// </summary>
-    public float Width { get; set; }
+    public float Width
+    {
+        get => _width;
+        set
+        {
+            if (_width != value)
+            {
+                SeparatorDashCount = 0;
+            }
+            _width = value;
+        }
+    }
 
     /// <summary>
     /// Gets or sets the column alignment.
