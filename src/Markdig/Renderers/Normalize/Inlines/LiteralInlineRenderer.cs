@@ -18,10 +18,18 @@ public class LiteralInlineRenderer : NormalizeObjectRenderer<LiteralInline>
     /// </summary>
     protected override void Write(NormalizeRenderer renderer, LiteralInline obj)
     {
-        if (obj.IsFirstCharacterEscaped && obj.Content.Length > 0 && obj.Content[obj.Content.Start].IsAsciiPunctuation())
+        if (obj.IsFirstCharacterEscaped && obj.Content.Length > 0 && obj.Content[obj.Content.Start].IsAsciiPunctuation()
+            && !(renderer.EscapeTablePipes && obj.Content.CurrentChar is '|' or '\\'))
         {
             renderer.Write('\\');
         }
-        renderer.Write(ref obj.Content);
+        if (renderer.EscapeTablePipes && obj.Content.AsSpan().IndexOfAny('\\', '|') >= 0)
+        {
+            renderer.Write(obj.Content.ToString().Replace("\\", "\\\\").Replace("|", "\\|"));
+        }
+        else
+        {
+            renderer.Write(ref obj.Content);
+        }
     }
 }

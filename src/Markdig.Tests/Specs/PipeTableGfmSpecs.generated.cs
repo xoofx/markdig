@@ -64,7 +64,8 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             TestParser.TestSpec("a | b\n-- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example 1\nSection Extensions / Gfm Pipe Table\n");
         }
 
-        // The following is also considered as a table, even if the second line starts like a list:
+        // List markers take precedence over tables in cmark-gfm. Use a leading pipe or
+        // at least two dashes to disambiguate this delimiter row:
         [Test]
         public void ExtensionsGfmPipeTable_Example002()
         {
@@ -77,22 +78,13 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     0 | 1
             //
             // Should be rendered as:
-            //     <table>
-            //     <thead>
-            //     <tr>
-            //     <th>a</th>
-            //     <th>b</th>
-            //     </tr>
-            //     </thead>
-            //     <tbody>
-            //     <tr>
-            //     <td>0</td>
-            //     <td>1</td>
-            //     </tr>
-            //     </tbody>
-            //     </table>
+            //     <p>a | b</p>
+            //     <ul>
+            //     <li>| -
+            //     0 | 1</li>
+            //     </ul>
 
-            TestParser.TestSpec("a | b\n- | -\n0 | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example 2\nSection Extensions / Gfm Pipe Table\n");
+            TestParser.TestSpec("a | b\n- | -\n0 | 1", "<p>a | b</p>\n<ul>\n<li>| -\n0 | 1</li>\n</ul>", "gfm-pipetables", context: "Example 2\nSection Extensions / Gfm Pipe Table\n");
         }
 
         // A pipe table with only one header row is allowed:

@@ -66,13 +66,28 @@ In this mode:
   ignored. Body rows do not need to contain a pipe.
 - Unescaped pipes split cells **before** inline parsing, even inside code, HTML,
   or link labels. Use `\|` for a literal pipe, including inside code spans.
+- As in `cmark-gfm`, a pipe immediately preceded by a backslash stays in its cell
+  regardless of the length of the backslash run. One backslash is removed before
+  inline parsing, including reference-link lookup and autolinks.
+- List markers take precedence: `- | -` starts a list, not a delimiter row.
+  Use `|-|-|` or `-- | --` to avoid that ambiguity.
 - Blank lines and other block-level structures end the table. Inline spans cannot
-  cross cell or row boundaries.
+  cross cell or row boundaries. A lone `|` also ends the table; `||` represents
+  one empty cell and can continue it.
+- Cell-edge spaces and tabs are trimmed; non-breaking and other Unicode spaces
+  are preserved. A rejected header/delimiter cell-count match is not retried
+  within the same paragraph.
 
 `UseGfmRules` overrides `RequireHeaderSeparator` and `UseHeaderForColumnCount`
 without modifying those option values. Width inference is still available as an
 additional, non-GFM rendering feature. This option changes table parsing only;
 it does not enable other GFM extensions such as task lists or strikethrough.
+
+Strict mode is differentially tested against a pinned native `cmark-gfm` build,
+not just the published specification examples. The repository's
+`tools/GfmTableDifferential/README.md` records the corpus, reproduction commands,
+and known limitations. This does **not** promise identical whole-document HTML:
+Markdig's other block parsers, trivia mode and renderers still have differences.
 
 ### Column alignment
 

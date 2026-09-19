@@ -41,8 +41,9 @@ public class PipeTableExtension : IMarkdownExtension
         {
             if (!pipeline.BlockParsers.Contains<GfmPipeTableParser>())
             {
-                pipeline.BlockParsers.Insert(0, new GfmPipeTableParser(Options));
+                pipeline.BlockParsers.InsertBefore<ParagraphBlockParser>(new GfmPipeTableParser(Options));
                 pipeline.BlockParsers.InsertBefore<ParagraphBlockParser>(new GfmPipeTableParser.RowParser());
+                pipeline.DocumentProcessed += GfmPipeTableParser.UpdateListTightness;
             }
             return;
         }

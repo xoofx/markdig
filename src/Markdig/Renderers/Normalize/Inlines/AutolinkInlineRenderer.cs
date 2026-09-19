@@ -17,6 +17,6 @@ public class AutolinkInlineRenderer : NormalizeObjectRenderer<AutolinkInline>
     /// </summary>
     protected override void Write(NormalizeRenderer renderer, AutolinkInline obj)
     {
-        renderer.Write('<').Write(obj.Url).Write('>');
+        renderer.Write('<').Write(renderer.EscapeTablePipes ? obj.Url.Replace("|", "\\|") : obj.Url).Write('>');
     }
 }

@@ -44,19 +44,22 @@ public class LinkInlineRenderer : NormalizeObjectRenderer<LinkInline>
             else
             {
                 // full link
-                renderer.Write('[').Write(link.Label).Write(']');
+                renderer.Write('[').Write(renderer.EscapeTablePipes ? link.Label.Replace("|", "\\|") : link.Label).Write(']');
             }
         }
         else
         {
-            if (!string.IsNullOrEmpty(link.Url))
+            if (link.Url is { Length: > 0 } url)
             {
-                renderer.Write('(').Write(link.Url);
+                renderer.Write('(').Write(renderer.EscapeTablePipes
+                    ? url.Replace("\\", "\\\\").Replace("|", "\\|") : url);
 
                 if (link.Title is { Length: > 0 })
                 {
                     renderer.Write(" \"");
-                    renderer.Write(link.Title.Replace(@"""", @"\"""));
+                    var title = renderer.EscapeTablePipes
+                        ? link.Title.Replace("\\", "\\\\").Replace("|", "\\|") : link.Title;
+                    renderer.Write(title.Replace(@"""", @"\"""));
                     renderer.Write('"');
                 }
 

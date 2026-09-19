@@ -43,27 +43,19 @@ a | b
 </table>
 ````````````````````````````````
 
-The following is also considered as a table, even if the second line starts like a list:
+List markers take precedence over tables in cmark-gfm. Use a leading pipe or
+at least two dashes to disambiguate this delimiter row:
 
 ```````````````````````````````` example
 a | b
 - | -
 0 | 1
 .
-<table>
-<thead>
-<tr>
-<th>a</th>
-<th>b</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
+<p>a | b</p>
+<ul>
+<li>| -
+0 | 1</li>
+</ul>
 ````````````````````````````````
 
 A pipe table with only one header row is allowed:

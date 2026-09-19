@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+using Markdig.Extensions.Tables;
 using Markdig.Helpers;
 using Markdig.Parsers.Inlines;
 using Markdig.Syntax;
@@ -29,6 +30,8 @@ public class InlineProcessor
     private readonly List<StringLineGroup.LineOffset> lineOffsets = [];
     private int previousSliceOffset;
     private int previousLineIndexForSliceOffset;
+    private int[]? _unescapedSourceOffsets;
+    private int _unescapedSourceStart;
     internal ContainerBlock? PreviousContainerToReplace;
     internal ContainerBlock? NewContainerToReplace;
 
@@ -125,7 +128,7 @@ public class InlineProcessor
             return SourceSpan.Empty;
         }
 
-        return new SourceSpan(GetSourcePosition(span.Start), GetSourcePosition(span.End));
+        return new SourceSpan(GetSourcePosition(span.Start, out _, out _), GetSourcePosition(span.End));
     }
 
     /// <summary>
@@ -137,6 +140,12 @@ public class InlineProcessor
     /// <returns>The source position</returns>
     public int GetSourcePosition(int sliceOffset, out int lineIndex, out int column)
     {
+        if (_unescapedSourceOffsets is { } offsetsMap && (uint)sliceOffset < (uint)offsetsMap.Length)
+        {
+            // This overload locates the start of an inline: include a removed
+            // pipe escape. The position-only overload locates its original end.
+            sliceOffset = sliceOffset == 0 ? _unescapedSourceStart : offsetsMap[sliceOffset - 1] + 1;
+        }
         column = 0;
         lineIndex = sliceOffset >= previousSliceOffset ? previousLineIndexForSliceOffset : 0;
         int position = 0;
@@ -180,6 +189,8 @@ public class InlineProcessor
     /// <returns>The source position</returns>
     public int GetSourcePosition(int sliceOffset)
     {
+        if (_unescapedSourceOffsets is { } offsetsMap && (uint)sliceOffset < (uint)offsetsMap.Length)
+            sliceOffset = offsetsMap[sliceOffset];
         if (PreciseSourceLocation)
         {
             int lineIndex = sliceOffset >= previousSliceOffset ? previousLineIndexForSliceOffset : 0;
@@ -260,6 +271,9 @@ public class InlineProcessor
         previousLineIndexForSliceOffset = 0;
         lineOffsets.Clear();
         var text = leafBlock.Lines.ToSlice(lineOffsets);
+        _unescapedSourceStart = text.Start;
+        _unescapedSourceOffsets = leafBlock.Parser is GfmPipeTableParser
+            ? GfmPipeTableParser.UnescapePipes(ref text) : null;
         var textEnd = text.End;
         leafBlock.Lines.Release();
         int previousStart = -1;
@@ -527,6 +541,7 @@ public class InlineProcessor
 
     private void Reset()
     {
+        _unescapedSourceOffsets = null;
         Block = null;
         BlockNew = null;
         Inline = null;

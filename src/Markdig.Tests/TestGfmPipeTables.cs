@@ -53,10 +53,10 @@ public class TestGfmPipeTables
     {
         var pipeline = CreatePipeline(trivia);
         Assert.That(Markdown.Parse("a | b\nx | y", pipeline).Descendants<Table>(), Is.Empty);
-        var table = (Table)Markdown.Parse("a | b\n- | -\nx\ny | z | ignored\n|", pipeline)[0];
-        Assert.That(table.Count, Is.EqualTo(4));
+        var table = (Table)Markdown.Parse("a | b\n|-|-|\nx\ny | z | ignored\n|", pipeline)[0];
+        Assert.That(table.Count, Is.EqualTo(3));
         Assert.That(table.Cast<TableRow>().Select(row => row.Count), Is.All.EqualTo(2));
-        Assert.That(Markdown.ToHtml("a | b\n- | -\nx\ny | z | ignored", pipeline), Does.Not.Contain("ignored"));
+        Assert.That(Markdown.ToHtml("a | b\n|-|-|\nx\ny | z | ignored", pipeline), Does.Not.Contain("ignored"));
     }
 
     [Test]
@@ -101,16 +101,16 @@ public class TestGfmPipeTables
     }
 
     [Test]
-    public void OnlyOddBackslashRunsEscapePipes()
+    public void BackslashRunsEscapePipesBeforeInlineParsing()
     {
         const string markdown = """
             a | b
-            - | -
+            |-|-|
             \\|x
             \\\|y
             """;
         var html = Markdown.ToHtml(markdown, CreatePipeline());
-        Assert.That(html, Does.Contain("<td>\\</td>\n<td>x</td>"));
+        Assert.That(html, Does.Contain("<td>|x</td>\n<td></td>"));
         Assert.That(html, Does.Contain("<td>\\|y</td>\n<td></td>"));
     }
 
@@ -119,7 +119,7 @@ public class TestGfmPipeTables
     {
         var configured = new MarkdownPipelineBuilder().Configure("gfm-pipetables").Build();
         Assert.That(configured.Extensions.Find<PipeTableExtension>().Options.UseGfmRules, Is.True);
-        const string markdown = "a | b\n- | -\nx";
+        const string markdown = "a | b\n|-|-|\nx";
         Assert.That(Markdown.ToHtml(markdown, configured), Is.EqualTo(Markdown.ToHtml(markdown, CreatePipeline())));
         var advanced = new MarkdownPipelineBuilder().UsePipeTables(new PipeTableOptions { UseGfmRules = true }).UseAdvancedExtensions().Build();
         Assert.That(Markdown.ToHtml(markdown, advanced), Is.EqualTo(Markdown.ToHtml(markdown, configured)));
@@ -131,7 +131,7 @@ public class TestGfmPipeTables
     [TestCase("<i title='a|b'>", "&lt;i title='a", "b'&gt;")]
     public void PipesTakePrecedenceOverAllInlines(string body, string first, string second)
     {
-        var html = Markdown.ToHtml("a | b\n- | -\n| " + body + " |", CreatePipeline());
+        var html = Markdown.ToHtml("a | b\n|-|-|\n| " + body + " |", CreatePipeline());
         Assert.That(html, Does.Contain("<td>" + first + "</td>\n<td>" + second + "</td>"));
     }
 
@@ -172,7 +172,7 @@ public class TestGfmPipeTables
     [TestCase("<div>\nhtml\n</div>", "<div>")]
     public void OtherBlocksTerminateTables(string next, string expected)
     {
-        var html = Markdown.ToHtml("a | b\n- | -\nx | y\n" + next, CreatePipeline());
+        var html = Markdown.ToHtml("a | b\n|-|-|\nx | y\n" + next, CreatePipeline());
         Assert.That(html, Does.Contain("</table>\n" + expected));
     }
 
@@ -180,7 +180,7 @@ public class TestGfmPipeTables
     [TestCase(true)]
     public void TablesCanInterruptParagraphsAndNestInContainers(bool trivia)
     {
-        const string table = "a | b\n- | -\nx | y";
+        const string table = "a | b\n|-|-|\nx | y";
         var pipeline = CreatePipeline(trivia);
         var html = Markdown.ToHtml(table, pipeline);
         Assert.That(Markdown.ToHtml("first\nsecond\n" + table, pipeline), Is.EqualTo("<p>first\nsecond</p>\n" + html));
@@ -214,7 +214,7 @@ public class TestGfmPipeTables
     {
         const string markdown = """
             a | b
-            - | -
+            |-|-|
             `a\|b` | **\|**
             <i title="\|"> | [a\|b](url)
             """;
@@ -222,5 +222,79 @@ public class TestGfmPipeTables
         var normalized = Markdown.Normalize(markdown, pipeline: pipeline);
         Assert.That(Markdown.ToHtml(normalized, pipeline), Is.EqualTo(Markdown.ToHtml(markdown, pipeline)));
         Assert.That(Markdown.Normalize(normalized, pipeline: pipeline), Is.EqualTo(normalized));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void NativeGfmBlockBoundaries(bool trivia)
+    {
+        var pipeline = CreatePipeline(trivia);
+        const string list = "a|b\n- | -\nx|y";
+        var plain = new MarkdownPipelineBuilder();
+        if (trivia) plain.EnableTrackTrivia();
+        Assert.That(Markdown.ToHtml(list, pipeline), Is.EqualTo(Markdown.ToHtml(list, plain.Build())));
+        const string retry = "a|b|c\n--|--\na|b\n--|--\nx|y";
+        Assert.That(Markdown.ToHtml(retry, pipeline), Is.EqualTo(Markdown.ToHtml(retry)));
+        var header = Markdown.ToHtml("a|b\n--|--", pipeline);
+        Assert.That(Markdown.ToHtml("a|b\n--|--\n|\nx|y", pipeline),
+            Is.EqualTo(header + "<p>|\nx|y</p>\n"));
+    }
+
+    [TestCase("\u00a0")]
+    [TestCase("\u2003")]
+    [TestCase("\v")]
+    [TestCase("\f")]
+    public void NativeGfmCellWhitespace(string space)
+    {
+        foreach (bool trivia in new[] { false, true })
+        {
+            var html = Markdown.ToHtml("a|b\n--|--\n|" + space + "x" + space + "|y|", CreatePipeline(trivia));
+            // The scanner consumes ASCII whitespace immediately after a pipe,
+            // but cell trimming only removes spaces and tabs, not Unicode spaces.
+            var leading = space is "\v" or "\f" ? "" : space;
+            Assert.That(html, Does.Contain("<td>" + leading + "x" + space + "</td>"));
+        }
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void NativeGfmUnescapesReferencesAndAutolinks(bool trivia)
+    {
+        const string markdown = "a|b\n--|--\n[a\\|b]|<https://a/\\|>\n\n[a|b]: /target";
+        var html = Markdown.ToHtml(markdown, CreatePipeline(trivia));
+        Assert.That(html, Does.Contain("<a href=\"/target\">a|b</a>"));
+        Assert.That(html, Does.Contain("<a href=\"https://a/%7C\">https://a/|</a>"));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void UnescapingRetainsOriginalInlineLocations(bool trivia)
+    {
+        const string markdown = "before\n\n| a | b |\n| - | - |\n| \\|x | `a\\\\|b` [x](u\\\\|v) |\n\nafter";
+        var document = Markdown.Parse(markdown, CreatePipeline(trivia));
+        var table = document.Descendants<Table>().Single();
+        var literal = ((ParagraphBlock)((TableCell)((TableRow)table[1])[0])[0]).Inline!.FirstChild!;
+        var code = table.Descendants<CodeInline>().Single();
+        var link = table.Descendants<LinkInline>().Single();
+        Assert.That(markdown.Substring(literal.Span.Start, literal.Span.Length), Is.EqualTo("\\|x"));
+        Assert.That(literal.Column, Is.EqualTo(2));
+        Assert.That(markdown.Substring(code.Span.Start, code.Span.Length), Is.EqualTo("`a\\\\|b`"));
+        Assert.That(markdown.Substring(link.Span.Start, link.Span.Length), Is.EqualTo("[x](u\\\\|v)"));
+        Assert.That(code.Line, Is.EqualTo(4));
+        Assert.That(link.Column, Is.EqualTo(markdown.Split('\n')[4].IndexOf("[x]", StringComparison.Ordinal)));
+        var after = document.Descendants<LiteralInline>().Last();
+        Assert.That(markdown.Substring(after.Span.Start, after.Span.Length), Is.EqualTo("after"));
+        Assert.That(after.Line, Is.EqualTo(6));
+    }
+
+    [Test]
+    public void RejectsRowsBeyondNativeColumnLimit()
+    {
+        var pipeline = CreatePipeline();
+        var header = new string('|', ushort.MaxValue + 2);
+        var separator = string.Concat(Enumerable.Repeat("|-", ushort.MaxValue + 1)) + "|";
+        Assert.That(Markdown.Parse(header + "\n" + separator, pipeline).Descendants<Table>(), Is.Empty);
+        var document = Markdown.Parse("a\n|-|\n" + header, pipeline);
+        Assert.That(document.Descendants<Table>().Single().Count, Is.EqualTo(1));
     }
 }
