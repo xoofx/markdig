@@ -74,6 +74,7 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     {
         private readonly string? _constant;
         private readonly string[]? _lineSpecific;
+        private readonly string? _marker;
         private int position;
 
         internal Indent(string constant)
@@ -86,8 +87,20 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
             _lineSpecific = lineSpecific;
         }
 
+        internal Indent(string marker, string rest)
+        {
+            _marker = marker;
+            _constant = rest;
+        }
+
         internal string Next()
         {
+            if (_marker != null && position == 0)
+            {
+                position++;
+                return _marker;
+            }
+
             if (_constant != null)
             {
                 return _constant;
@@ -174,13 +187,37 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     /// <summary>
     /// Performs the push indent operation.
     /// </summary>
+    /// <param name="lineSpecific">The indent to use for each successive line.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="lineSpecific"/> is null.</exception>
     public void PushIndent(string[] lineSpecific)
     {
-        if (indents is null) ThrowHelper.ArgumentNullException(nameof(indents));
+        if (lineSpecific is null) ThrowHelper.ArgumentNullException(nameof(lineSpecific));
         indents.Add(new Indent(lineSpecific));
 
         // ensure that indents are written to the output stream
         // this assumes that calls after PushIndent wil write children content
+        previousWasLine = true;
+    }
+
+    /// <summary>
+    /// Pushes an indent that uses the specified marker on its first line and
+    /// the same number of spaces on subsequent lines.
+    /// </summary>
+    /// <param name="marker">The first line of the hanging indent.</param>
+    /// <remarks>
+    /// Call at the beginning of a line, before writing child content. This method
+    /// marks indents as pending but does not insert a newline; use <see cref="EnsureLine"/>
+    /// first if necessary. The next write emits all active indents, including this marker.
+    /// Call <see cref="PopIndent"/> after writing the indented content.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="marker"/> is null.</exception>
+    public void PushHangingIndent(string marker)
+    {
+        if (marker is null) ThrowHelper.ArgumentNullException(nameof(marker));
+        indents.Add(new Indent(marker, new string(' ', marker.Length)));
+
+        // ensure that indents are written to the output stream
+        // this assumes that calls after PushHangingIndent will write children content
         previousWasLine = true;
     }
 

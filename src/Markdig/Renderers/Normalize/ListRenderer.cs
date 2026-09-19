@@ -38,12 +38,15 @@ public class ListRenderer : NormalizeObjectRenderer<ListBlock>
                 var item = listBlock[i];
                 var listItem = (ListItemBlock) item;
                 renderer.EnsureLine();
-
-                renderer.Write(index.ToString(CultureInfo.InvariantCulture));
-                renderer.Write(listBlock.OrderedDelimiter);
-                renderer.Write(' ');
-                renderer.PushIndent(new string(' ', IntLog10Fast(index) + 3));
-                renderer.WriteChildren(listItem);
+                renderer.PushHangingIndent($"{index.ToString(CultureInfo.InvariantCulture)}{listBlock.OrderedDelimiter} ");
+                if (listItem.Count == 0)
+                {
+                    renderer.Write(""); // trigger writing of indent
+                }
+                else
+                {
+                    renderer.WriteChildren(listItem);
+                }
                 renderer.PopIndent();
                 switch (listBlock.BulletType)
                 {
@@ -65,10 +68,15 @@ public class ListRenderer : NormalizeObjectRenderer<ListBlock>
                 var item = listBlock[i];
                 var listItem = (ListItemBlock) item;
                 renderer.EnsureLine();
-                renderer.Write(renderer.Options.ListItemCharacter ?? listBlock.BulletType);
-                renderer.Write(' ');
-                renderer.PushIndent("  ");
-                renderer.WriteChildren(listItem);
+                renderer.PushHangingIndent($"{renderer.Options.ListItemCharacter ?? listBlock.BulletType} ");
+                if (listItem.Count == 0)
+                {
+                    renderer.Write(""); // trigger writing of indent
+                }
+                else
+                {
+                    renderer.WriteChildren(listItem);
+                }
                 renderer.PopIndent();
                 if (i + 1 < listBlock.Count && listBlock.IsLoose)
                 {
@@ -81,16 +89,4 @@ public class ListRenderer : NormalizeObjectRenderer<ListBlock>
 
         renderer.FinishBlock(true);
     }
-
-
-    private static int IntLog10Fast(int input) =>
-        (input < 10) ? 0 :
-        (input < 100) ? 1 :
-        (input < 1000) ? 2 :
-        (input < 10000) ? 3 :
-        (input < 100000) ? 4 :
-        (input < 1000000) ? 5 :
-        (input < 10000000) ? 6 :
-        (input < 100000000) ? 7 :
-        (input < 1000000000) ? 8 : 9;
 }

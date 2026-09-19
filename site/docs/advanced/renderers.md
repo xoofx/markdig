@@ -15,6 +15,21 @@ When you call `document.ToHtml(pipeline)`:
 3. The renderer walks the AST depth-first, dispatching each node to the `ObjectRenderer` registered for its runtime type.
 4. Output is written to the underlying `TextWriter`.
 
+## Normalizing lists and quotes
+
+`Markdown.Normalize` preserves quote prefixes inside ordered and unordered lists,
+including empty quotes. For example, `- >` normalizes to `- > ` with the default
+space-after-quote option, rather than dropping the list item. Empty list items
+also retain a trailing space after their marker; normalization is not an exact
+whitespace round-trip.
+
+Custom text renderers can use `PushHangingIndent(marker)` to emit a marker on the
+first line and an equal number of spaces on continuation lines. Call it at the
+beginning of a line (use `EnsureLine()` if needed), before writing child content,
+and balance it with `PopIndent()`. It does not itself write a newline. Empty
+containers may need `Write("")` to emit pending indents when there are no children
+to write.
+
 ## The IMarkdownRenderer interface
 
 ```csharp
