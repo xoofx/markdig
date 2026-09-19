@@ -18,17 +18,13 @@ public class HeadingLinkReferenceDefinition : LinkReferenceDefinition
     public HeadingLinkReferenceDefinition(HeadingBlock headling)
     {
         Heading = headling;
+        // Created implicitly, so it must not resolve inside another still-open
+        // link bracket, e.g. [Some text [Heading]](url).
+        AllowResolutionInsideOpenLink = false;
     }
 
     /// <summary>
     /// Gets or sets the heading related to this link reference definition.
     /// </summary>
     public HeadingBlock Heading { get; set; }
-
-    /// <inheritdoc />
-    /// <remarks>
-    /// Created implicitly for every heading, so it must not resolve inside another
-    /// still-open link bracket, e.g. <c>[Some text [Heading]](url)</c>.
-    /// </remarks>
-    internal override bool AllowResolutionInsideOpenLink => false;
 }
