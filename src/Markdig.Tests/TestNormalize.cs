@@ -241,6 +241,51 @@ line3");
     }
 
     [Test]
+    public void LineSpecificIndentRejectsNullWithoutChangingState()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        renderer.PushIndent("> ");
+        renderer.Write("first");
+
+        var exception = Assert.Throws<ArgumentNullException>(() => renderer.PushIndent((string[])null));
+        Assert.AreEqual("lineSpecific", exception.ParamName);
+        renderer.WriteLine(" second");
+        renderer.Write("third");
+        renderer.PopIndent();
+
+        Assert.AreEqual("> first second\n> third", writer.ToString());
+    }
+
+    [Test]
+    public void LineSpecificIndentStopsAfterLastEntry()
+    {
+        using var writer = new StringWriter();
+        var renderer = new NormalizeRenderer(writer);
+        renderer.PushIndent(new[] { "first: ", "next: " });
+        renderer.WriteLine("a");
+        renderer.WriteLine("b");
+        renderer.Write("c");
+        renderer.PopIndent();
+
+        Assert.AreEqual("first: a\nnext: b\nc", writer.ToString());
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void OrderedListNormalizationRenumbersWithoutSourceBullets(bool trackTrivia)
+    {
+        var builder = new MarkdownPipelineBuilder();
+        if (trackTrivia)
+        {
+            builder.EnableTrackTrivia();
+        }
+        var normalized = Markdown.Normalize("3. first\n9. second\n9. third", pipeline: builder.Build());
+        var list = (ListBlock)Markdown.Parse(normalized)[0];
+        Assert.AreEqual(new[] { 3, 4, 5 }, list.Select(item => ((ListItemBlock)item).Order).ToArray());
+    }
+
+    [Test]
     public void ListUnorderedEmpty()
     {
         AssertNormalizeNoTrim("-", "- ");

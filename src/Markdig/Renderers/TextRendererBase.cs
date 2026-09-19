@@ -187,9 +187,11 @@ public abstract class TextRendererBase<T> : TextRendererBase where T : TextRende
     /// <summary>
     /// Performs the push indent operation.
     /// </summary>
+    /// <param name="lineSpecific">The indent to use for each successive line.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="lineSpecific"/> is null.</exception>
     public void PushIndent(string[] lineSpecific)
     {
-        if (indents is null) ThrowHelper.ArgumentNullException(nameof(indents));
+        if (lineSpecific is null) ThrowHelper.ArgumentNullException(nameof(lineSpecific));
         indents.Add(new Indent(lineSpecific));
 
         // ensure that indents are written to the output stream
