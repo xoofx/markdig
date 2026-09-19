@@ -580,7 +580,7 @@ public static class MarkdownExtensions
                     pipeline.UsePipeTables();
                     break;
                 case "gfm-pipetables":
-                    pipeline.UsePipeTables(new PipeTableOptions { UseHeaderForColumnCount = true });
+                    pipeline.UsePipeTables(new PipeTableOptions { UseGfmRules = true });
                     break;
                 case "emphasisextras":
                     pipeline.UseEmphasisExtras();

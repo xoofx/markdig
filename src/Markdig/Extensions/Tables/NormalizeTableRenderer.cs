@@ -36,7 +36,16 @@ public class NormalizeTableRenderer : NormalizeObjectRenderer<Table>
             {
                 renderer.Write(MarginSeparator);
 
-                renderer.Render(tableCell);
+                bool previousEscapeTablePipes = renderer.EscapeTablePipes;
+                renderer.EscapeTablePipes = obj.Parser is GfmPipeTableParser;
+                try
+                {
+                    renderer.Render(tableCell);
+                }
+                finally
+                {
+                    renderer.EscapeTablePipes = previousEscapeTablePipes;
+                }
 
                 renderer.Write(MarginSeparator);
                 renderer.Write(PipeSeparator);

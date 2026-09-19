@@ -64,6 +64,7 @@ class Program
         new Spec("Alert Blocks",        "AlertBlockSpecs.md",           "advanced"),
         new Spec("Pipe Tables",         "PipeTableSpecs.md",            "pipetables|advanced"),
         new Spec("GFM Pipe Tables",     "PipeTableGfmSpecs.md",         "gfm-pipetables"),
+        new Spec("GFM Table Conformance", "GfmTableSpecs.md",           "gfm-pipetables"),
         new Spec("Footnotes",           "FootnotesSpecs.md",            "footnotes|advanced"),
         new Spec("Generic Attributes",  "GenericAttributesSpecs.md",    "attributes|advanced"),
         new Spec("Emphasis Extra",      "EmphasisExtraSpecs.md",        "emphasisextras|advanced"),

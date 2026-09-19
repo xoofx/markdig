@@ -16,6 +16,6 @@ public class NormalizeHtmlInlineRenderer : NormalizeObjectRenderer<HtmlInline>
     /// </summary>
     protected override void Write(NormalizeRenderer renderer, HtmlInline obj)
     {
-        renderer.Write(obj.Tag);
+        renderer.Write(renderer.EscapeTablePipes ? obj.Tag.Replace("|", "\\|") : obj.Tag);
     }
 }

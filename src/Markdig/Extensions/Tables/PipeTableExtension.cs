@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Extensions.Emoji;
+using Markdig.Parsers;
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
 using Markdig.Renderers.Normalize;
@@ -36,6 +37,15 @@ public class PipeTableExtension : IMarkdownExtension
     {
         // Pipe tables require precise source location
         pipeline.PreciseSourceLocation = true;
+        if (Options.UseGfmRules)
+        {
+            if (!pipeline.BlockParsers.Contains<GfmPipeTableParser>())
+            {
+                pipeline.BlockParsers.Insert(0, new GfmPipeTableParser(Options));
+                pipeline.BlockParsers.InsertBefore<ParagraphBlockParser>(new GfmPipeTableParser.RowParser());
+            }
+            return;
+        }
         if (!pipeline.BlockParsers.Contains<PipeTableBlockParser>())
         {
             pipeline.BlockParsers.Insert(0, new PipeTableBlockParser());

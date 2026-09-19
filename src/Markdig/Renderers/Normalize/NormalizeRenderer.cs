@@ -56,6 +56,9 @@ public class NormalizeRenderer : TextRendererBase<NormalizeRenderer>
     /// </summary>
     public bool CompactParagraph { get; set; }
 
+    // Raw inline content must escape pipes when emitted inside a GFM table.
+    internal bool EscapeTablePipes { get; set; }
+
     /// <summary>
     /// Performs the finish block operation.
     /// </summary>

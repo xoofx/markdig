@@ -36,7 +36,43 @@ For backward compatibility, Markdig allows individual separator cells to be empt
 | Name | Master | Inherit |
 ```
 
-An empty separator cell has no explicit alignment. A separator row containing only pipes and whitespace does not define a table. This compatibility behavior is more permissive than strict GFM syntax; use dashes in every separator cell for portability.
+An empty separator cell has no explicit alignment. A separator row containing only pipes and whitespace does not define a table. This compatibility behavior is more permissive than strict GFM syntax and is disabled by `UseGfmRules` (see below).
+
+### Strict GFM mode
+
+Opt in to the [GitHub Flavored Markdown table rules](https://github.github.com/gfm/#tables-extension-):
+
+```csharp
+using Markdig;
+using Markdig.Extensions.Tables;
+
+var pipeline = new MarkdownPipelineBuilder()
+    .UsePipeTables(new PipeTableOptions { UseGfmRules = true })
+    .Build();
+```
+
+Alternatively, use `.Configure("gfm-pipetables")`. This preset previously enabled
+only header-based column counting; it now selects the full GFM table mode.
+Plain `.UsePipeTables()` and `.UseAdvancedExtensions()` remain permissive by default.
+When combining strict tables with `.UseAdvancedExtensions()`, call the configured
+`.UsePipeTables(...)` first, since an already registered table extension is not replaced.
+
+In this mode:
+
+- A header and a delimiter row are required, with exactly the same number of cells.
+- Every delimiter cell needs at least one dash, optionally surrounded by alignment
+  colons. Empty delimiter cells and spaces between dashes/colons are rejected.
+- The header determines the width: short body rows are padded and excess cells are
+  ignored. Body rows do not need to contain a pipe.
+- Unescaped pipes split cells **before** inline parsing, even inside code, HTML,
+  or link labels. Use `\|` for a literal pipe, including inside code spans.
+- Blank lines and other block-level structures end the table. Inline spans cannot
+  cross cell or row boundaries.
+
+`UseGfmRules` overrides `RequireHeaderSeparator` and `UseHeaderForColumnCount`
+without modifying those option values. Width inference is still available as an
+additional, non-GFM rendering feature. This option changes table parsing only;
+it does not enable other GFM extensions such as task lists or strikethrough.
 
 ### Column alignment
 
@@ -111,6 +147,7 @@ var pipeline = new MarkdownPipelineBuilder()
 
 | Option                           | Default | Description |
 |----------------------------------|---------|-------------|
+| `UseGfmRules`                    | `false` | Use strict GFM table parsing, requiring a matching delimiter row and header-based column counting regardless of the next two options. |
 | `RequireHeaderSeparator`         | `true`  | Whether the dashed separator row is required. Set to `false` for Kramdown-style tables that allow headerless tables. |
 | `UseHeaderForColumnCount`        | `false` | When `true`, the header row's column count is authoritative — short rows are padded with empty cells and extra cells in wider rows are dropped. When `false`, the widest row determines the column count. |
 | `InferColumnWidthsFromSeparator` | `false` | When `true`, populates `TableColumnDefinition.Width` based on the dash count of each column in the separator row, normalized to percentages that sum to 100. When `false`, `Width` stays `0` and no width information is emitted. |
@@ -146,6 +183,9 @@ wider body rows. With `InferColumnWidthsFromSeparator` enabled, the original
 separator dash counts (including zero for empty cells) are retained for parsed
 columns so their inferred width proportions survive normalization. Without width inference, separators use three
 dashes.
+
+For tables parsed in GFM mode, normalization also escapes pipes in code spans and
+inline HTML so those pipes do not become cell boundaries when parsed again.
 
 This support targets pipe tables, not grid tables. When both extensions are
 enabled (including via `UseAdvancedExtensions()`), the normalizer also attempts

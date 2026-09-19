@@ -40,4 +40,16 @@ public class PipeTableOptions
     /// in the header separator row. Each column's width will be proportional to the dash count in its respective column.
     /// </summary>
     public bool InferColumnWidthsFromSeparator { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to use GitHub Flavored Markdown table parsing rules.
+    /// <c>false</c> by default, preserving the permissive pipe-table syntax.
+    /// </summary>
+    /// <remarks>
+    /// Requires a nonempty delimiter for every header cell and matching header/delimiter cell counts.
+    /// Splits cells before parsing inlines, supports escaped pipes in code spans, and pads or truncates
+    /// body rows to the header width. Overrides <see cref="RequireHeaderSeparator"/> and
+    /// <see cref="UseHeaderForColumnCount"/>. <see cref="InferColumnWidthsFromSeparator"/> remains available.
+    /// </remarks>
+    public bool UseGfmRules { get; set; }
 }

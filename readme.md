@@ -23,7 +23,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
 - Built-in with **20+ extensions**, including:
   - [**Alerts**](https://xoofx.github.io/markdig/docs/extensions/alert-blocks/) for [GitHub style alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) including: `[!Note]`, `[!Tip]`, `[!Important]`, `[!Warning]`, `[!Caution]`
   - 2 kind of tables:
-    - [**Pipe tables**](src/Markdig.Tests/Specs/PipeTableSpecs.md) (inspired from GitHub tables and [PanDoc - Pipe Tables](https://pandoc.org/MANUAL.html#extension-pipe_tables))
+    - [**Pipe tables**](src/Markdig.Tests/Specs/PipeTableSpecs.md) (inspired from GitHub tables and [PanDoc - Pipe Tables](https://pandoc.org/MANUAL.html#extension-pipe_tables)), with opt-in [strict GFM parsing](site/docs/extensions/tables.md#strict-gfm-mode) via `PipeTableOptions.UseGfmRules`
     - [**Grid tables**](src/Markdig.Tests/Specs/GridTableSpecs.md) (inspired from [Pandoc - Grid Tables](https://pandoc.org/MANUAL.html#extension-grid_tables)) 
   - [**Extra emphasis**](src/Markdig.Tests/Specs/EmphasisExtraSpecs.md) (inspired from [Pandoc - Emphasis](https://pandoc.org/MANUAL.html#strikeout) and [Markdown-it](https://markdown-it.github.io/)) 
     - strike through `~~`,

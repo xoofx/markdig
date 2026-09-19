@@ -18,7 +18,7 @@ public class CodeInlineRenderer : NormalizeObjectRenderer<CodeInline>
     protected override void Write(NormalizeRenderer renderer, CodeInline obj)
     {
         var delimiterCount = 0;
-        string content = obj.Content;
+        string content = renderer.EscapeTablePipes ? obj.Content.Replace("|", "\\|") : obj.Content;
         for (var i = 0; i < content.Length; i++)
         {
             var index = content.IndexOf(obj.Delimiter, i);

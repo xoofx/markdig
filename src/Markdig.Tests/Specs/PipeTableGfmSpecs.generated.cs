@@ -17,20 +17,23 @@ namespace Markdig.Tests.Specs.GFMPipeTables
         // 
         // ## Gfm Pipe Table
         // 
-        // This groups a certain set of behaviors that makes pipe tables adhere more strictly to the GitHub-flavored Markdown specification.
+        // These tests exercise `Configure("gfm-pipetables")`, equivalent to
+        // `UsePipeTables(new PipeTableOptions { UseGfmRules = true })`.
+        // The official specification examples are in `GfmTableSpecs.md`.
         // 
         // A pipe table is detected when:
         // 
         // **Rule #1**
-        // - Each line of a paragraph block have to contain at least a **column delimiter** `|` that is not embedded by either a code inline (backtick \`) or a HTML inline.
+        // - Cells are split on unescaped pipes before parsing any inline content. Body rows may omit pipes.
         // - The second row must separate the first header row from sub-sequent rows by containing a **header column separator** for each column separated by a column delimiter. A header column separator is:
         //   - starting by optional spaces
         //   - followed by an optional `:` to specify left align
         //   - followed by a sequence of at least one `-` character
         //   - followed by an optional `:` to specify right align (or center align if left align is also defined)
         //   - ending by optional spaces
+        // - Header and separator rows must contain the same number of cells.
         //  
-        // Because a list has a higher precedence than a pipe table, a table header row separator requires at least 2 dashes `--` to start a header row:
+        // A table header row separator may start with two dashes:
         [Test]
         public void ExtensionsGfmPipeTable_Example001()
         {
@@ -167,7 +170,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             TestParser.TestSpec("a b\nc | d\ne | f", "<p>a b\nc | d\ne | f</p>", "gfm-pipetables", context: "Example 5\nSection Extensions / Gfm Pipe Table\n");
         }
 
-        // If a line doesn't have a column delimiter `|` the table is not detected
+        // Without a delimiter row, the table is not detected:
         [Test]
         public void ExtensionsGfmPipeTable_Example006()
         {
@@ -227,7 +230,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
         }
 
         // **Rule #2**
-        // A pipe table ends after a blank line or the end of the file.
+        // A pipe table ends at a blank line, another block-level structure, or the end of the file.
         // 
         // **Rule #3**
         // A cell content is trimmed (start and end) from white-spaces.
@@ -608,7 +611,7 @@ namespace Markdig.Tests.Specs.GFMPipeTables
 
         // **Rule #7**
         // 
-        // A backtick/code delimiter has a higher precedence than a column delimiter `|`:
+        // Without a delimiter row this remains an ordinary paragraph with a multiline code span:
         [Test]
         public void ExtensionsGfmPipeTable_Example019()
         {
@@ -627,7 +630,8 @@ namespace Markdig.Tests.Specs.GFMPipeTables
 
         // **Rule #8**
         // 
-        // A HTML inline has a higher precedence than a column delimiter `|`: 
+        // An unescaped pipe inside HTML still counts as a column delimiter. Here the
+        // header and delimiter counts do not match, so no table is recognized:
         [Test]
         public void ExtensionsGfmPipeTable_Example020()
         {
@@ -640,27 +644,16 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     0  | 1
             //
             // Should be rendered as:
-            //     <table>
-            //     <thead>
-            //     <tr>
-            //     <th>a <a href="" title="|"></a></th>
-            //     <th>b</th>
-            //     </tr>
-            //     </thead>
-            //     <tbody>
-            //     <tr>
-            //     <td>0</td>
-            //     <td>1</td>
-            //     </tr>
-            //     </tbody>
-            //     </table>
+            //     <p>a <a href="" title="|"></a> | b
+            //     -- | --
+            //     0  | 1</p>
 
-            TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<table>\n<thead>\n<tr>\n<th>a <a href=\"\" title=\"|\"></a></th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>0</td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example 20\nSection Extensions / Gfm Pipe Table\n");
+            TestParser.TestSpec("a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1", "<p>a <a href=\"\" title=\"|\"></a> | b\n-- | --\n0  | 1</p>", "gfm-pipetables", context: "Example 20\nSection Extensions / Gfm Pipe Table\n");
         }
 
         // **Rule #9**
         // 
-        // Links have a higher precedence than the column delimiter character `|`:
+        // Unescaped pipes split cells even inside link labels:
         [Test]
         public void ExtensionsGfmPipeTable_Example021()
         {
@@ -682,13 +675,13 @@ namespace Markdig.Tests.Specs.GFMPipeTables
             //     </thead>
             //     <tbody>
             //     <tr>
-            //     <td><a href="http://google.com">This is a link with a | inside the label</a></td>
-            //     <td>1</td>
+            //     <td>[This is a link with a</td>
+            //     <td>inside the label](http://google.com)</td>
             //     </tr>
             //     </tbody>
             //     </table>
 
-            TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><a href=\"http://google.com\">This is a link with a | inside the label</a></td>\n<td>1</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example 21\nSection Extensions / Gfm Pipe Table\n");
+            TestParser.TestSpec("a  | b\n-- | --\n[This is a link with a | inside the label](http://google.com) | 1", "<table>\n<thead>\n<tr>\n<th>a</th>\n<th>b</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>[This is a link with a</td>\n<td>inside the label](http://google.com)</td>\n</tr>\n</tbody>\n</table>", "gfm-pipetables", context: "Example 21\nSection Extensions / Gfm Pipe Table\n");
         }
 
         // **Rule #10**
