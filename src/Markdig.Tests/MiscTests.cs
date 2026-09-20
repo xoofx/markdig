@@ -72,7 +72,7 @@ public class MiscTests
     public void GuardsAgainstHighlyNestedNodes(char c, int count, bool parseOnly, bool shouldThrow)
     {
         var markdown = new string(c, count);
-        TestDelegate test = parseOnly ? () => Markdown.Parse(markdown) : () => Markdown.ToHtml(markdown);
+        Action test = parseOnly ? () => Markdown.Parse(markdown) : () => Markdown.ToHtml(markdown);
 
         if (shouldThrow)
         {
