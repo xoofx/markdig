@@ -4,10 +4,10 @@
     <File Path="../.gitattributes" />
     <File Path="../.gitignore" />
     <File Path="../AGENTS.md" />
-    <File Path="../changelog.md" />
     <File Path="../license.txt" />
     <File Path="../readme.md" />
     <File Path="Directory.Packages.props" />
+    <File Path="dotnet-releaser.toml" />
     <File Path="global.json" />
   </Folder>
   <Folder Name="/Build/GitHub Actions/">

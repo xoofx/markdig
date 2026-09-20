@@ -8,3 +8,6 @@ repo = "markdig"
 run_tests_for_debug = true
 [coverage]
 exclude = "[SpecFileGen*]*"
+[nuget]
+user = "xoofx"
+trusted_publishing = true

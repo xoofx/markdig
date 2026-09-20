@@ -5,17 +5,22 @@ on:
     paths-ignore:
     - 'site/**'
     - 'img/**'
-    - 'changelog.md'
-    - 'readme.md'
+    - '*.md'
+    - '*.txt'
   pull_request:
 
 jobs:
   build:
-    uses: xoofx/.github/.github/workflows/dotnet.yml@main
-    with:
-      dotnet-version: |
-        6.0
-        8.0
-        10.0
-    secrets:
-      NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+    permissions:
+      id-token: write
+      actions: write
+      contents: write
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: "Build, Test, Pack and Publish"
+        uses: xoofx/.github/.github/actions/dotnet-releaser-action@main
+        with:
+          dotnet-version: |
+            6.0
+            8.0
+            10.0
