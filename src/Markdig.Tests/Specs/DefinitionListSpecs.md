@@ -130,3 +130,51 @@ Definition lists can be nested inside list items
 </dl></li>
 </ol>
 ````````````````````````````````
+
+An invalid continuation must preserve its leading marker when it starts the next term:
+
+```````````````````````````````` example
+Term
+:   First definition
+
+:foo: Foo
+:   Second definition
+.
+<dl>
+<dt>Term</dt>
+<dd>First definition</dd>
+<dt>:foo: Foo</dt>
+<dd>Second definition</dd>
+</dl>
+````````````````````````````````
+
+The same applies to the tilde marker:
+
+```````````````````````````````` example
+Term
+:   First definition
+
+~foo Foo
+:   Second definition
+.
+<dl>
+<dt>Term</dt>
+<dd>First definition</dd>
+<dt>~foo Foo</dt>
+<dd>Second definition</dd>
+</dl>
+````````````````````````````````
+
+Without a blank line, the next line remains part of the current definition but keeps its marker:
+
+```````````````````````````````` example
+Term
+:   First definition
+:foo: Foo
+.
+<dl>
+<dt>Term</dt>
+<dd>First definition
+:foo: Foo</dd>
+</dl>
+````````````````````````````````

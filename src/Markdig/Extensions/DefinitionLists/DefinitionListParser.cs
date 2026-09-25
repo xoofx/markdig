@@ -151,6 +151,8 @@ public class DefinitionListParser : BlockParser
             // We expect to have a least
             if (delta < 4)
             {
+                processor.GoToColumn(column);
+
                 // Remove the blankline before breaking this definition item
                 if (lastBlankLine != null)
                 {

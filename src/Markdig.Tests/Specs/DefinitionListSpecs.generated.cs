@@ -191,5 +191,77 @@ namespace Markdig.Tests.Specs.DefinitionLists
 
             TestParser.TestSpec("1.  First\n    \n2.  Second\n    \n    Term 1\n    :   Definition\n    \n    Term 2\n    :   Second Definition", "<ol>\n<li><p>First</p></li>\n<li><p>Second</p>\n<dl>\n<dt>Term 1</dt>\n<dd>Definition</dd>\n<dt>Term 2</dt>\n<dd>Second Definition</dd>\n</dl></li>\n</ol>", "definitionlists+attributes|advanced", context: "Example 6\nSection Extensions / Definition lists\n");
         }
+
+        // An invalid continuation must preserve its leading marker when it starts the next term:
+        [Test]
+        public void ExtensionsDefinitionLists_Example007()
+        {
+            // Example 7
+            // Section: Extensions / Definition lists
+            //
+            // The following Markdown:
+            //     Term
+            //     :   First definition
+            //     
+            //     :foo: Foo
+            //     :   Second definition
+            //
+            // Should be rendered as:
+            //     <dl>
+            //     <dt>Term</dt>
+            //     <dd>First definition</dd>
+            //     <dt>:foo: Foo</dt>
+            //     <dd>Second definition</dd>
+            //     </dl>
+
+            TestParser.TestSpec("Term\n:   First definition\n\n:foo: Foo\n:   Second definition", "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dt>:foo: Foo</dt>\n<dd>Second definition</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 7\nSection Extensions / Definition lists\n");
+        }
+
+        // The same applies to the tilde marker:
+        [Test]
+        public void ExtensionsDefinitionLists_Example008()
+        {
+            // Example 8
+            // Section: Extensions / Definition lists
+            //
+            // The following Markdown:
+            //     Term
+            //     :   First definition
+            //     
+            //     ~foo Foo
+            //     :   Second definition
+            //
+            // Should be rendered as:
+            //     <dl>
+            //     <dt>Term</dt>
+            //     <dd>First definition</dd>
+            //     <dt>~foo Foo</dt>
+            //     <dd>Second definition</dd>
+            //     </dl>
+
+            TestParser.TestSpec("Term\n:   First definition\n\n~foo Foo\n:   Second definition", "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dt>~foo Foo</dt>\n<dd>Second definition</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 8\nSection Extensions / Definition lists\n");
+        }
+
+        // Without a blank line, the next line remains part of the current definition but keeps its marker:
+        [Test]
+        public void ExtensionsDefinitionLists_Example009()
+        {
+            // Example 9
+            // Section: Extensions / Definition lists
+            //
+            // The following Markdown:
+            //     Term
+            //     :   First definition
+            //     :foo: Foo
+            //
+            // Should be rendered as:
+            //     <dl>
+            //     <dt>Term</dt>
+            //     <dd>First definition
+            //     :foo: Foo</dd>
+            //     </dl>
+
+            TestParser.TestSpec("Term\n:   First definition\n:foo: Foo", "<dl>\n<dt>Term</dt>\n<dd>First definition\n:foo: Foo</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 9\nSection Extensions / Definition lists\n");
+        }
     }
 }
