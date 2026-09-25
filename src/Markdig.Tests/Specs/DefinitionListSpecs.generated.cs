@@ -202,7 +202,7 @@ namespace Markdig.Tests.Specs.DefinitionLists
             // The following Markdown:
             //     Term
             //     :   First definition
-            //
+            //     
             //     :foo: Foo
             //     :   Second definition
             //
@@ -227,7 +227,7 @@ namespace Markdig.Tests.Specs.DefinitionLists
             // The following Markdown:
             //     Term
             //     :   First definition
-            //
+            //     
             //     ~foo Foo
             //     :   Second definition
             //
