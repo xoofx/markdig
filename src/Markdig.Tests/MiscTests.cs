@@ -347,6 +347,31 @@ $$
     }
 
     [Test]
+    public void TestGridTableLastCellWithoutClosingPipe()
+    {
+        // The last cell is open and shorter than the column, and the next line has
+        // a `|` where this one would end: https://github.com/xoofx/markdig/issues/494
+        var input = @"
++-----+----------+
+| 6   |  1
+|     |
++-----+----------+";
+
+        var expected = @"<table>
+<col style=""width:33.33%"" />
+<col style=""width:66.67%"" />
+<tbody>
+<tr>
+<td>6</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
+    }
+
+    [Test]
     public void TestDefinitionListInListItemWithBlankLine()
     {
         var input = @"
