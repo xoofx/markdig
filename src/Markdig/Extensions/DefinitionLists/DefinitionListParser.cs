@@ -2,6 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using Markdig.Helpers;
 using Markdig.Parsers;
 using Markdig.Syntax;
 
@@ -35,12 +36,12 @@ public class DefinitionListParser : BlockParser
         var startPosition = processor.Start;
 
         var column = processor.ColumnBeforeIndent;
-        processor.NextChar();
+        var c = processor.NextChar();
         processor.ParseIndent();
         var delta = processor.Column - column;
 
-        // We expect to have a least
-        if (delta < 4)
+        // The marker must be followed by at least one space or tab
+        if (!c.IsSpaceOrTab())
         {
             // Return back to original position
             processor.GoToColumn(column);
@@ -144,12 +145,12 @@ public class DefinitionListParser : BlockParser
         {
             var startPosition = processor.Start;
             var column = processor.ColumnBeforeIndent;
-            processor.NextChar();
+            var c = processor.NextChar();
             processor.ParseIndent();
             var delta = processor.Column - column;
 
-            // We expect to have a least
-            if (delta < 4)
+            // The marker must be followed by at least one space or tab
+            if (!c.IsSpaceOrTab())
             {
                 // Remove the blankline before breaking this definition item
                 if (lastBlankLine != null)

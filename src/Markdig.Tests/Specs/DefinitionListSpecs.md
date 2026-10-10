@@ -72,14 +72,33 @@ with lazy continuation.</p>
 </dl>
 ````````````````````````````````
 
-The definition must be indented to 4 characters including the `:`. 
+The `:` or `~` must be followed by at least one space or tab. A single space is enough:
+
+```````````````````````````````` example
+First Term
+: This is the definition of the first term.
+
+Second Term
+: This is one definition of the second term.
+~ This is another definition of the second term.
+.
+<dl>
+<dt>First Term</dt>
+<dd>This is the definition of the first term.</dd>
+<dt>Second Term</dt>
+<dd>This is one definition of the second term.</dd>
+<dd>This is another definition of the second term.</dd>
+</dl>
+````````````````````````````````
+
+Without a space or tab after the `:`, the line is not a definition:
 
 ```````````````````````````````` example
 Term 1
-:  Invalid with less than 3 characters
+:Invalid without a space after the colon
 .
 <p>Term 1
-:  Invalid with less than 3 characters</p>
+:Invalid without a space after the colon</p>
 ````````````````````````````````
 
 The `:` can be indented up to 3 spaces:
