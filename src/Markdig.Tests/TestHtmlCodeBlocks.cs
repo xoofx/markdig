@@ -32,4 +32,14 @@ public class TestHtmlCodeBlocks
         Assert.AreEqual(7, htmlBlocks[0].Span.Start);
         Assert.AreEqual(10 + tag.Length, htmlBlocks[0].Span.Length);
     }
+
+    // A line containing only spaces or tabs is a blank line, which ends HTML blocks of type 6 and 7.
+    // https://spec.commonmark.org/0.31.2/#blank-line
+    [TestCase("<div>\n  \nfoo", "<div>\n<p>foo</p>\n")]
+    [TestCase("<div>\n\t\nfoo", "<div>\n<p>foo</p>\n")]
+    [TestCase("<del>\n \n*foo*", "<del>\n<p><em>foo</em></p>\n")]
+    public void WhitespaceOnlyLineEndsHtmlBlock(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
 }

@@ -181,6 +181,9 @@ public class HtmlBlockParser : BlockParser
 
     private BlockState MatchEnd(BlockProcessor state, HtmlBlock htmlBlock)
     {
+        // A line with only spaces or tabs is a blank line too, but going back
+        // over its indent below makes the line non-empty, so check it first
+        var isBlankLine = state.IsBlankLine;
         state.GoToColumn(state.ColumnBeforeIndent);
 
         // Early exit if it is not starting by an HTML tag
@@ -257,13 +260,13 @@ public class HtmlBlockParser : BlockParser
                 }
                 break;
             case HtmlBlockType.InterruptingBlock:
-                if (state.IsBlankLine)
+                if (isBlankLine)
                 {
                     result = BlockState.BreakDiscard;
                 }
                 break;
             case HtmlBlockType.NonInterruptingBlock:
-                if (state.IsBlankLine)
+                if (isBlankLine)
                 {
                     result = BlockState.BreakDiscard;
                 }
