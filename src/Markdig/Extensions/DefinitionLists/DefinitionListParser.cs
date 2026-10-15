@@ -33,6 +33,7 @@ public class DefinitionListParser : BlockParser
         }
 
         var startPosition = processor.Start;
+        var startColumn = processor.Column;
 
         var column = processor.ColumnBeforeIndent;
         processor.NextChar();
@@ -43,7 +44,7 @@ public class DefinitionListParser : BlockParser
         if (delta < 4)
         {
             // Return back to original position
-            processor.GoToColumn(column);
+            processor.GoToColumn(startColumn);
             return BlockState.None;
         }
 
@@ -143,6 +144,7 @@ public class DefinitionListParser : BlockParser
         if (Array.IndexOf(OpeningCharacters!, processor.CurrentChar) >= 0)
         {
             var startPosition = processor.Start;
+            var startColumn = processor.Column;
             var column = processor.ColumnBeforeIndent;
             processor.NextChar();
             processor.ParseIndent();
@@ -151,6 +153,8 @@ public class DefinitionListParser : BlockParser
             // We expect to have a least
             if (delta < 4)
             {
+                processor.GoToColumn(startColumn);
+
                 // Remove the blankline before breaking this definition item
                 if (lastBlankLine != null)
                 {
