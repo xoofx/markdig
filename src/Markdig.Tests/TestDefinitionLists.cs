@@ -7,8 +7,10 @@ public class TestDefinitionLists
 {
     [TestCase(":foo: Foo", 1)]
     [TestCase(":foo: Foo", 2)]
+    [TestCase(":foo: Foo", 3)]
     [TestCase("~foo Foo", 1)]
     [TestCase("~foo Foo", 2)]
+    [TestCase("~foo Foo", 3)]
     public void IndentedInvalidContinuationPreservesTerm(string term, int indent)
     {
         var markdown = $"Term\n:   First definition\n\n{new string(' ', indent)}{term}\n:   Second definition";
@@ -21,7 +23,7 @@ public class TestDefinitionLists
     public void InvalidDefinitionMarkerPreservesSourceLocation(
         [Values("Term\n", "Term\n:   First definition\n")] string prefix,
         [Values(":foo: Foo", "~foo Foo")] string marker,
-        [Values(1, 2)] int indent)
+        [Values(1, 2, 3)] int indent)
     {
         var markdown = $"{prefix}{new string(' ', indent)}{marker}";
         var pipeline = new MarkdownPipelineBuilder().UseDefinitionLists().UsePreciseSourceLocation().Build();
@@ -31,5 +33,16 @@ public class TestDefinitionLists
         Assert.AreEqual(indent, literal.Column);
         Assert.AreEqual(prefix.Length + indent, literal.Span.Start);
         Assert.AreEqual(markdown.Length - 1, literal.Span.End);
+    }
+
+    [Test]
+    public void DefinitionMarkersAcceptSpacesOrTabs(
+        [Values(':', '~')] char marker,
+        [Values(" ", "  ", "\t")] string whitespace)
+    {
+        var markdown = $"Term\n{marker}{whitespace}First definition\n{marker}{whitespace}Second definition";
+        const string expected = "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dd>Second definition</dd>\n</dl>\n";
+
+        TestParser.TestSpec(markdown, expected, "definitionlists+attributes|advanced");
     }
 }

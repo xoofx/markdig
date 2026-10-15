@@ -101,7 +101,7 @@ namespace Markdig.Tests.Specs.DefinitionLists
             TestParser.TestSpec("Term 1\n\n:   Definition\nwith lazy continuation.\n\n    Second paragraph of the definition.", "<dl>\n<dt>Term 1</dt>\n<dd><p>Definition\nwith lazy continuation.</p>\n<p>Second paragraph of the definition.</p>\n</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 2\nSection Extensions / Definition lists\n");
         }
 
-        // The definition must be indented to 4 characters including the `:`. 
+        // The `:` or `~` must be followed by at least one space or tab. A single space is enough:
         [Test]
         public void ExtensionsDefinitionLists_Example003()
         {
@@ -109,21 +109,48 @@ namespace Markdig.Tests.Specs.DefinitionLists
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
-            //     Term 1
-            //     :  Invalid with less than 3 characters
+            //     First Term
+            //     : This is the definition of the first term.
+            //     
+            //     Second Term
+            //     : This is one definition of the second term.
+            //     ~ This is another definition of the second term.
             //
             // Should be rendered as:
-            //     <p>Term 1
-            //     :  Invalid with less than 3 characters</p>
+            //     <dl>
+            //     <dt>First Term</dt>
+            //     <dd>This is the definition of the first term.</dd>
+            //     <dt>Second Term</dt>
+            //     <dd>This is one definition of the second term.</dd>
+            //     <dd>This is another definition of the second term.</dd>
+            //     </dl>
 
-            TestParser.TestSpec("Term 1\n:  Invalid with less than 3 characters", "<p>Term 1\n:  Invalid with less than 3 characters</p>", "definitionlists+attributes|advanced", context: "Example 3\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("First Term\n: This is the definition of the first term.\n\nSecond Term\n: This is one definition of the second term.\n~ This is another definition of the second term.", "<dl>\n<dt>First Term</dt>\n<dd>This is the definition of the first term.</dd>\n<dt>Second Term</dt>\n<dd>This is one definition of the second term.</dd>\n<dd>This is another definition of the second term.</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 3\nSection Extensions / Definition lists\n");
         }
 
-        // The `:` can be indented up to 3 spaces:
+        // Without a space or tab after the `:`, the line is not a definition:
         [Test]
         public void ExtensionsDefinitionLists_Example004()
         {
             // Example 4
+            // Section: Extensions / Definition lists
+            //
+            // The following Markdown:
+            //     Term 1
+            //     :Invalid without a space after the colon
+            //
+            // Should be rendered as:
+            //     <p>Term 1
+            //     :Invalid without a space after the colon</p>
+
+            TestParser.TestSpec("Term 1\n:Invalid without a space after the colon", "<p>Term 1\n:Invalid without a space after the colon</p>", "definitionlists+attributes|advanced", context: "Example 4\nSection Extensions / Definition lists\n");
+        }
+
+        // The `:` can be indented up to 3 spaces:
+        [Test]
+        public void ExtensionsDefinitionLists_Example005()
+        {
+            // Example 5
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
@@ -136,14 +163,14 @@ namespace Markdig.Tests.Specs.DefinitionLists
             //     <dd>Valid even if <code>:</code> starts at most 3 spaces</dd>
             //     </dl>
 
-            TestParser.TestSpec("Term 1\n   : Valid even if `:` starts at most 3 spaces", "<dl>\n<dt>Term 1</dt>\n<dd>Valid even if <code>:</code> starts at most 3 spaces</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 4\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("Term 1\n   : Valid even if `:` starts at most 3 spaces", "<dl>\n<dt>Term 1</dt>\n<dd>Valid even if <code>:</code> starts at most 3 spaces</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 5\nSection Extensions / Definition lists\n");
         }
 
         // But more than 3 spaces before `:` will trigger an indented code block:
         [Test]
-        public void ExtensionsDefinitionLists_Example005()
+        public void ExtensionsDefinitionLists_Example006()
         {
-            // Example 5
+            // Example 6
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
@@ -156,14 +183,14 @@ namespace Markdig.Tests.Specs.DefinitionLists
             //     <pre><code>: Not valid
             //     </code></pre>
 
-            TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes|advanced", context: "Example 5\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("Term 1\n\n    : Not valid", "<p>Term 1</p>\n<pre><code>: Not valid\n</code></pre>", "definitionlists+attributes|advanced", context: "Example 6\nSection Extensions / Definition lists\n");
         }
 
         // Definition lists can be nested inside list items
         [Test]
-        public void ExtensionsDefinitionLists_Example006()
+        public void ExtensionsDefinitionLists_Example007()
         {
-            // Example 6
+            // Example 7
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
@@ -189,14 +216,14 @@ namespace Markdig.Tests.Specs.DefinitionLists
             //     </dl></li>
             //     </ol>
 
-            TestParser.TestSpec("1.  First\n    \n2.  Second\n    \n    Term 1\n    :   Definition\n    \n    Term 2\n    :   Second Definition", "<ol>\n<li><p>First</p></li>\n<li><p>Second</p>\n<dl>\n<dt>Term 1</dt>\n<dd>Definition</dd>\n<dt>Term 2</dt>\n<dd>Second Definition</dd>\n</dl></li>\n</ol>", "definitionlists+attributes|advanced", context: "Example 6\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("1.  First\n    \n2.  Second\n    \n    Term 1\n    :   Definition\n    \n    Term 2\n    :   Second Definition", "<ol>\n<li><p>First</p></li>\n<li><p>Second</p>\n<dl>\n<dt>Term 1</dt>\n<dd>Definition</dd>\n<dt>Term 2</dt>\n<dd>Second Definition</dd>\n</dl></li>\n</ol>", "definitionlists+attributes|advanced", context: "Example 7\nSection Extensions / Definition lists\n");
         }
 
         // An invalid continuation must preserve its leading marker when it starts the next term:
         [Test]
-        public void ExtensionsDefinitionLists_Example007()
+        public void ExtensionsDefinitionLists_Example008()
         {
-            // Example 7
+            // Example 8
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
@@ -214,14 +241,14 @@ namespace Markdig.Tests.Specs.DefinitionLists
             //     <dd>Second definition</dd>
             //     </dl>
 
-            TestParser.TestSpec("Term\n:   First definition\n\n:foo: Foo\n:   Second definition", "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dt>:foo: Foo</dt>\n<dd>Second definition</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 7\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("Term\n:   First definition\n\n:foo: Foo\n:   Second definition", "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dt>:foo: Foo</dt>\n<dd>Second definition</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 8\nSection Extensions / Definition lists\n");
         }
 
         // The same applies to the tilde marker:
         [Test]
-        public void ExtensionsDefinitionLists_Example008()
+        public void ExtensionsDefinitionLists_Example009()
         {
-            // Example 8
+            // Example 9
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
@@ -239,14 +266,14 @@ namespace Markdig.Tests.Specs.DefinitionLists
             //     <dd>Second definition</dd>
             //     </dl>
 
-            TestParser.TestSpec("Term\n:   First definition\n\n~foo Foo\n:   Second definition", "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dt>~foo Foo</dt>\n<dd>Second definition</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 8\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("Term\n:   First definition\n\n~foo Foo\n:   Second definition", "<dl>\n<dt>Term</dt>\n<dd>First definition</dd>\n<dt>~foo Foo</dt>\n<dd>Second definition</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 9\nSection Extensions / Definition lists\n");
         }
 
         // Without a blank line, the next line remains part of the current definition but keeps its marker:
         [Test]
-        public void ExtensionsDefinitionLists_Example009()
+        public void ExtensionsDefinitionLists_Example010()
         {
-            // Example 9
+            // Example 10
             // Section: Extensions / Definition lists
             //
             // The following Markdown:
@@ -261,7 +288,7 @@ namespace Markdig.Tests.Specs.DefinitionLists
             //     :foo: Foo</dd>
             //     </dl>
 
-            TestParser.TestSpec("Term\n:   First definition\n:foo: Foo", "<dl>\n<dt>Term</dt>\n<dd>First definition\n:foo: Foo</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 9\nSection Extensions / Definition lists\n");
+            TestParser.TestSpec("Term\n:   First definition\n:foo: Foo", "<dl>\n<dt>Term</dt>\n<dd>First definition\n:foo: Foo</dd>\n</dl>", "definitionlists+attributes|advanced", context: "Example 10\nSection Extensions / Definition lists\n");
         }
     }
 }

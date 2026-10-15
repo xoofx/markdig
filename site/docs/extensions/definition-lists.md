@@ -10,23 +10,25 @@ Definition lists render as `<dl>` / `<dt>` / `<dd>` HTML elements. Inspired by [
 
 ## Syntax
 
-A definition list consists of terms followed by their definitions. Definitions are prefixed with `:` (colon followed by a space):
+A definition list consists of terms followed by their definitions. Definitions are
+prefixed with `:` or `~`, followed by at least one space or tab. A single space is
+enough:
 
 ```markdown
 Term 1
-:   Definition of term 1.
+: Definition of term 1.
 
 Term 2
-:   Definition of term 2.
-:   Another definition of term 2.
+: Definition of term 2.
+~ Another definition of term 2.
 ```
 
 Term 1
-:   Definition of term 1.
+: Definition of term 1.
 
 Term 2
-:   Definition of term 2.
-:   Another definition of term 2.
+: Definition of term 2.
+~ Another definition of term 2.
 
 ## Multi-line definitions
 
@@ -79,7 +81,7 @@ Term B
 ## Rules
 
 - There must be a blank line before the first term (or it will be treated as a paragraph).
-- The `:` marker must be followed by at least one space.
+- The `:` or `~` marker must be followed by at least one space or tab.
 - Continuation lines must be indented.
 - A line beginning with `:` or `~` that is not a valid definition marker keeps
   that character, whether it continues the current definition or starts a new term.
