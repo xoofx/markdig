@@ -42,4 +42,31 @@ public class TestHtmlCodeBlocks
     {
         TestParser.TestSpec(markdown, expected);
     }
+
+    [TestCase("<div>\n  \nfoo")]
+    [TestCase("<div>\n\t\nfoo")]
+    [TestCase("<del>\n \t \n*foo*")]
+    [TestCase("<div>\r\n  \r\nfoo")]
+    [TestCase("<del>\r\n\t\r\n*foo*")]
+    [TestCase("<div>\r \t\rfoo")]
+    [TestCase("> <div>\n>  \n> foo")]
+    [TestCase("> <div>\n>   \n> foo")]
+    [TestCase("> > <div>\n> >  \n> > foo")]
+    [TestCase("- > <div>\n  >  \n  > foo")]
+    [TestCase("- <div>\n  \t\n  foo")]
+    [TestCase("<div>\n  \n")]
+    public void WhitespaceOnlyHtmlBlockTerminatorRoundtrips(string markdown)
+    {
+        TestRoundtrip.RoundTrip(markdown);
+    }
+
+    [TestCase("<script>\n \t\n*foo*\n</script>")]
+    [TestCase("<!--\n \t\n*foo*\n-->")]
+    [TestCase("<div>\n\u00a0\n*foo*")]
+    [TestCase("<del>\n\u00a0\n*foo*")]
+    public void NonTerminatingHtmlBlockLinesArePreserved(string markdown)
+    {
+        TestParser.TestSpec(markdown, markdown + "\n");
+        TestRoundtrip.RoundTrip(markdown);
+    }
 }
