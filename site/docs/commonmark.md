@@ -247,6 +247,12 @@ letter. Whitespace separators after known block tag names, and trailing whitespa
 after complete standalone tags, must be spaces or tabs. Nonbreaking spaces and
 other Unicode whitespace do not satisfy these start conditions.
 
+For known block tag names, `/>` is a valid block-start boundary even after a
+closing prefix, as in `</div/>`; this rule does not require a well-formed HTML tag.
+Complete closing tags allow spaces, tabs, and at most one line ending before `>`.
+They can span lines in inline HTML, but a block opened by a standalone complete
+tag still requires the tag to be complete on its opening line.
+
 ## Inline HTML
 
 HTML tags can appear within inline content:

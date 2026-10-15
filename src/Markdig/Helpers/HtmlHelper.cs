@@ -355,7 +355,7 @@ public static class HtmlHelper
 
     internal static bool TryParseHtmlCloseTag(ref StringSlice text, ref ValueStringBuilder builder)
     {
-        // </[A-Za-z][A-Za-z0-9]+\s*>
+        // A closing tag allows spaces, tabs, and up to one line ending after its name.
         builder.Append('/');
 
         var c = text.NextChar();
@@ -366,6 +366,7 @@ public static class HtmlHelper
         builder.Append(c);
 
         bool skipSpaces = false;
+        bool hasLineEnding = false;
         while (true)
         {
             c = text.NextChar();
@@ -376,14 +377,28 @@ public static class HtmlHelper
                 return true;
             }
 
-            if (skipSpaces)
+            if (c.IsNewLineOrLineFeed())
             {
-                if (c != ' ')
+                if (hasLineEnding)
+                {
+                    break;
+                }
+                hasLineEnding = true;
+                skipSpaces = true;
+                if (c == '\r' && text.PeekChar() == '\n')
+                {
+                    builder.Append(c);
+                    c = text.NextChar();
+                }
+            }
+            else if (skipSpaces)
+            {
+                if (!c.IsSpaceOrTab())
                 {
                     break;
                 }
             }
-            else if (c == ' ')
+            else if (c.IsSpaceOrTab())
             {
                 skipSpaces = true;
             }

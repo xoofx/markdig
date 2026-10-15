@@ -1,4 +1,5 @@
 using Markdig.Syntax;
+using Markdig.Syntax.Inlines;
 
 namespace Markdig.Tests;
 
@@ -85,6 +86,71 @@ public class TestHtmlCodeBlocks
     public void ValidHtmlBlockStartConditionsArePreserved(string opening)
     {
         TestParser.TestSpec(opening + "\n*foo*", opening + "\n*foo*\n");
+    }
+
+    [TestCaseSource(nameof(KnownSimpleHtmlTags))]
+    public void KnownClosingTagSlashBoundaryInterruptsParagraph(string tag)
+    {
+        var markdown = $"before\n</{tag}/>\n*foo*\n\n*bar*";
+        var expected = $"<p>before</p>\n</{tag}/>\n*foo*\n<p><em>bar</em></p>\n";
+
+        TestParser.TestSpec(markdown, expected);
+        TestRoundtrip.RoundTrip(markdown);
+    }
+
+    [TestCase("</del\t>")]
+    [TestCase("</del \t >")]
+    [TestCase("</custom\t>")]
+    [TestCase("</script\t>")]
+    [TestCase("</pre\t>")]
+    [TestCase("</style\t>")]
+    [TestCase("</textarea\t>")]
+    public void CompleteClosingTagsAllowTabs(string tag)
+    {
+        var markdown = $"{tag}\n*foo*\n \t \n*bar*";
+        var expected = $"{tag}\n*foo*\n<p><em>bar</em></p>\n";
+
+        TestParser.TestSpec(markdown, expected);
+        TestRoundtrip.RoundTrip(markdown);
+    }
+
+    [TestCase("before\n</del\t>\n*foo*", "<p>before\n</del\t>\n<em>foo</em></p>\n")]
+    [TestCase("before\n</script\t>\n*foo*", "<p>before\n</script\t>\n<em>foo</em></p>\n")]
+    [TestCase("left </del\t> right", "<p>left </del\t> right</p>\n")]
+    [TestCase("left </div/> right", "<p>left &lt;/div/&gt; right</p>\n")]
+    [TestCase("</unknown/>\n*foo*", "<p>&lt;/unknown/&gt;\n<em>foo</em></p>\n")]
+    [TestCase("</div/ >\n*foo*", "<p>&lt;/div/ &gt;\n<em>foo</em></p>\n")]
+    [TestCase("</script/>\n*foo*", "<p>&lt;/script/&gt;\n<em>foo</em></p>\n")]
+    [TestCase("before\n</div/>tail\n*foo*", "<p>before</p>\n</div/>tail\n*foo*\n")]
+    public void ClosingTagsRespectBlockAndInlineBoundaries(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+        TestRoundtrip.RoundTrip(markdown);
+    }
+
+    [Test]
+    public void MultilineClosingTagsPreserveSourceLocations(
+        [Values("\n", "\r", "\r\n")] string lineEnding,
+        [Values(false, true)] bool trackTrivia)
+    {
+        const string prefix = "prefix ";
+        var tag = $"</del{lineEnding}    >";
+        var markdown = prefix + tag + " suffix";
+        var pipelineBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation();
+        if (trackTrivia)
+        {
+            pipelineBuilder.EnableTrackTrivia();
+        }
+        var document = Markdown.Parse(markdown, pipelineBuilder.Build());
+        var html = document.Descendants<HtmlInline>().Single();
+
+        Assert.AreEqual(prefix.Length, html.Span.Start);
+        Assert.AreEqual(prefix.Length + tag.Length - 1, html.Span.End);
+        Assert.AreEqual(0, html.Line);
+        Assert.AreEqual(prefix.Length, html.Column);
+        Assert.AreEqual(trackTrivia ? tag : $"</del{lineEnding}>", html.Tag);
+        TestParser.TestSpec(markdown, $"<p>{prefix}</del{lineEnding}> suffix</p>\n");
+        TestRoundtrip.RoundTrip(markdown);
     }
 
     // A line containing only spaces or tabs is a blank line, which ends HTML blocks of type 6 and 7.
