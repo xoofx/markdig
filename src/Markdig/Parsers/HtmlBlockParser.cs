@@ -72,7 +72,7 @@ public class HtmlBlockParser : BlockParser
         var result = BlockState.None;
         if ((c == '/' && HtmlHelper.TryParseHtmlCloseTag(ref line, ref builder)) || HtmlHelper.TryParseHtmlTagOpenTag(ref line, ref builder))
         {
-            // Must be followed by whitespace only
+            // Must be followed by spaces or tabs only
             bool hasOnlySpaces = true;
             c = line.CurrentChar;
             while (true)
@@ -81,7 +81,7 @@ public class HtmlBlockParser : BlockParser
                 {
                     break;
                 }
-                if (!c.IsWhitespace())
+                if (!c.IsSpaceOrTab())
                 {
                     hasOnlySpaces = false;
                     break;
@@ -110,7 +110,7 @@ public class HtmlBlockParser : BlockParser
             {
                 return CreateHtmlBlock(state, HtmlBlockType.Comment, startColumn, startPosition); // group 2
             }
-            if (c.IsAlphaUpper())
+            if (c.IsAlpha())
             {
                 return CreateHtmlBlock(state, HtmlBlockType.DocumentType, startColumn, startPosition); // group 4
             }
@@ -145,7 +145,7 @@ public class HtmlBlockParser : BlockParser
             c = line.NextChar();
         }
 
-        if (!(c == '>' || (!hasLeadingClose && c == '/' && line.PeekChar() == '>') || c.IsWhiteSpaceOrZero()))
+        if (!(c == '>' || (!hasLeadingClose && c == '/' && line.PeekChar() == '>') || c.IsSpaceOrTab() || c == '\0'))
         {
             return BlockState.None;
         }

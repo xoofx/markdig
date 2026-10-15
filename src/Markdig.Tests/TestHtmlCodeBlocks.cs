@@ -33,6 +33,60 @@ public class TestHtmlCodeBlocks
         Assert.AreEqual(10 + tag.Length, htmlBlocks[0].Span.Length);
     }
 
+    [Test]
+    public void HtmlDeclarationsStartWithAsciiLetters([Values('A', 'Z', 'a', 'z')] char firstLetter)
+    {
+        var markdown = $"<!{firstLetter}\n\n*foo*\n>\n*bar*";
+        var expected = $"<!{firstLetter}\n\n*foo*\n>\n<p><em>bar</em></p>\n";
+
+        TestParser.TestSpec(markdown, expected);
+        TestRoundtrip.RoundTrip(markdown);
+    }
+
+    [Test]
+    public void HtmlDeclarationsRequireAsciiLetters([Values('0', '@', '[', '`', '{', 'é', 'Ω')] char firstCharacter)
+    {
+        TestParser.TestSpec($"<!{firstCharacter}\n*foo*", $"<p>&lt;!{firstCharacter}\n<em>foo</em></p>\n");
+    }
+
+    [Test]
+    public void KnownHtmlTagNamesRejectOtherWhitespace(
+        [Values("<div", "</div", "<script")] string opening,
+        [Values('\f', '\v', '\u0085', '\u00a0', '\u2003', '\u202f', '\u2028', '\u2029')] char whitespace)
+    {
+        var markdown = $"{opening}{whitespace}\n*foo*";
+        var expected = $"<p>&lt;{opening[1..]}{whitespace}\n<em>foo</em></p>\n";
+
+        TestParser.TestSpec(markdown, expected);
+    }
+
+    [Test]
+    public void CompleteHtmlTagsRejectOtherTrailingWhitespace(
+        [Values("<del>", "</del>", "<custom/>")] string tag,
+        [Values('\f', '\v', '\u0085', '\u00a0', '\u2003', '\u202f', '\u2028', '\u2029')] char whitespace)
+    {
+        TestParser.TestSpec($"{tag}{whitespace}\n*foo*", $"<p>{tag}{whitespace}\n<em>foo</em></p>\n");
+    }
+
+    [TestCase("<div")]
+    [TestCase("</DIV")]
+    [TestCase("<div attribute")]
+    [TestCase("<div\tattribute")]
+    [TestCase("<div/>")]
+    [TestCase("</DiV>")]
+    [TestCase("<script")]
+    [TestCase("<del>")]
+    [TestCase("<del> \t")]
+    [TestCase("</del>\t")]
+    [TestCase("<custom/> \t")]
+    [TestCase("<del\tattr='x'>")]
+    [TestCase("<del attr='\u00a0\f'>")]
+    [TestCase("<div>\u00a0")]
+    public void ValidHtmlBlockStartConditionsArePreserved(string opening)
+    {
+        TestParser.TestSpec(opening + "\n*foo*", opening + "\n*foo*\n");
+    }
+
     // A line containing only spaces or tabs is a blank line, which ends HTML blocks of type 6 and 7.
     // https://spec.commonmark.org/0.31.2/#blank-line
     [TestCase("<div>\n  \nfoo", "<div>\n<p>foo</p>\n")]

@@ -242,6 +242,11 @@ on their own line, also end at a line containing only spaces or tabs. Markdown
 after that line is parsed normally. Blocks such as `<script>` and HTML comments
 instead continue until their matching end condition.
 
+Declaration blocks start with `<!` followed by an uppercase or lowercase ASCII
+letter. Whitespace separators after known block tag names, and trailing whitespace
+after complete standalone tags, must be spaces or tabs. Nonbreaking spaces and
+other Unicode whitespace do not satisfy these start conditions.
+
 ## Inline HTML
 
 HTML tags can appear within inline content:
