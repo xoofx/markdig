@@ -34,6 +34,7 @@ public class DefinitionListParser : BlockParser
         }
 
         var startPosition = processor.Start;
+        var startColumn = processor.Column;
 
         var column = processor.ColumnBeforeIndent;
         var c = processor.NextChar();
@@ -44,7 +45,7 @@ public class DefinitionListParser : BlockParser
         if (!c.IsSpaceOrTab())
         {
             // Return back to original position
-            processor.GoToColumn(column);
+            processor.GoToColumn(startColumn);
             return BlockState.None;
         }
 
@@ -144,6 +145,7 @@ public class DefinitionListParser : BlockParser
         if (Array.IndexOf(OpeningCharacters!, processor.CurrentChar) >= 0)
         {
             var startPosition = processor.Start;
+            var startColumn = processor.Column;
             var column = processor.ColumnBeforeIndent;
             var c = processor.NextChar();
             processor.ParseIndent();
@@ -152,6 +154,8 @@ public class DefinitionListParser : BlockParser
             // The marker must be followed by at least one space or tab
             if (!c.IsSpaceOrTab())
             {
+                processor.GoToColumn(startColumn);
+
                 // Remove the blankline before breaking this definition item
                 if (lastBlankLine != null)
                 {

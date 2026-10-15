@@ -198,6 +198,11 @@ Use numbers followed by `.` or `)`:
 2. Second item
 3. Third item
 
+A nonempty list item can interrupt a paragraph without a blank line; an ordered
+list must start at `1` to do so. An empty list item cannot interrupt an open
+paragraph, but it can start a list after a blank line or after leaving a blockquote
+container. After a blank line, an ordered list may start with any valid number.
+
 ### List continuation
 
 Indent content to align with the list item text:
@@ -231,6 +236,11 @@ Raw HTML can be included directly:
   This is raw HTML.
 </div>
 ```
+
+HTML blocks that end at a blank line, such as `<div>` blocks and complete tags
+on their own line, also end at a line containing only spaces or tabs. Markdown
+after that line is parsed normally. Blocks such as `<script>` and HTML comments
+instead continue until their matching end condition.
 
 ## Inline HTML
 

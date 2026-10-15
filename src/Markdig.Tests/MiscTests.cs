@@ -346,6 +346,33 @@ $$
         TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
     }
 
+    [TestCase("\n")]
+    [TestCase("\r\n")]
+    [TestCase("\r")]
+    public void TestGridTableLastCellWithoutClosingPipe(string lineEnding)
+    {
+        // The last cell is open and shorter than the column, and the next line has
+        // a `|` where this one would end: https://github.com/xoofx/markdig/issues/494
+        var input = @"
++-----+----------+
+| 6   |  1
+|     |
++-----+----------+".ReplaceLineEndings(lineEnding);
+
+        var expected = @"<table>
+<col style=""width:33.33%"" />
+<col style=""width:66.67%"" />
+<tbody>
+<tr>
+<td>6</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+";
+        TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
+    }
+
     [Test]
     public void TestDefinitionListInListItemWithBlankLine()
     {
@@ -556,5 +583,18 @@ Continued 3a</p>
 <li></li>
 </ul>
 <p>foo</p>");
+    }
+
+    // An empty list item cannot interrupt a paragraph, but it can start a list once the paragraph
+    // is closed by a blank line or the line does not continue the block quote around it.
+    [TestCase("foo\n\n-", "<p>foo</p>\n<ul>\n<li></li>\n</ul>\n")]
+    [TestCase("A\n\n-\n-", "<p>A</p>\n<ul>\n<li></li>\n<li></li>\n</ul>\n")]
+    [TestCase("foo\n\n-\n  bar", "<p>foo</p>\n<ul>\n<li>bar</li>\n</ul>\n")]
+    [TestCase("foo\n\n2.", "<p>foo</p>\n<ol start=\"2\">\n<li></li>\n</ol>\n")]
+    [TestCase("> foo\n-", "<blockquote>\n<p>foo</p>\n</blockquote>\n<ul>\n<li></li>\n</ul>\n")]
+    [TestCase("> foo\n>\n> -", "<blockquote>\n<p>foo</p>\n<ul>\n<li></li>\n</ul>\n</blockquote>\n")]
+    public void TestEmptyListItemAfterParagraph(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
     }
 }
