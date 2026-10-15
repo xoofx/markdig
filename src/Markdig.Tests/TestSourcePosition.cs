@@ -196,7 +196,7 @@ literal      ( 0, 2)  2-5
     public void TestSetextHeading()
     {
         //     01 2 34 5
-        Check("A\n\n-\n-", @"
+        Check("A\n\nB\n-", @"
 paragraph    ( 0, 0)  0-0
 literal      ( 0, 0)  0-0
 heading      ( 3, 0)  3-5

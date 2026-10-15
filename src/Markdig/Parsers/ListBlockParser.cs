@@ -269,19 +269,14 @@ public class ListBlockParser : BlockParser
             columnWidth = (state.IsBlankLine ? columnBeforeIndent : state.Column) - initColumnBeforeIndent;
         }
 
-        // Starts/continue the list unless:
-        // - an empty list item follows a paragraph
-        // - an ordered list is not starting by '1'
+        // Starts/continue the list unless it interrupts a paragraph with:
+        // - an empty list item
+        // - an ordered list not starting by '1'
         block ??= state.LastBlock;
-        if (block is not null && block.IsParagraphBlock)
+        if (block is not null && block.IsParagraphBlock && !state.HasUnmatchedBlocks && state.IsOpen(block))
         {
-            bool isOrderedListInterruptingParagraph = !state.HasUnmatchedBlocks &&
-                state.IsOpen(block) &&
-                listInfo.BulletType == '1' &&
-                listInfo.OrderedStart is not "1";
-
             if (state.IsBlankLine ||
-                isOrderedListInterruptingParagraph)
+                listInfo.BulletType == '1' && listInfo.OrderedStart is not "1")
             {
                 state.GoToColumn(initColumn);
                 state.TriviaStart = savedTriviaStart; // restore changed TriviaStart state

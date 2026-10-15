@@ -198,6 +198,11 @@ Use numbers followed by `.` or `)`:
 2. Second item
 3. Third item
 
+A nonempty list item can interrupt a paragraph without a blank line; an ordered
+list must start at `1` to do so. An empty list item cannot interrupt an open
+paragraph, but it can start a list after a blank line or after leaving a blockquote
+container. After a blank line, an ordered list may start with any valid number.
+
 ### List continuation
 
 Indent content to align with the list item text:
