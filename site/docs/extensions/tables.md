@@ -238,6 +238,10 @@ Grid tables use `+`, `-`, and `|` characters to draw a grid. They support multi-
 
 Grid table cells can contain multiple lines and block-level content:
 
+The closing `|` of the last cell is optional, including on short lines. Each
+content line is read independently; the following line's border is not part of
+the current line's cell content.
+
 ```markdown
 +-----------+-------------------+
 | Name      | Description       |

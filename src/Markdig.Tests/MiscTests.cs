@@ -346,8 +346,10 @@ $$
         TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseGridTables().Build());
     }
 
-    [Test]
-    public void TestGridTableLastCellWithoutClosingPipe()
+    [TestCase("\n")]
+    [TestCase("\r\n")]
+    [TestCase("\r")]
+    public void TestGridTableLastCellWithoutClosingPipe(string lineEnding)
     {
         // The last cell is open and shorter than the column, and the next line has
         // a `|` where this one would end: https://github.com/xoofx/markdig/issues/494
@@ -355,7 +357,7 @@ $$
 +-----+----------+
 | 6   |  1
 |     |
-+-----+----------+";
++-----+----------+".ReplaceLineEndings(lineEnding);
 
         var expected = @"<table>
 <col style=""width:33.33%"" />
