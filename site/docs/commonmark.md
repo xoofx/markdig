@@ -232,6 +232,11 @@ Raw HTML can be included directly:
 </div>
 ```
 
+HTML blocks that end at a blank line, such as `<div>` blocks and complete tags
+on their own line, also end at a line containing only spaces or tabs. Markdown
+after that line is parsed normally. Blocks such as `<script>` and HTML comments
+instead continue until their matching end condition.
+
 ## Inline HTML
 
 HTML tags can appear within inline content:
