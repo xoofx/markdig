@@ -72,6 +72,42 @@ public class TestHtmlHelper
         }
     }
 
+    [TestCase("<!DOCTYPE html>", true)]
+    [TestCase("<!doctype html>", true)]
+    [TestCase("<!ELEMENT br EMPTY>", true)]
+    [TestCase("<!x>", true)]
+    [TestCase("<!X>", true)]
+    [TestCase("<!a-b>", true)]
+    [TestCase("<!x\ny>", true)]
+    [TestCase("<!>", false)]
+    [TestCase("<!1x>", false)]
+    [TestCase("<! x>", false)]
+    [TestCase("<!é>", false)]
+    [TestCase("<!x", false)]
+    public void DeclarationsFollowCommonMarkGrammar(string inputTag, bool expected)
+    {
+        var text = new StringSlice(inputTag + "tail");
+
+        Assert.AreEqual(expected, HtmlHelper.TryParseHtmlTag(ref text, out string outputTag));
+        if (expected)
+        {
+            Assert.AreEqual(inputTag, outputTag);
+            Assert.AreEqual(inputTag.Length, text.Start);
+        }
+        else
+        {
+            Assert.IsNull(outputTag);
+        }
+    }
+
+    [TestCase("a <!doctype html> b", "<p>a <!doctype html> b</p>")]
+    [TestCase("a <!x> b", "<p>a <!x> b</p>")]
+    [TestCase("a <!> b", "<p>a &lt;!&gt; b</p>")]
+    public void InlineDeclarations(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
+
     [TestCase("</del")]
     [TestCase("</del\t")]
     [TestCase("</del\r")]

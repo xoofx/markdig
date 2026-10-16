@@ -261,6 +261,10 @@ HTML tags can appear within inline content:
 This is <em>inline HTML</em> in a paragraph.
 ```
 
+Inline declarations follow the same rule as declaration blocks: `<!` followed by an
+uppercase or lowercase ASCII letter, any characters other than `>`, and a closing `>`,
+as in `<!doctype html>`.
+
 ## Escaping
 
 Use a backslash `\` to escape special characters:

@@ -290,20 +290,12 @@ public static class HtmlHelper
     private static bool TryParseHtmlTagDeclaration(ref StringSlice text, ref ValueStringBuilder builder)
     {
         var c = text.CurrentChar;
-        bool hasAlpha = false;
-        while (c.IsAlphaUpper())
-        {
-            builder.Append(c);
-            c = text.NextChar();
-            hasAlpha = true;
-        }
-
-        if (!hasAlpha || !c.IsWhitespace())
+        if (!c.IsAlpha())
         {
             return false;
         }
 
-        // Regexp: "\\![A-Z]+\\s+[^>\\x00]*>"
+        // Regexp: "\\![A-Za-z][^>\\x00]*>"
         while (true)
         {
             builder.Append(c);
