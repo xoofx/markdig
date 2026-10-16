@@ -80,8 +80,12 @@ Term B
 
 ## Rules
 
-- There must be a blank line before the first term (or it will be treated as a paragraph).
+- There must be a blank line before the first term; otherwise every line of the
+  preceding paragraph also becomes a term.
 - The `:` or `~` marker must be followed by at least one space or tab.
-- Continuation lines must be indented.
+- A line following the definition text without a blank line continues it, even if
+  it is not indented.
+- After a blank line, additional paragraphs or blocks of a definition must be
+  indented by at least four spaces or a tab, whatever the width of the marker.
 - A line beginning with `:` or `~` that is not a valid definition marker keeps
   that character, whether it continues the current definition or starts a new term.
