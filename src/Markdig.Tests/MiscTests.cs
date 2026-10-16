@@ -383,14 +383,15 @@ $$
   :   definition
 ";
 
+        // An item starting with a blank line ends at the next blank line (CommonMark example 280),
+        // so the definition list follows the empty list item.
         var expected = @"<ul>
-<li>
+<li></li>
+</ul>
 <dl>
 <dt>term</dt>
 <dd>definition</dd>
 </dl>
-</li>
-</ul>
 ";
         TestParser.TestSpec(input, expected, new MarkdownPipelineBuilder().UseDefinitionLists().Build());
     }
@@ -594,6 +595,27 @@ Continued 3a</p>
     [TestCase("> foo\n-", "<blockquote>\n<p>foo</p>\n</blockquote>\n<ul>\n<li></li>\n</ul>\n")]
     [TestCase("> foo\n>\n> -", "<blockquote>\n<p>foo</p>\n<ul>\n<li></li>\n</ul>\n</blockquote>\n")]
     public void TestEmptyListItemAfterParagraph(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
+
+    // A list marker followed only by spaces or tabs starts the item with a blank line, exactly like a bare marker:
+    // the item requires the indentation of the marker plus one column and ends at the first blank line.
+    [TestCase("- \n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("- \t\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("- \n\n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("- \n  \n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("-      \n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("1. \n\n   foo", "<ol>\n<li></li>\n</ol>\n<p>foo</p>\n")]
+    [TestCase("1.      \n\n   foo", "<ol>\n<li></li>\n</ol>\n<p>foo</p>\n")]
+    [TestCase("- a\n- \n\n  foo", "<ul>\n<li>a</li>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("> - \n>\n>   foo", "<blockquote>\n<ul>\n<li></li>\n</ul>\n<p>foo</p>\n</blockquote>\n")]
+    [TestCase("- \n foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]
+    [TestCase("- \n  foo", "<ul>\n<li>foo</li>\n</ul>\n")]
+    [TestCase("-      \n  foo", "<ul>\n<li>foo</li>\n</ul>\n")]
+    [TestCase("a\n* ", "<p>a\n*</p>\n")]
+    [TestCase("a\n*      ", "<p>a\n*</p>\n")]
+    public void TestEmptyListItemWithTrailingWhitespace(string markdown, string expected)
     {
         TestParser.TestSpec(markdown, expected);
     }

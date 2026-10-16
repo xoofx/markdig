@@ -256,17 +256,25 @@ public class ListBlockParser : BlockParser
             var columnBeforeIndent = state.Column;
             state.ParseIndent();
 
-            // We expect at most 4 columns after
-            // If we have more, we reset the position
-            if (state.Indent > 4)
+            if (state.IsBlankLine)
             {
-                state.GoToColumn(columnBeforeIndent + 1);
+                // If the list item starts with a blank line, the number of spaces
+                // following the list marker doesn't change the required indentation,
+                // and the item is handled exactly like a marker followed by the end of the line
+                columnWidth = -(columnBeforeIndent - initColumnBeforeIndent + 1);
             }
+            else
+            {
+                // We expect at most 4 columns after
+                // If we have more, we reset the position
+                if (state.Indent > 4)
+                {
+                    state.GoToColumn(columnBeforeIndent + 1);
+                }
 
-            // Number of spaces required for the following content to be part of this list item
-            // If the list item starts with a blank line, the number of spaces
-            // following the list marker doesn't change the required indentation
-            columnWidth = (state.IsBlankLine ? columnBeforeIndent : state.Column) - initColumnBeforeIndent;
+                // Number of spaces required for the following content to be part of this list item
+                columnWidth = state.Column - initColumnBeforeIndent;
+            }
         }
 
         // Starts/continue the list unless it interrupts a paragraph with:
