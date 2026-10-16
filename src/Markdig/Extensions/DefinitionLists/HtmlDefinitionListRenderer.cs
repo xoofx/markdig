@@ -61,10 +61,11 @@ public class HtmlDefinitionListRenderer : HtmlObjectRenderer<DefinitionList>
                     bool isSimpleParagraph = (nextTerm is null || nextTerm is DefinitionItem) && countdd == 0 &&
                                              definitionTermOrContent is ParagraphBlock;
 
+                    // Don't inherit the state of an enclosing tight list: only a simple definition omits <p>
                     var saveImplicitParagraph = renderer.ImplicitParagraph;
+                    renderer.ImplicitParagraph = isSimpleParagraph;
                     if (isSimpleParagraph)
                     {
-                        renderer.ImplicitParagraph = true;
                         lastWasSimpleParagraph = true;
                     }
                     renderer.Write(definitionTermOrContent);

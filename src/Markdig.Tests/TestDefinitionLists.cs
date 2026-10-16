@@ -45,4 +45,20 @@ public class TestDefinitionLists
 
         TestParser.TestSpec(markdown, expected, "definitionlists+attributes|advanced");
     }
+
+    // A definition renders its paragraphs the same way whether the enclosing list is tight or loose.
+    [TestCase("- Term\n  :   first\n\n      next para",
+        "<ul>\n<li>\n<dl>\n<dt>Term</dt>\n<dd><p>first</p>\n<p>next para</p>\n</dd>\n</dl>\n</li>\n</ul>\n")]
+    [TestCase("- Term\n  :   first\n\n      next para\n\n- other",
+        "<ul>\n<li>\n<dl>\n<dt>Term</dt>\n<dd><p>first</p>\n<p>next para</p>\n</dd>\n</dl>\n</li>\n<li><p>other</p>\n</li>\n</ul>\n")]
+    [TestCase("> - Term\n>   :   first\n>\n>       next para",
+        "<blockquote>\n<ul>\n<li>\n<dl>\n<dt>Term</dt>\n<dd><p>first</p>\n<p>next para</p>\n</dd>\n</dl>\n</li>\n</ul>\n</blockquote>\n")]
+    [TestCase("- Term\n  : first\n    - a\n    - b",
+        "<ul>\n<li>\n<dl>\n<dt>Term</dt>\n<dd><p>first</p>\n<ul>\n<li>a</li>\n<li>b</li>\n</ul>\n</dd>\n</dl>\n</li>\n</ul>\n")]
+    [TestCase("- Term\n  :   simple\n  :   other",
+        "<ul>\n<li>\n<dl>\n<dt>Term</dt>\n<dd>simple</dd>\n<dd>other</dd>\n</dl>\n</li>\n</ul>\n")]
+    public void DefinitionParagraphsIgnoreEnclosingTightList(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected, "definitionlists+attributes|advanced");
+    }
 }
