@@ -99,6 +99,30 @@ class Program
 
     static void Main()
     {
+        // Each target framework of Markdig.Tests runs the generator and parallel builds run them concurrently:
+        // serialize them, as they all write the same generated files.
+        using var mutex = new Mutex(false, "Markdig.SpecFileGen");
+        try
+        {
+            mutex.WaitOne();
+        }
+        catch (AbandonedMutexException)
+        {
+            // The mutex is acquired, a previous generator was terminated while holding it
+        }
+
+        try
+        {
+            Generate();
+        }
+        finally
+        {
+            mutex.ReleaseMutex();
+        }
+    }
+
+    static void Generate()
+    {
         int totalTests = 0;
         bool hasErrors = false;
 
