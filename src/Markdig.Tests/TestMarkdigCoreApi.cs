@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using Markdig.Renderers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -210,5 +212,27 @@ public class TestMarkdigCoreApi
             string plainText = writer.ToString();
             Assert.AreEqual("Hello, world!\n", plainText);
         }
+    }
+
+    [Test]
+    public void TestAssemblyIsMarkedTrimmable()
+    {
+        Assert.AreEqual("True", GetAssemblyMetadata("IsTrimmable"));
+    }
+
+#if NET10_0_OR_GREATER
+    // The IsAotCompatible metadata is emitted by ILLink 10 and later; net8.0 builds use ILLink 8.
+    [Test]
+    public void TestAssemblyIsMarkedAotCompatible()
+    {
+        Assert.AreEqual("True", GetAssemblyMetadata("IsAotCompatible"));
+    }
+#endif
+
+    private static string GetAssemblyMetadata(string key)
+    {
+        return typeof(Markdown).Assembly
+            .GetCustomAttributes<AssemblyMetadataAttribute>()
+            .SingleOrDefault(attribute => attribute.Key == key)?.Value;
     }
 }
