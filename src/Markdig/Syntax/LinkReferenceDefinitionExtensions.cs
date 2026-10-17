@@ -72,4 +72,12 @@ public static class LinkReferenceDefinitionExtensions
         }
         return references;
     }
+
+    /// <summary>
+    /// Gets the link reference definitions of the document if any, without creating them.
+    /// </summary>
+    internal static LinkReferenceDefinitionGroup? GetLinkReferenceDefinitionGroupOrNull(this MarkdownDocument document)
+    {
+        return document.GetData(DocumentKey) as LinkReferenceDefinitionGroup;
+    }
 }

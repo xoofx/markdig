@@ -75,4 +75,89 @@ public class TestPragmaLines
 
         Assert.AreEqual(6, doc.FindClosestLine(50));
     }
+
+    [Test]
+    public void TestFindClosestWithLinkReferenceDefinition()
+    {
+        var text =
+"Para a\n" +                     // 0
+"\n" +                           // 1
+"Para b\n" +                     // 2
+"\n" +                           // 3
+"[foo]: /url\n" +                // 4
+"\n" +                           // 5
+"Para c\n" +                     // 6
+"\n" +                           // 7
+"- item1\n" +                    // 8
+"- item2\n";                     // 9
+
+        var pipeline = new MarkdownPipelineBuilder().UsePragmaLines().Build();
+        var doc = Markdown.Parse(text, pipeline);
+
+        foreach (var exact in new int[] { 0, 2, 4, 6, 8, 9 })
+        {
+            Assert.AreEqual(exact, doc.FindClosestLine(exact));
+        }
+
+        Assert.IsInstanceOf<ParagraphBlock>(doc.FindClosestBlock(0));
+        Assert.IsInstanceOf<ParagraphBlock>(doc.FindClosestBlock(2));
+        Assert.IsInstanceOf<LinkReferenceDefinition>(doc.FindClosestBlock(4));
+        Assert.IsInstanceOf<ListItemBlock>(doc.FindClosestBlock(9));
+        Assert.AreEqual(9, doc.FindClosestLine(50));
+    }
+
+    [Test]
+    public void TestFindClosestWithFootnotes()
+    {
+        var text =
+"Para a[^1]\n" +                 // 0
+"\n" +                           // 1
+"[^1]: note\n" +                 // 2
+"\n" +                           // 3
+"- item1\n" +                    // 4
+"- item2\n";                     // 5
+
+        var pipeline = new MarkdownPipelineBuilder().UsePragmaLines().UseFootnotes().Build();
+        var doc = Markdown.Parse(text, pipeline);
+
+        foreach (var exact in new int[] { 0, 2, 4, 5 })
+        {
+            Assert.AreEqual(exact, doc.FindClosestLine(exact));
+        }
+
+        Assert.IsInstanceOf<ParagraphBlock>(doc.FindClosestBlock(0));
+        Assert.IsInstanceOf<ListItemBlock>(doc.FindClosestBlock(5));
+        Assert.AreEqual(5, doc.FindClosestLine(50));
+    }
+
+    [Test]
+    public void TestFindBlockAtPositionWithLinkReferenceDefinitionAndFootnotes()
+    {
+        var text =
+"Para a\n" +
+"\n" +
+"[foo]: /url\n" +
+"\n" +
+"Para b[^1]\n" +
+"\n" +
+"[^1]: note\n";
+
+        var pipeline = new MarkdownPipelineBuilder().UseFootnotes().Build();
+        var doc = Markdown.Parse(text, pipeline);
+
+        var block = doc.FindBlockAtPosition(text.IndexOf("Para a", StringComparison.Ordinal));
+        Assert.IsInstanceOf<ParagraphBlock>(block);
+        Assert.AreEqual(0, block!.Line);
+
+        Assert.IsInstanceOf<LinkReferenceDefinition>(doc.FindBlockAtPosition(text.IndexOf("/url", StringComparison.Ordinal)));
+
+        block = doc.FindBlockAtPosition(text.IndexOf("Para b", StringComparison.Ordinal));
+        Assert.IsInstanceOf<ParagraphBlock>(block);
+        Assert.AreEqual(4, block!.Line);
+
+        block = doc.FindBlockAtPosition(text.IndexOf("note", StringComparison.Ordinal));
+        Assert.IsInstanceOf<ParagraphBlock>(block);
+        Assert.AreEqual(6, block!.Line);
+        Assert.IsInstanceOf<Markdig.Extensions.Footnotes.Footnote>(block.Parent);
+    }
 }
