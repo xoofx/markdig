@@ -9,6 +9,7 @@ Paths/commands below are relative to this directory.
 - Workspace: `src/markdig.slnx` (solution/workspace listing the projects below)
 - Library: `src/Markdig/`
 - Tests: `src/Markdig.Tests/` (NUnit; includes generated spec tests)
+- AOT tests: `src/Markdig.AotTests/` (the build fails with IL3058 if `Markdig` is no longer marked AOT-compatible)
 - Signed library build: `src/Markdig.Signed/` (strong-named build of `src/Markdig/` sources)
 - Benchmarks: `src/Markdig.Benchmarks/` (BenchmarkDotNet perf comparisons)
 - Fuzzing: `src/Markdig.Fuzzing/` (SharpFuzz/libFuzzer harness for parser/renderers)
