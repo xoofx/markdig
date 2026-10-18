@@ -160,7 +160,14 @@ public class ParagraphBlockParser : BlockParser
                 }
                 else
                 {
-                    heading.Lines.Trim();
+                    // Trim like a paragraph: the trailing spaces of a line before the last one
+                    // can make a hard line break
+                    var lines = heading.Lines.Lines;
+                    for (int i = 0; i < heading.Lines.Count; i++)
+                    {
+                        lines[i].Slice.TrimStart();
+                    }
+                    lines[heading.Lines.Count - 1].Slice.TrimEnd();
                 }
 
                 // Remove the paragraph as a pending block
