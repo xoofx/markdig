@@ -599,6 +599,20 @@ Continued 3a</p>
         TestParser.TestSpec(markdown, expected);
     }
 
+    // A setext underline cannot be a lazy continuation line. A line that continues every container
+    // of the paragraph can underline it, however far the paragraph itself is indented.
+    [TestCase("-\n   bar\n  -", "<ul>\n<li>\n<h2>bar</h2>\n</li>\n</ul>\n")]
+    [TestCase("- foo\n\n   bar\n  ===", "<ul>\n<li>\n<p>foo</p>\n<h1>bar</h1>\n</li>\n</ul>\n")]
+    [TestCase(">  bar\n> -", "<blockquote>\n<h2>bar</h2>\n</blockquote>\n")]
+    [TestCase(">   foo\n> ---", "<blockquote>\n<h2>foo</h2>\n</blockquote>\n")]
+    [TestCase("> foo\n  ---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n")]
+    [TestCase("> foo\n  ===", "<blockquote>\n<p>foo\n===</p>\n</blockquote>\n")]
+    [TestCase("> foo\n---", "<blockquote>\n<p>foo</p>\n</blockquote>\n<hr />\n")]
+    public void TestSetextUnderlineInContainers(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
+
     // A list marker followed only by spaces or tabs starts the item with a blank line, exactly like a bare marker:
     // the item requires the indentation of the marker plus one column and ends at the first blank line.
     [TestCase("- \n\n  foo", "<ul>\n<li></li>\n</ul>\n<p>foo</p>\n")]

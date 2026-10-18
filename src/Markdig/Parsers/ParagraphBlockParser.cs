@@ -127,7 +127,9 @@ public class ParagraphBlockParser : BlockParser
             // If we matched a LinkReferenceDefinition before matching the heading, and the remaining
             // lines are empty, we can early exit and remove the paragraph
             var parent = block.Parent;
-            bool isSetTextHeading = !state.IsLazy || paragraph.Column == state.Column || !(parent is QuoteBlock || parent is ListItemBlock);
+            // A setext underline cannot be a lazy continuation line, so every container
+            // around the paragraph must continue on this line
+            bool isSetTextHeading = !state.IsLazy || !state.HasUnmatchedBlocks || !(parent is QuoteBlock || parent is ListItemBlock);
             if (!(foundLrd && paragraph.Lines.Count == 0) && isSetTextHeading)
             {
                 // We discard the paragraph that will be transformed to a heading

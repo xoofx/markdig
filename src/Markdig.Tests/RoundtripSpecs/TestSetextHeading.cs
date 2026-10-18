@@ -48,4 +48,14 @@ public class TestSetextHeading
     {
         RoundTrip(value);
     }
+
+    [TestCase("> h1\n  ---")]
+    [TestCase("> h1\n  ===")]
+    [TestCase("> h1\n h1 l2\n  ---")]
+    [TestCase(">  h1\n> ---")]
+    [TestCase("-\n   h1\n  ---")]
+    public void TestUnderlineInContainers(string value)
+    {
+        RoundTrip(value);
+    }
 }
