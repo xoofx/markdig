@@ -2,6 +2,10 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Runtime.CompilerServices;
+
+using Markdig.Extensions.Footnotes;
+
 namespace Markdig.Syntax;
 
 /// <summary>
@@ -22,6 +26,7 @@ public static class BlockExtensions
             return contains ? rootBlock : null;
         }
 
+        var skipGroups = blocks is MarkdownDocument;
         var lowerIndex = 0;
         var upperIndex = blocks.Count - 1;
 
@@ -31,6 +36,17 @@ public static class BlockExtensions
         {
             int midIndex = (upperIndex - lowerIndex) / 2 + lowerIndex;
             block = blocks[midIndex];
+            if (skipGroups && IsDefinitionGroup(block))
+            {
+                midIndex = SkipDefinitionGroups(blocks, midIndex, lowerIndex, upperIndex);
+                if (midIndex < 0)
+                {
+                    block = null;
+                    break;
+                }
+                block = blocks[midIndex];
+            }
+
             int comparison = block.CompareToPosition(position);
             if (comparison == 0)
             {
@@ -46,7 +62,12 @@ public static class BlockExtensions
 
         if (block is null)
         {
-            return rootBlock;
+            // The position might be within a definition collected by a group (e.g. a link reference definition or a footnote)
+            block = skipGroups ? FindDefinitionAtPosition((MarkdownDocument)blocks, position) : null;
+            if (block is null)
+            {
+                return rootBlock;
+            }
         }
 
         // Recursively go deep into the block
@@ -72,6 +93,24 @@ public static class BlockExtensions
             return rootBlock.Line == line ? rootBlock : null;
         }
 
+        if (blocks is not MarkdownDocument document)
+        {
+            return FindClosestChild(blocks, line, skipGroups: false);
+        }
+
+        var closestBlock = FindClosestChild(document, line, skipGroups: true);
+        if (closestBlock?.Line != line)
+        {
+            // A definition collected by a group (e.g. a link reference definition or a footnote) is only selected on an exact line match.
+            // If the document contains only groups, search them as regular children.
+            closestBlock = FindDefinitionAtLine(document, line) ?? closestBlock ?? FindClosestChild(document, line, skipGroups: false);
+        }
+
+        return closestBlock;
+    }
+
+    private static Block? FindClosestChild(ContainerBlock blocks, int line, bool skipGroups)
+    {
         var lowerIndex = 0;
         var upperIndex = blocks.Count - 1;
 
@@ -80,6 +119,16 @@ public static class BlockExtensions
         {
             int midIndex = (upperIndex - lowerIndex) / 2 + lowerIndex;
             var block = blocks[midIndex];
+            if (skipGroups && IsDefinitionGroup(block))
+            {
+                midIndex = SkipDefinitionGroups(blocks, midIndex, lowerIndex, upperIndex);
+                if (midIndex < 0)
+                {
+                    break;
+                }
+                block = blocks[midIndex];
+            }
+
             int comparison = block.Line.CompareTo(line);
             if (comparison == 0)
             {
@@ -91,11 +140,15 @@ public static class BlockExtensions
                 upperIndex = midIndex - 1;
         }
 
+        // The blocks before and after the line (when skipping groups, they are never groups as they have been compared)
+        var prevIndex = lowerIndex - 1;
+        var nextIndex = upperIndex + 1;
+
         // If we are between two lines, try to find the best spot
-        if (lowerIndex > 0 && lowerIndex < blocks.Count)
+        if (prevIndex >= 0 && nextIndex < blocks.Count)
         {
-            var prevBlock = blocks[lowerIndex - 1].FindClosestBlock(line) ?? blocks[lowerIndex - 1];
-            var nextBlock = blocks[lowerIndex].FindClosestBlock(line) ?? blocks[lowerIndex];
+            var prevBlock = blocks[prevIndex].FindClosestBlock(line) ?? blocks[prevIndex];
+            var nextBlock = blocks[nextIndex].FindClosestBlock(line) ?? blocks[nextIndex];
 
             if (prevBlock.Line == line)
             {
@@ -116,21 +169,103 @@ public static class BlockExtensions
             return middle < 0.5 ? prevBlock : nextBlock;
         }
 
-        if (lowerIndex == 0)
+        if (nextIndex < blocks.Count)
         {
-            var prevBlock = blocks[lowerIndex].FindClosestBlock(line) ?? blocks[lowerIndex];
+            var prevBlock = blocks[nextIndex].FindClosestBlock(line) ?? blocks[nextIndex];
             return prevBlock;
         }
 
-        if (lowerIndex == blocks.Count)
+        if (prevIndex >= 0)
         {
-            var prevBlock = blocks[lowerIndex - 1].FindClosestBlock(line) ?? blocks[lowerIndex - 1];
+            var prevBlock = blocks[prevIndex].FindClosestBlock(line) ?? blocks[prevIndex];
             return prevBlock;
         }
 
         return null;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsDefinitionGroup(Block block) => block.IsContainerBlock && (block is LinkReferenceDefinitionGroup or FootnoteGroup);
+
+    /// <summary>
+    /// Returns the index of the block nearest to the group at <paramref name="midIndex"/> within [<paramref name="lowerIndex"/>, <paramref name="upperIndex"/>]
+    /// that is not a <see cref="LinkReferenceDefinitionGroup"/> or a <see cref="FootnoteGroup"/>, or -1 if there are only groups in this range.
+    /// </summary>
+    /// <remarks>
+    /// These groups are created by the parsers to collect definitions and are only added to the document.
+    /// They are not located in the source (their line is 0 and their span starts at 0) and they can be anywhere
+    /// among the children of the document (e.g. a footnote group is moved to the end of the document),
+    /// so they must not be compared during a binary search. A document has at most one group of each kind.
+    /// </remarks>
+    private static int SkipDefinitionGroups(ContainerBlock blocks, int midIndex, int lowerIndex, int upperIndex)
+    {
+        for (int i = midIndex + 1; i <= upperIndex; i++)
+        {
+            if (!IsDefinitionGroup(blocks[i]))
+            {
+                return i;
+            }
+        }
+
+        for (int i = midIndex - 1; i >= lowerIndex; i--)
+        {
+            if (!IsDefinitionGroup(blocks[i]))
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private static Block? FindDefinitionAtLine(MarkdownDocument document, int line)
+    {
+        return FindGroupChildAtLine(document, document.GetLinkReferenceDefinitionGroupOrNull(), line)
+            ?? FindGroupChildAtLine(document, GetFootnoteGroup(document), line);
+    }
+
+    private static Block? FindDefinitionAtPosition(MarkdownDocument document, int position)
+    {
+        return FindGroupChildAtPosition(document, document.GetLinkReferenceDefinitionGroupOrNull(), position)
+            ?? FindGroupChildAtPosition(document, GetFootnoteGroup(document), position);
+    }
+
+    // The footnote group is moved to the end of the document once the inlines have been processed
+    private static FootnoteGroup? GetFootnoteGroup(MarkdownDocument document) => document.LastChild as FootnoteGroup;
+
+    private static Block? FindGroupChildAtLine(MarkdownDocument document, ContainerBlock? group, int line)
+    {
+        // The group might not be attached to the document (e.g. link reference definitions when tracking trivia)
+        if (group?.Parent == document)
+        {
+            foreach (var child in group)
+            {
+                var block = child.FindClosestBlock(line) ?? child;
+                if (block.Line == line)
+                {
+                    return block;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static Block? FindGroupChildAtPosition(MarkdownDocument document, ContainerBlock? group, int position)
+    {
+        if (group?.Parent == document)
+        {
+            foreach (var child in group)
+            {
+                if (child.CompareToPosition(position) == 0)
+                {
+                    return child;
+                }
+            }
+        }
+
+        return null;
+    }
 
     /// <summary>
     /// Performs the contains position operation.
