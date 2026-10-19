@@ -76,7 +76,8 @@ public class ThematicBreakParser : BlockParser
         if (isSetexHeading)
         {
             var parent = previousParagraph!.Parent!;
-            if (previousParagraph.Column != processor.Column && (parent is QuoteBlock or ListItemBlock))
+            // A lazy continuation line cannot be a setext underline, so it is a thematic break
+            if (processor.HasUnmatchedBlocks && (parent is QuoteBlock or ListItemBlock))
             {
                 isSetexHeading = false;
             }
