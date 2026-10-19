@@ -14,6 +14,9 @@
     <File Path="../.github/workflows/ci.yml" />
     <File Path="../.github/workflows/test-netstandard.yml" />
   </Folder>
+  <Project Path="Markdig.AotTests/Markdig.AotTests.csproj">
+    <BuildDependency Project="Markdig/Markdig.csproj" />
+  </Project>
   <Project Path="Markdig.Benchmarks/Markdig.Benchmarks.csproj">
     <BuildDependency Project="Markdig/Markdig.csproj" />
   </Project>
