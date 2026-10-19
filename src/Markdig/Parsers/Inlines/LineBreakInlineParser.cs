@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Helpers;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
 namespace Markdig.Parsers.Inlines;
@@ -32,7 +33,8 @@ public class LineBreakInlineParser : InlineParser
     public override bool Match(InlineProcessor processor, ref StringSlice slice)
     {
         // Hard line breaks are for separating inline content within a block. Neither syntax for hard line breaks works at the end of a paragraph or other block element:
-        if (!processor.Block!.IsParagraphBlock)
+        // The lines of a setext heading are separated the same way as the lines of a paragraph
+        if (!processor.Block!.IsParagraphBlock && processor.Block is not HeadingBlock { IsSetext: true })
         {
             return false;
         }

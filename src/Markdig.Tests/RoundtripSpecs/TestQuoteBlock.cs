@@ -281,4 +281,15 @@ public class TestQuoteBlock
     {
         RoundTrip(value);
     }
+
+    // Lazy continuation lines indented by 4 or more spaces
+    [TestCase(">p\n    p\n>p")]
+    [TestCase("> p\n     p\n> p\n")]
+    [TestCase(">p\n\tp\n>p")]
+    [TestCase("> - p\n    p\n> p")]
+    [TestCase(">p\n    p\n>---")]
+    public void TestIndentedLazyLines(string value)
+    {
+        RoundTrip(value);
+    }
 }

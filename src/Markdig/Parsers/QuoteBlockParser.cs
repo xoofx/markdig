@@ -99,12 +99,22 @@ public class QuoteBlockParser : BlockParser
     /// </summary>
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
+        var quote = (QuoteBlock) block;
         if (processor.IsCodeIndent)
         {
+            // An indented line can still be a lazy continuation line, so record it like
+            // the other lines without a quote marker below
+            if (processor.TrackTrivia && !processor.IsBlankLine)
+            {
+                quote.QuoteLines.Add(new QuoteBlockLine
+                {
+                    QuoteChar = false,
+                    NewLine = processor.Line.NewLine,
+                });
+            }
             return BlockState.None;
         }
 
-        var quote = (QuoteBlock) block;
         var sourcePosition = processor.Start;
 
         // 5.1 Block quotes 

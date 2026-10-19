@@ -25,6 +25,15 @@ public class TestSetextHeading
         RoundTrip(value);
     }
 
+    [TestCase("> h1\n> h1 l2\n> ===")]
+    [TestCase("> h1  \n> h1 l2\n> ---\n")]
+    [TestCase(">h1\n>h1 l2\n>---")]
+    [TestCase("> h1\nh1 l2\n> ===")]
+    public void TestInQuoteBlock(string value)
+    {
+        RoundTrip(value);
+    }
+
     [TestCase("h1\r===")]
     [TestCase("h1\n===")]
     [TestCase("h1\r\n===")]

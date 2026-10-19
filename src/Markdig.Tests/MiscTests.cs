@@ -619,4 +619,17 @@ Continued 3a</p>
     {
         TestParser.TestSpec(markdown, expected);
     }
+
+    // The lines of a setext heading are inline content like the lines of a paragraph,
+    // so two or more trailing spaces make a hard line break.
+    [TestCase("foo  \nbar\n---", "<h2>foo<br />\nbar</h2>\n")]
+    [TestCase("foo  \nbar\n===", "<h1>foo<br />\nbar</h1>\n")]
+    [TestCase("*foo  \nbar*\n---", "<h2><em>foo<br />\nbar</em></h2>\n")]
+    [TestCase("> foo  \n> bar\n> ---", "<blockquote>\n<h2>foo<br />\nbar</h2>\n</blockquote>\n")]
+    [TestCase("`foo  \nbar`\n---", "<h2><code>foo   bar</code></h2>\n")]
+    [TestCase("foo \nbar\n---", "<h2>foo\nbar</h2>\n")]
+    public void TestSetextHeadingLineBreaks(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
 }
