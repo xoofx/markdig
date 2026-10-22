@@ -16,6 +16,9 @@ public class TestFencedCodeBlocks
     [TestCase(" c# \t  fOo \t", "c#", "fOo")]
     [TestCase("in\\%fo arg\\%ument", "in%fo", "arg%ument")]
     [TestCase("info&#9; arg&acute;ument", "info\t", "arg\u00B4ument")]
+    [TestCase("\\\\*", "\\*", "")]
+    [TestCase("a\\\\_b c\\\\\\*", "a\\_b", "c\\*")]
+    [TestCase("\\&amp;", "&", "")]
     public void TestInfoAndArguments(string infoString, string expectedInfo, string expectedArguments)
     {
         Test('`');
