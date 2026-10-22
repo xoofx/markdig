@@ -94,9 +94,9 @@ public class ParagraphBlockParser : BlockParser
             {
                 for (int i = 0; i < lineCount; i++)
                 {
-                    lines.Lines[i].Slice.TrimStart();
+                    lines.Lines[i].Slice.TrimStartSpaceOrTab();
                 }
-                lines.Lines[lineCount - 1].Slice.TrimEnd();
+                lines.Lines[lineCount - 1].Slice.TrimEndSpaceOrTab();
             }
         }
 
@@ -167,9 +167,9 @@ public class ParagraphBlockParser : BlockParser
                     var lines = heading.Lines.Lines;
                     for (int i = 0; i < heading.Lines.Count; i++)
                     {
-                        lines[i].Slice.TrimStart();
+                        lines[i].Slice.TrimStartSpaceOrTab();
                     }
-                    lines[heading.Lines.Count - 1].Slice.TrimEnd();
+                    lines[heading.Lines.Count - 1].Slice.TrimEndSpaceOrTab();
                 }
 
                 // Remove the paragraph as a pending block

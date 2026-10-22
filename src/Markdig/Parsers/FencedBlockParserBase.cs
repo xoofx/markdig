@@ -236,7 +236,7 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
             infoStringSlice = new StringSlice(line.Text, line.Start, firstSpace - 1);
 
             var argStringSlice = new StringSlice(line.Text, firstSpace, line.End);
-            argStringSlice.Trim();
+            argStringSlice.TrimSpaceOrTab();
             fenced.Arguments = s_argumentsStringCache.Get(argStringSlice.AsSpan());
         }
         else
@@ -245,7 +245,7 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
             fenced.Arguments = string.Empty;
         }
 
-        infoStringSlice.Trim();
+        infoStringSlice.TrimSpaceOrTab();
 
         fenced.Info = s_infoStringCache.Get(infoStringSlice.AsSpan());
 
@@ -277,7 +277,7 @@ public abstract class FencedBlockParserBase<T> : FencedBlockParserBase where T :
         // specs spaces: Is space and tabs? or only spaces? Use space and tab for this case
         if (!processor.TrackTrivia)
         {
-            line.TrimStart();
+            line.TrimStartSpaceOrTab();
         }
 
         var fenced = CreateFencedBlock(processor);
