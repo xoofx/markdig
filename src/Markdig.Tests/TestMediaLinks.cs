@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 
 using Markdig.Extensions.MediaLinks;
+using Markdig.Renderers;
 
 namespace Markdig.Tests;
 
@@ -45,6 +46,34 @@ public class TestMediaLinks
     {
         string html = Markdown.ToHtml(markdown, GetPipeline());
         Assert.AreEqual(expected, html);
+    }
+
+    [TestCase("![v](x\"onerror=\"alert(1)\".mp4)",
+        "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"x%22onerror=%22alert(1)%22.mp4\"></source></video></p>\n")]
+    [TestCase("![v](<x\" onerror=\"alert(1)\" data-x=\".mp4>)",
+        "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"x%22%20onerror=%22alert(1)%22%20data-x=%22.mp4\"></source></video></p>\n")]
+    [TestCase("![v](https://example.com/x\"onerror=\"alert(1)\".mp4)",
+        "<p><video width=\"500\" height=\"281\" controls=\"\"><source type=\"video/mp4\" src=\"https://example.com/x%22onerror=%22alert(1)%22.mp4\"></source></video></p>\n")]
+    [TestCase("![v](<my \"best\" clip.mp3>)",
+        "<p><audio width=\"500\" controls=\"\"><source type=\"audio/mpeg\" src=\"my%20%22best%22%20clip.mp3\"></source></audio></p>\n")]
+    public void TestAudioVideoSourceIsEscaped(string markdown, string expected)
+    {
+        string html = Markdown.ToHtml(markdown, GetPipeline());
+        Assert.AreEqual(expected, html);
+    }
+
+    [Test]
+    public void TestAudioVideoSourceGoesThroughLinkRewriter()
+    {
+        var pipeline = GetPipeline();
+        var writer = new StringWriter();
+        var renderer = new HtmlRenderer(writer) { LinkRewriter = url => "https://cdn.example.com/" + url };
+        pipeline.Setup(renderer);
+
+        renderer.Render(Markdown.Parse("![clip](video.mp4)", pipeline));
+        writer.Flush();
+
+        Assert.That(writer.ToString(), Contains.Substring("src=\"https://cdn.example.com/video.mp4\""));
     }
     
     private class TestHostProvider : IHostProvider

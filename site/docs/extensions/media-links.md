@@ -58,6 +58,8 @@ Produces:
 </video>
 ```
 
+The `src` URL is written the same way as an image `src`: it is URL-escaped and passes through `HtmlRenderer.BaseUrl` and `HtmlRenderer.LinkRewriter`.
+
 ## Options
 
 ```csharp
