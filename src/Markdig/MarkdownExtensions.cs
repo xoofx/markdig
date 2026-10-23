@@ -26,6 +26,7 @@ using Markdig.Extensions.MediaLinks;
 using Markdig.Extensions.NonAsciiNoEscape;
 using Markdig.Extensions.PragmaLines;
 using Markdig.Extensions.ReferralLinks;
+using Markdig.Extensions.RelativeFileLinks;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
 using Markdig.Extensions.Tables;
@@ -506,6 +507,31 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
+    /// Uses the relative file link extension to rewrite relative links to Markdown files (e.g. `usage.md#preview`) into links to HTML files (e.g. `usage.html#preview`).
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseRelativeFileLinks(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.ReplaceOrAdd<RelativeFileLinkExtension>(new RelativeFileLinkExtension());
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Uses the relative file link extension to rewrite relative links to files with one of the source extensions into links to files with the target extension.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="options">The options.</param>
+    /// <returns>The modified pipeline</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="options"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="options"/> contains an invalid value.</exception>
+    public static MarkdownPipelineBuilder UseRelativeFileLinks(this MarkdownPipelineBuilder pipeline, RelativeFileLinkOptions options)
+    {
+        pipeline.Extensions.ReplaceOrAdd<RelativeFileLinkExtension>(new RelativeFileLinkExtension(options));
+        return pipeline;
+    }
+
+    /// <summary>
     /// Adds support for right-to-left content by adding appropriate html attribtues.
     /// </summary>
     /// <param name="pipeline">The pipeline</param>
@@ -668,6 +694,9 @@ public static class MarkdownExtensions
                     break;
                 case "cjk-friendly-emphasis":
                     pipeline.UseCjkFriendlyEmphasis();
+                    break;
+                case "relativefilelinks":
+                    pipeline.UseRelativeFileLinks();
                     break;
                 default:
                     throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));

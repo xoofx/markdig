@@ -22,6 +22,12 @@ public class TestLinkRewriter
         TestSpec(null, "Image: ![alt text](/image.jpg)", "/image.jpg");
     }
 
+    [Test]
+    public void RewritesEmailAutolinksWithMailtoScheme()
+    {
+        TestSpec(s => "x" + s, "Email: <info@example.com>", "xmailto:info@example.com");
+    }
+
     public static void TestSpec(Func<string,string> linkRewriter, string markdown, string expectedLink)
     {
         var pipeline = new MarkdownPipelineBuilder().Build();

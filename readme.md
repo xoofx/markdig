@@ -53,6 +53,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - [**YAML Front Matter**](src/Markdig.Tests/Specs/YamlSpecs.md) to parse without evaluating the front matter and to discard it from the HTML output (typically used for previewing without the front matter in MarkdownEditor)
   - [**JIRA links**](src/Markdig.Tests/Specs/JiraLinks.md) to automatically generate links for JIRA project references (Thanks to @clarkd: https://github.com/clarkd/MarkdigJiraLinker)
   - [**CJK-friendly Emphasis**](src/Markdig.Tests/Specs/CJKFriendlyEmphasis.md) to mitigate a CommonMark specification issue in CJK languages (Thanks to @tats-u: https://github.com/tats-u/markdown-cjk-friendly)
+  - [**Relative file links**](https://xoofx.github.io/markdig/docs/extensions/relative-file-links/) to rewrite links to Markdown files, such as `usage.md#preview`, into links to the generated pages, such as `usage.html#preview`
 - Starting with Markdig version `0.20.0+`, Markdig is compatible only with `NETStandard 2.0`, `NETStandard 2.1`, `NETCoreApp 2.1` and `NETCoreApp 3.1`.
 
 If you are looking for support for an old .NET Framework 3.5 or 4.0, you can download Markdig `0.18.3`.

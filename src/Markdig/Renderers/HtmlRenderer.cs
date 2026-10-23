@@ -89,12 +89,12 @@ public class HtmlRenderer : TextRendererBase<HtmlRenderer>
     public bool UseNonAsciiNoEscape { get; set; }
 
     /// <summary>
-    /// Gets a value to use as the base url for all relative links
+    /// Gets or sets the base URL used to resolve relative links.
     /// </summary>
     public Uri? BaseUrl { get; set; }
 
     /// <summary>
-    /// Allows links to be rewritten
+    /// Gets or sets a function to rewrite the URLs written by <see cref="WriteEscapeUrl"/>. It receives the complete URL, after <see cref="BaseUrl"/> has been applied and before escaping.
     /// </summary>
     public Func<string, string>? LinkRewriter { get; set; }
 

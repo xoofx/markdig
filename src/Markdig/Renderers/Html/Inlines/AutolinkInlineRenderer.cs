@@ -24,8 +24,8 @@ public class AutolinkInlineRenderer : HtmlObjectRenderer<AutolinkInline>
     {
         if (renderer.EnableHtmlForInline)
         {
-            renderer.Write(obj.IsEmail ? "<a href=\"mailto:" : "<a href=\"");
-            renderer.WriteEscapeUrl(obj.Url);
+            renderer.Write("<a href=\"");
+            renderer.WriteEscapeUrl(obj.IsEmail ? "mailto:" + obj.Url : obj.Url);
             renderer.WriteRaw('"');
             renderer.WriteAttributes(obj);
 

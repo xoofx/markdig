@@ -25,6 +25,13 @@ public class TestRelativeUrlReplacement
         TestSpec(null, "Image: ![alt text](/image.jpg)", "/image.jpg");
     }
 
+    [Test]
+    public void DoesNotReplaceEmailAutolinks()
+    {
+        TestSpec("https://example.com", "Email: <info@example.com>", "mailto:info@example.com");
+        TestSpec(null, "Email: <info@example.com>", "mailto:info@example.com");
+    }
+
     public static void TestSpec(string baseUrl, string markdown, string expectedLink)
     {
         var pipeline = new MarkdownPipelineBuilder().Build();
