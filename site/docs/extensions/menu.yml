@@ -19,4 +19,5 @@ doc:
   - {path: media-links.md, title: "Media links"}
   - {path: list-extras.md, title: "List extras"}
   - {path: yaml-frontmatter.md, title: "YAML front matter"}
+  - {path: relative-file-links.md, title: "Relative file links"}
   - {path: other.md, title: "Other extensions"}

@@ -32,6 +32,7 @@ You will find from the following links the supported extensions in markdig and t
   - [**Diagrams**](DiagramsSpecs.md)
   - [**YAML frontmatter**](YamlSpecs.md)
   - [**JIRA links**](JiraLinks.md)
+  - [**Relative file links**](RelativeFileLinkSpecs.md)
   - [**CJK-friendly Emphasis**](CJKFriendlyEmphasis.md)
 
    > Notice that the links above are not yet the final documentation but are "specification" files used for testing the correctness of markdig for each extension
