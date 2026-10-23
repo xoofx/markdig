@@ -142,7 +142,13 @@ public class MediaLinkExtension : IMarkdownExtension
 
             renderer.WriteAttributes(htmlAttributes);
 
-            renderer.Write($"><source type=\"{mimeType}\" src=\"{linkInline.Url}\"></source></{tagType}>");
+            renderer.Write("><source type=\"");
+            renderer.Write(mimeType);
+            renderer.Write("\" src=\"");
+            renderer.WriteEscapeUrl(linkInline.Url);
+            renderer.Write("\"></source></");
+            renderer.Write(tagType);
+            renderer.Write('>');
 
             return true;
         }
