@@ -517,12 +517,9 @@ public static class HtmlHelper
                     sb.Append(text.AsSpan(lastPos, searchPos - lastPos - 1));
                     lastPos = searchPos;
 
-                    // An escaped backslash must not start another escape. An escaped & is still
-                    // decoded as an entity below, as cmark unescapes backslashes before entities.
-                    if (c != '&')
-                    {
-                        searchPos++;
-                    }
+                    // The escaped character is literal: an escaped backslash must not start
+                    // another escape and an escaped & must not start an entity.
+                    searchPos++;
                 }
             }
             else if (c == '&')
