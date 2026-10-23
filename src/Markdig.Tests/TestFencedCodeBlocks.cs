@@ -16,6 +16,8 @@ public class TestFencedCodeBlocks
     [TestCase(" c# \t  fOo \t", "c#", "fOo")]
     [TestCase("in\\%fo arg\\%ument", "in%fo", "arg%ument")]
     [TestCase("info&#9; arg&acute;ument", "info\t", "arg\u00B4ument")]
+    [TestCase("\u00A0c#\u00A0", "\u00A0c#\u00A0", "")]
+    [TestCase(" c# \u00A0foo\u00A0 ", "c#", "\u00A0foo\u00A0")]
     [TestCase("\\\\*", "\\*", "")]
     [TestCase("a\\\\_b c\\\\\\*", "a\\_b", "c\\*")]
     [TestCase("\\&amp;", "&amp;", "")]

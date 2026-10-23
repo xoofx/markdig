@@ -581,6 +581,49 @@ public struct StringSlice : ICharIterator
     }
 
     /// <summary>
+    /// Trims spaces and tabs at the beginning of this slice, keeping other Unicode whitespace such as U+00A0.
+    /// </summary>
+    /// <returns><c>true</c> if it has reaches the end of the slice</returns>
+    internal bool TrimStartSpaceOrTab()
+    {
+        string text = Text;
+        int end = End;
+        int i = Start;
+
+        while (i <= end && (uint)i < (uint)text.Length && text[i].IsSpaceOrTab())
+            i++;
+
+        Start = i;
+        return i > end;
+    }
+
+    /// <summary>
+    /// Trims spaces and tabs at the end of this slice, keeping other Unicode whitespace such as U+00A0.
+    /// </summary>
+    /// <returns><c>true</c> if the slice is empty afterwards</returns>
+    internal bool TrimEndSpaceOrTab()
+    {
+        string text = Text;
+        int start = Start;
+        int i = End;
+
+        while (start <= i && (uint)i < (uint)text.Length && text[i].IsSpaceOrTab())
+            i--;
+
+        End = i;
+        return start > i;
+    }
+
+    /// <summary>
+    /// Trims spaces and tabs from both the start and end of this slice.
+    /// </summary>
+    internal void TrimSpaceOrTab()
+    {
+        TrimStartSpaceOrTab();
+        TrimEndSpaceOrTab();
+    }
+
+    /// <summary>
     /// Trims whitespaces from both the start and end of this slice.
     /// </summary>
     public void Trim()

@@ -5,6 +5,6 @@ public class TestCodeInline
     [Test]
     public void UnpairedCodeInlineWithTrailingChars()
     {
-        TestParser.TestSpec("*`\n\f", "<p>*`</p>");
+        TestParser.TestSpec("*`\n\f", "<p>*`\n\f</p>");
     }
 }
