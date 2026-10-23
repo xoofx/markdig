@@ -177,7 +177,10 @@ public class HeadingBlockParser : BlockParser, IAttributesParseable
         if (!processor.TrackTrivia)
         {
             var heading = (HeadingBlock)block;
-            heading.Lines.Trim();
+            for (int i = 0; i < heading.Lines.Count; i++)
+            {
+                heading.Lines.Lines[i].Slice.TrimSpaceOrTab();
+            }
         }
         return true;
     }
