@@ -20,4 +20,14 @@ public class TestImageAltText
         string actualAltText = Regex.Match(html, "alt=\"(.*?)\"").Groups[1].Value;
         Assert.AreEqual(expectedAltText, actualAltText);
     }
+
+    [Test]
+    [TestCase("![foo[^1]](image.jpg)\n\n[^1]: bar", "foo", "footnotes")]
+    public void TestImageHtmlAltTextWithExtensions(string markdown, string expectedAltText, string extensions)
+    {
+        var pipeline = new MarkdownPipelineBuilder().Configure(extensions).Build();
+        string html = Markdown.ToHtml(markdown, pipeline);
+        string actualAltText = Regex.Match(html, "alt=\"(.*?)\"").Groups[1].Value;
+        Assert.AreEqual(expectedAltText, actualAltText);
+    }
 }

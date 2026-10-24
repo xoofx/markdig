@@ -42,6 +42,11 @@ public class HtmlFootnoteLinkRenderer : HtmlObjectRenderer<FootnoteLink>
     /// </summary>
     protected override void Write(HtmlRenderer renderer, FootnoteLink link)
     {
+        if (!renderer.EnableHtmlForInline)
+        {
+            return;
+        }
+
         var order = link.Footnote.Order;
         renderer.Write(link.IsBackLink
             ? $"<a href=\"#fnref:{link.Index}\" class=\"{FootnoteBackLinkClass}\">{BackLinkString}</a>"

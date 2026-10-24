@@ -32,18 +32,31 @@ public class HtmlFootnoteGroupRenderer : HtmlObjectRenderer<FootnoteGroup>
     protected override void Write(HtmlRenderer renderer, FootnoteGroup footnotes)
     {
         renderer.EnsureLine();
-        renderer.WriteLine($"<div class=\"{GroupClass}\">");
-        renderer.WriteLine("<hr />");
-        renderer.WriteLine("<ol>");
+        if (renderer.EnableHtmlForBlock)
+        {
+            renderer.WriteLine($"<div class=\"{GroupClass}\">");
+            renderer.WriteLine("<hr />");
+            renderer.WriteLine("<ol>");
+        }
 
         for (int i = 0; i < footnotes.Count; i++)
         {
             var footnote = (Footnote)footnotes[i];
-            renderer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.WriteLine($"<li id=\"fn:{footnote.Order}\">");
+            }
             renderer.WriteChildren(footnote);
-            renderer.WriteLine("</li>");
+            if (renderer.EnableHtmlForBlock)
+            {
+                renderer.WriteLine("</li>");
+            }
         }
-        renderer.WriteLine("</ol>");
-        renderer.WriteLine("</div>");
+
+        if (renderer.EnableHtmlForBlock)
+        {
+            renderer.WriteLine("</ol>");
+            renderer.WriteLine("</div>");
+        }
     }
 }
