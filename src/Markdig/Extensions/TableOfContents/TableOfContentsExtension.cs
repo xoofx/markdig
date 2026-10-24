@@ -25,6 +25,8 @@ public sealed class TableOfContentsExtension : IMarkdownExtension
     internal const string Marker = "[TOC]";
 
     private readonly TableOfContentsListKind _listKind;
+    private readonly int _minLevel;
+    private readonly int _maxLevel;
     private readonly ProcessInlineDelegate _documentProcessInlinesEnd;
 
     /// <summary>
@@ -38,7 +40,7 @@ public sealed class TableOfContentsExtension : IMarkdownExtension
     /// Initializes a new instance of the <see cref="TableOfContentsExtension"/> class. The options are copied.
     /// </summary>
     /// <exception cref="ArgumentNullException"><paramref name="options"/> is <c>null</c>.</exception>
-    /// <exception cref="ArgumentException">The list kind is not a defined <see cref="TableOfContentsListKind"/> value.</exception>
+    /// <exception cref="ArgumentException">The list kind is not a defined <see cref="TableOfContentsListKind"/> value, the minimum level is less than 1, or the maximum level is less than the minimum level.</exception>
     public TableOfContentsExtension(TableOfContentsOptions options)
     {
         if (options is null) ThrowHelper.ArgumentNullException(nameof(options));
@@ -48,7 +50,19 @@ public sealed class TableOfContentsExtension : IMarkdownExtension
             ThrowHelper.ArgumentException($"Invalid list kind `{options.ListKind}`.", nameof(options));
         }
 
+        if (options.MinLevel < 1)
+        {
+            ThrowHelper.ArgumentException($"Invalid minimum level `{options.MinLevel}`: the level must be at least 1.", nameof(options));
+        }
+
+        if (options.MaxLevel < options.MinLevel)
+        {
+            ThrowHelper.ArgumentException($"Invalid maximum level `{options.MaxLevel}`: the level must not be less than the minimum level `{options.MinLevel}`.", nameof(options));
+        }
+
         _listKind = options.ListKind;
+        _minLevel = options.MinLevel;
+        _maxLevel = options.MaxLevel;
         _documentProcessInlinesEnd = Document_ProcessInlinesEnd;
     }
 
@@ -135,13 +149,13 @@ public sealed class TableOfContentsExtension : IMarkdownExtension
         }
     }
 
-    private static List<TableOfContentsEntry> BuildEntries(MarkdownDocument document)
+    private List<TableOfContentsEntry> BuildEntries(MarkdownDocument document)
     {
         var entries = new List<TableOfContentsEntry>();
         var parents = new Stack<TableOfContentsEntry>();
         foreach (var heading in document.Descendants<HeadingBlock>())
         {
-            if (heading.Inline?.FirstChild is null)
+            if (heading.Level < _minLevel || heading.Level > _maxLevel || heading.Inline?.FirstChild is null)
             {
                 continue;
             }

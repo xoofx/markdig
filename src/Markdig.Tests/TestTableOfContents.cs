@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Extensions.TableOfContents;
+using Markdig.Parsers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Renderers.Roundtrip;
@@ -192,14 +193,47 @@ public class TestTableOfContents
         Assert.AreEqual(FooTableOfContents + "<h1>Foo</h1>\n", Markdown.ToHtml("[TOC]\n\n# Foo\n", pipeline));
     }
 
+    [TestCase(1, 6, "A(B(C) D) E")]
+    [TestCase(2, 6, "B(C) D")]
+    [TestCase(1, 2, "A(B D) E")]
+    [TestCase(3, 3, "C")]
+    public void ListsHeadingsWithinLevelRange(int minLevel, int maxLevel, string expectedEntries)
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseTableOfContents(new TableOfContentsOptions { MinLevel = minLevel, MaxLevel = maxLevel }).Build();
+        MarkdownDocument document = Markdown.Parse("[TOC]\n\n# A\n## B\n### C\n## D\n# E\n", pipeline);
+
+        Assert.AreEqual(expectedEntries, Describe(((TableOfContentsBlock)document[0]).Entries));
+    }
+
+    [Test]
+    public void RendersNothingWithoutHeadingsInLevelRange()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseTableOfContents(new TableOfContentsOptions { MinLevel = 2 }).Build();
+
+        Assert.AreEqual("<h1>Foo</h1>\n", Markdown.ToHtml("[TOC]\n\n# Foo\n", pipeline));
+    }
+
+    [TestCase(6, "A")]
+    [TestCase(7, "A(B)")]
+    public void ListsLevelsAboveSixUpToMaxLevel(int maxLevel, string expectedEntries)
+    {
+        var builder = new MarkdownPipelineBuilder().UseTableOfContents(new TableOfContentsOptions { MaxLevel = maxLevel });
+        builder.BlockParsers.Find<HeadingBlockParser>()!.MaxLeadingCount = 7;
+        MarkdownDocument document = Markdown.Parse("[TOC]\n\n# A\n####### B\n", builder.Build());
+
+        Assert.AreEqual(expectedEntries, Describe(((TableOfContentsBlock)document[0]).Entries));
+    }
+
     [Test]
     public void CopiesOptions()
     {
-        var options = new TableOfContentsOptions { ListKind = TableOfContentsListKind.Ordered };
+        var options = new TableOfContentsOptions { ListKind = TableOfContentsListKind.Ordered, MinLevel = 2, MaxLevel = 2 };
         var builder = new MarkdownPipelineBuilder().UseTableOfContents(options);
         options.ListKind = TableOfContentsListKind.Unordered;
+        options.MinLevel = 1;
+        options.MaxLevel = 6;
 
-        Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ol>\n<li>Foo</li>\n</ol>\n</nav>\n<h1>Foo</h1>\n", Markdown.ToHtml("[TOC]\n\n# Foo\n", builder.Build()));
+        Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ol>\n<li>Bar</li>\n</ol>\n</nav>\n<h1>Foo</h1>\n<h2>Bar</h2>\n<h3>Baz</h3>\n", Markdown.ToHtml("[TOC]\n\n# Foo\n## Bar\n### Baz\n", builder.Build()));
     }
 
     [Test]
@@ -222,6 +256,15 @@ public class TestTableOfContents
     public void ThrowsForUndefinedListKind(int listKind)
     {
         var options = new TableOfContentsOptions { ListKind = (TableOfContentsListKind)listKind };
+
+        Assert.Throws<ArgumentException>(() => new MarkdownPipelineBuilder().UseTableOfContents(options));
+    }
+
+    [TestCase(0, 6)]
+    [TestCase(3, 2)]
+    public void ThrowsForInvalidLevelRange(int minLevel, int maxLevel)
+    {
+        var options = new TableOfContentsOptions { MinLevel = minLevel, MaxLevel = maxLevel };
 
         Assert.Throws<ArgumentException>(() => new MarkdownPipelineBuilder().UseTableOfContents(options));
     }
