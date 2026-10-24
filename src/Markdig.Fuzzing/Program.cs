@@ -30,6 +30,7 @@ sealed class ParseRenderFuzzer
 {
     private static readonly MarkdownPipeline s_advancedPipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
+        .UseTableOfContents()
         .Build();
 
     private static readonly ResettableRoundtripRenderer _roundtripRenderer = new();
