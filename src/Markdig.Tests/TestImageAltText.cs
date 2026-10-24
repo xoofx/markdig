@@ -23,6 +23,7 @@ public class TestImageAltText
 
     [Test]
     [TestCase("![foo[^1]](image.jpg)\n\n[^1]: bar", "foo", "footnotes")]
+    [TestCase("![::foo::](image.jpg)", "foo", "customcontainers")]
     public void TestImageHtmlAltTextWithExtensions(string markdown, string expectedAltText, string extensions)
     {
         var pipeline = new MarkdownPipelineBuilder().Configure(extensions).Build();
