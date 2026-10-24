@@ -17,9 +17,9 @@ namespace Markdig.Tests.Specs.TableOfContents
         // 
         // ## Table of Contents
         // 
-        // The table of contents extension replaces a paragraph that consists of `[TOC]` alone with a nested list of the headings of the document. It is enabled with `UseTableOfContents()`. The examples also enable `UseAutoIdentifiers()`, which gives every heading an ID.
+        // The table of contents extension replaces a paragraph that consists of `[TOC]` alone with a nested list of the headings of the document. It is enabled with `UseTableOfContents()`. The examples also enable `UseAutoIdentifiers()`, which gives every heading an ID. An entry for a heading without an ID contains the text of the heading without a link.
         // 
-        // The list is wrapped in a `nav` element with the `doc-toc` role. An entry contains the text of its heading, and the entries of the headings below it form a nested list:
+        // The list is wrapped in a `nav` element with the `doc-toc` role. An entry links to the ID of its heading, and the entries of the headings below it form a nested list:
         [Test]
         public void ExtensionsTableOfContents_Example001()
         {
@@ -36,10 +36,10 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo
+            //     <li><a href="#foo">Foo</a>
             //     <ul>
-            //     <li>Bar</li>
-            //     <li>Baz</li>
+            //     <li><a href="#bar">Bar</a></li>
+            //     <li><a href="#baz">Baz</a></li>
             //     </ul>
             //     </li>
             //     </ul>
@@ -48,7 +48,7 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     <h2 id="bar">Bar</h2>
             //     <h2 id="baz">Baz</h2>
 
-            TestParser.TestSpec("[TOC]\n\n# Foo\n## Bar\n## Baz", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo\n<ul>\n<li>Bar</li>\n<li>Baz</li>\n</ul>\n</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h2 id=\"bar\">Bar</h2>\n<h2 id=\"baz\">Baz</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 1\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# Foo\n## Bar\n## Baz", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a>\n<ul>\n<li><a href=\"#bar\">Bar</a></li>\n<li><a href=\"#baz\">Baz</a></li>\n</ul>\n</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h2 id=\"bar\">Bar</h2>\n<h2 id=\"baz\">Baz</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 1\nSection Extensions / Table of Contents\n");
         }
 
         // Every heading of the document is listed, including the headings before the marker:
@@ -69,16 +69,16 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     <h1 id="intro">Intro</h1>
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Intro
+            //     <li><a href="#intro">Intro</a>
             //     <ul>
-            //     <li>Usage</li>
+            //     <li><a href="#usage">Usage</a></li>
             //     </ul>
             //     </li>
             //     </ul>
             //     </nav>
             //     <h2 id="usage">Usage</h2>
 
-            TestParser.TestSpec("# Intro\n\n[TOC]\n\n## Usage", "<h1 id=\"intro\">Intro</h1>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Intro\n<ul>\n<li>Usage</li>\n</ul>\n</li>\n</ul>\n</nav>\n<h2 id=\"usage\">Usage</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 2\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("# Intro\n\n[TOC]\n\n## Usage", "<h1 id=\"intro\">Intro</h1>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#intro\">Intro</a>\n<ul>\n<li><a href=\"#usage\">Usage</a></li>\n</ul>\n</li>\n</ul>\n</nav>\n<h2 id=\"usage\">Usage</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 2\nSection Extensions / Table of Contents\n");
         }
 
         // A heading is nested below the closest preceding heading with a lower level, so a skipped level produces no empty entry:
@@ -98,10 +98,10 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo
+            //     <li><a href="#foo">Foo</a>
             //     <ul>
-            //     <li>Bar</li>
-            //     <li>Baz</li>
+            //     <li><a href="#bar">Bar</a></li>
+            //     <li><a href="#baz">Baz</a></li>
             //     </ul>
             //     </li>
             //     </ul>
@@ -110,7 +110,7 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     <h3 id="bar">Bar</h3>
             //     <h2 id="baz">Baz</h2>
 
-            TestParser.TestSpec("[TOC]\n\n# Foo\n### Bar\n## Baz", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo\n<ul>\n<li>Bar</li>\n<li>Baz</li>\n</ul>\n</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h3 id=\"bar\">Bar</h3>\n<h2 id=\"baz\">Baz</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 3\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# Foo\n### Bar\n## Baz", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a>\n<ul>\n<li><a href=\"#bar\">Bar</a></li>\n<li><a href=\"#baz\">Baz</a></li>\n</ul>\n</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h3 id=\"bar\">Bar</h3>\n<h2 id=\"baz\">Baz</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 3\nSection Extensions / Table of Contents\n");
         }
 
         // A heading without such a preceding heading is a top-level entry, even if its level is higher than the level of a later heading:
@@ -130,10 +130,10 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
-            //     <li>Bar
+            //     <li><a href="#foo">Foo</a></li>
+            //     <li><a href="#bar">Bar</a>
             //     <ul>
-            //     <li>Baz</li>
+            //     <li><a href="#baz">Baz</a></li>
             //     </ul>
             //     </li>
             //     </ul>
@@ -142,7 +142,7 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     <h1 id="bar">Bar</h1>
             //     <h2 id="baz">Baz</h2>
 
-            TestParser.TestSpec("[TOC]\n\n### Foo\n# Bar\n## Baz", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n<li>Bar\n<ul>\n<li>Baz</li>\n</ul>\n</li>\n</ul>\n</nav>\n<h3 id=\"foo\">Foo</h3>\n<h1 id=\"bar\">Bar</h1>\n<h2 id=\"baz\">Baz</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 4\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n### Foo\n# Bar\n## Baz", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n<li><a href=\"#bar\">Bar</a>\n<ul>\n<li><a href=\"#baz\">Baz</a></li>\n</ul>\n</li>\n</ul>\n</nav>\n<h3 id=\"foo\">Foo</h3>\n<h1 id=\"bar\">Bar</h1>\n<h2 id=\"baz\">Baz</h2>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 4\nSection Extensions / Table of Contents\n");
         }
 
         // Headings inside container blocks are listed too. Headings without content are left out:
@@ -164,9 +164,9 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo
+            //     <li><a href="#foo">Foo</a>
             //     <ul>
-            //     <li>Bar</li>
+            //     <li><a href="#bar">Bar</a></li>
             //     </ul>
             //     </li>
             //     </ul>
@@ -181,10 +181,10 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     </ul>
             //     <h1 id="section"></h1>
 
-            TestParser.TestSpec("[TOC]\n\n> # Foo\n\n- ## Bar\n\n#", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo\n<ul>\n<li>Bar</li>\n</ul>\n</li>\n</ul>\n</nav>\n<blockquote>\n<h1 id=\"foo\">Foo</h1>\n</blockquote>\n<ul>\n<li>\n<h2 id=\"bar\">Bar</h2>\n</li>\n</ul>\n<h1 id=\"section\"></h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 5\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n> # Foo\n\n- ## Bar\n\n#", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a>\n<ul>\n<li><a href=\"#bar\">Bar</a></li>\n</ul>\n</li>\n</ul>\n</nav>\n<blockquote>\n<h1 id=\"foo\">Foo</h1>\n</blockquote>\n<ul>\n<li>\n<h2 id=\"bar\">Bar</h2>\n</li>\n</ul>\n<h1 id=\"section\"></h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 5\nSection Extensions / Table of Contents\n");
         }
 
-        // An entry contains the plain text of its heading. The formatting is dropped, so that all entries look the same:
+        // The link text is the plain text of the heading. The formatting is dropped, so that all entries look the same:
         [Test]
         public void ExtensionsTableOfContents_Example006()
         {
@@ -199,15 +199,15 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Use the &lt;T&gt; &amp; co</li>
+            //     <li><a href="#use-the-t-co">Use the &lt;T&gt; &amp; co</a></li>
             //     </ul>
             //     </nav>
             //     <h1 id="use-the-t-co">Use <em>the</em> <code>&lt;T&gt;</code> &amp; co</h1>
 
-            TestParser.TestSpec("[TOC]\n\n# Use *the* `<T>` & co", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Use the &lt;T&gt; &amp; co</li>\n</ul>\n</nav>\n<h1 id=\"use-the-t-co\">Use <em>the</em> <code>&lt;T&gt;</code> &amp; co</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 6\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# Use *the* `<T>` & co", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#use-the-t-co\">Use the &lt;T&gt; &amp; co</a></li>\n</ul>\n</nav>\n<h1 id=\"use-the-t-co\">Use <em>the</em> <code>&lt;T&gt;</code> &amp; co</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 6\nSection Extensions / Table of Contents\n");
         }
 
-        // Headings with the same text get an entry each:
+        // Headings with the same text get an entry each, and every entry links to the ID of its own heading:
         [Test]
         public void ExtensionsTableOfContents_Example007()
         {
@@ -223,14 +223,14 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
+            //     <li><a href="#foo-1">Foo</a></li>
             //     </ul>
             //     </nav>
             //     <h1 id="foo">Foo</h1>
             //     <h1 id="foo-1">Foo</h1>
 
-            TestParser.TestSpec("[TOC]\n\n# Foo\n# Foo", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n<li>Foo</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h1 id=\"foo-1\">Foo</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 7\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# Foo\n# Foo", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n<li><a href=\"#foo-1\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h1 id=\"foo-1\">Foo</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 7\nSection Extensions / Table of Contents\n");
         }
 
         // Every marker of a document renders the same list:
@@ -250,17 +250,17 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
             //     </ul>
             //     </nav>
             //     <h1 id="foo">Foo</h1>
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
             //     </ul>
             //     </nav>
 
-            TestParser.TestSpec("[TOC]\n\n# Foo\n\n[TOC]", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 8\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# Foo\n\n[TOC]", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n</ul>\n</nav>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 8\nSection Extensions / Table of Contents\n");
         }
 
         // A marker inside a container block is recognized as well:
@@ -282,7 +282,7 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     <li>
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
             //     </ul>
             //     </nav>
             //     </li>
@@ -290,13 +290,13 @@ namespace Markdig.Tests.Specs.TableOfContents
             //     <blockquote>
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
             //     </ul>
             //     </nav>
             //     </blockquote>
             //     <h1 id="foo">Foo</h1>
 
-            TestParser.TestSpec("- [TOC]\n\n> [TOC]\n\n# Foo", "<ul>\n<li>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>\n</li>\n</ul>\n<blockquote>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>\n</blockquote>\n<h1 id=\"foo\">Foo</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 9\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("- [TOC]\n\n> [TOC]\n\n# Foo", "<ul>\n<li>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n</ul>\n</nav>\n</li>\n</ul>\n<blockquote>\n<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n</ul>\n</nav>\n</blockquote>\n<h1 id=\"foo\">Foo</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 9\nSection Extensions / Table of Contents\n");
         }
 
         // The marker needs no blank line after it when the next line starts a block that interrupts a paragraph:
@@ -313,12 +313,12 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
             //     </ul>
             //     </nav>
             //     <h1 id="foo">Foo</h1>
 
-            TestParser.TestSpec("[TOC]\n# Foo", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 10\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n# Foo", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 10\nSection Extensions / Table of Contents\n");
         }
 
         // A document without headings renders no table of contents:
@@ -354,12 +354,12 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>TOC</li>
+            //     <li><a href="#toc">TOC</a></li>
             //     </ul>
             //     </nav>
             //     <h1 id="toc">TOC</h1>
 
-            TestParser.TestSpec("[TOC]\n\n# TOC", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>TOC</li>\n</ul>\n</nav>\n<h1 id=\"toc\">TOC</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 12\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# TOC", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#toc\">TOC</a></li>\n</ul>\n</nav>\n<h1 id=\"toc\">TOC</h1>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 12\nSection Extensions / Table of Contents\n");
         }
 
         // It also takes precedence over a link reference definition with the label `TOC`. An escaped bracket keeps the text, and an explicit collapsed reference keeps the link:
@@ -383,14 +383,14 @@ namespace Markdig.Tests.Specs.TableOfContents
             // Should be rendered as:
             //     <nav class="toc" role="doc-toc">
             //     <ul>
-            //     <li>Foo</li>
+            //     <li><a href="#foo">Foo</a></li>
             //     </ul>
             //     </nav>
             //     <h1 id="foo">Foo</h1>
             //     <p>[TOC]</p>
             //     <p><a href="/url">TOC</a></p>
 
-            TestParser.TestSpec("[TOC]\n\n# Foo\n\n\\[TOC]\n\n[TOC][]\n\n[TOC]: /url", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<p>[TOC]</p>\n<p><a href=\"/url\">TOC</a></p>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 13\nSection Extensions / Table of Contents\n");
+            TestParser.TestSpec("[TOC]\n\n# Foo\n\n\\[TOC]\n\n[TOC][]\n\n[TOC]: /url", "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<p>[TOC]</p>\n<p><a href=\"/url\">TOC</a></p>", "autoidentifiers+tableofcontents|advanced+tableofcontents", context: "Example 13\nSection Extensions / Table of Contents\n");
         }
 
         // Only a paragraph that consists of `[TOC]` alone is a marker. More text in the paragraph, another casing or spacing, and a code span render as usual:

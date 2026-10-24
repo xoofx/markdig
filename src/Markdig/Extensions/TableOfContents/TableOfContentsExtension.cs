@@ -18,6 +18,7 @@ namespace Markdig.Extensions.TableOfContents;
 /// <remarks>
 /// A paragraph is a marker only if it is a single line that reads `[TOC]`, ignoring surrounding spaces and tabs. The marker takes precedence over a link with the label `TOC`; `\[TOC]` and `[TOC][]` keep the text and the link.
 /// When trivia is tracked, the marker stays a paragraph, so that a roundtrip writes it back unchanged.
+/// Entries link to headings that have an ID, for example from <see cref="MarkdownExtensions.UseAutoIdentifiers"/>; the extension does not add IDs itself.
 /// </remarks>
 public sealed class TableOfContentsExtension : IMarkdownExtension
 {

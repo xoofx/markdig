@@ -4,9 +4,9 @@ This section describes the different extensions supported:
 
 ## Table of Contents
 
-The table of contents extension replaces a paragraph that consists of `[TOC]` alone with a nested list of the headings of the document. It is enabled with `UseTableOfContents()`. The examples also enable `UseAutoIdentifiers()`, which gives every heading an ID.
+The table of contents extension replaces a paragraph that consists of `[TOC]` alone with a nested list of the headings of the document. It is enabled with `UseTableOfContents()`. The examples also enable `UseAutoIdentifiers()`, which gives every heading an ID. An entry for a heading without an ID contains the text of the heading without a link.
 
-The list is wrapped in a `nav` element with the `doc-toc` role. An entry contains the text of its heading, and the entries of the headings below it form a nested list:
+The list is wrapped in a `nav` element with the `doc-toc` role. An entry links to the ID of its heading, and the entries of the headings below it form a nested list:
 
 ```````````````````````````````` example
 [TOC]
@@ -17,10 +17,10 @@ The list is wrapped in a `nav` element with the `doc-toc` role. An entry contain
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo
+<li><a href="#foo">Foo</a>
 <ul>
-<li>Bar</li>
-<li>Baz</li>
+<li><a href="#bar">Bar</a></li>
+<li><a href="#baz">Baz</a></li>
 </ul>
 </li>
 </ul>
@@ -42,9 +42,9 @@ Every heading of the document is listed, including the headings before the marke
 <h1 id="intro">Intro</h1>
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Intro
+<li><a href="#intro">Intro</a>
 <ul>
-<li>Usage</li>
+<li><a href="#usage">Usage</a></li>
 </ul>
 </li>
 </ul>
@@ -63,10 +63,10 @@ A heading is nested below the closest preceding heading with a lower level, so a
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo
+<li><a href="#foo">Foo</a>
 <ul>
-<li>Bar</li>
-<li>Baz</li>
+<li><a href="#bar">Bar</a></li>
+<li><a href="#baz">Baz</a></li>
 </ul>
 </li>
 </ul>
@@ -87,10 +87,10 @@ A heading without such a preceding heading is a top-level entry, even if its lev
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
-<li>Bar
+<li><a href="#foo">Foo</a></li>
+<li><a href="#bar">Bar</a>
 <ul>
-<li>Baz</li>
+<li><a href="#baz">Baz</a></li>
 </ul>
 </li>
 </ul>
@@ -113,9 +113,9 @@ Headings inside container blocks are listed too. Headings without content are le
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo
+<li><a href="#foo">Foo</a>
 <ul>
-<li>Bar</li>
+<li><a href="#bar">Bar</a></li>
 </ul>
 </li>
 </ul>
@@ -131,7 +131,7 @@ Headings inside container blocks are listed too. Headings without content are le
 <h1 id="section"></h1>
 ````````````````````````````````
 
-An entry contains the plain text of its heading. The formatting is dropped, so that all entries look the same:
+The link text is the plain text of the heading. The formatting is dropped, so that all entries look the same:
 
 ```````````````````````````````` example
 [TOC]
@@ -140,13 +140,13 @@ An entry contains the plain text of its heading. The formatting is dropped, so t
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Use the &lt;T&gt; &amp; co</li>
+<li><a href="#use-the-t-co">Use the &lt;T&gt; &amp; co</a></li>
 </ul>
 </nav>
 <h1 id="use-the-t-co">Use <em>the</em> <code>&lt;T&gt;</code> &amp; co</h1>
 ````````````````````````````````
 
-Headings with the same text get an entry each:
+Headings with the same text get an entry each, and every entry links to the ID of its own heading:
 
 ```````````````````````````````` example
 [TOC]
@@ -156,8 +156,8 @@ Headings with the same text get an entry each:
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
+<li><a href="#foo-1">Foo</a></li>
 </ul>
 </nav>
 <h1 id="foo">Foo</h1>
@@ -175,13 +175,13 @@ Every marker of a document renders the same list:
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
 </ul>
 </nav>
 <h1 id="foo">Foo</h1>
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
 </ul>
 </nav>
 ````````````````````````````````
@@ -199,7 +199,7 @@ A marker inside a container block is recognized as well:
 <li>
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
 </ul>
 </nav>
 </li>
@@ -207,7 +207,7 @@ A marker inside a container block is recognized as well:
 <blockquote>
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
 </ul>
 </nav>
 </blockquote>
@@ -222,7 +222,7 @@ The marker needs no blank line after it when the next line starts a block that i
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
 </ul>
 </nav>
 <h1 id="foo">Foo</h1>
@@ -247,7 +247,7 @@ The marker takes precedence over a link to a heading with the text `TOC`:
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>TOC</li>
+<li><a href="#toc">TOC</a></li>
 </ul>
 </nav>
 <h1 id="toc">TOC</h1>
@@ -268,7 +268,7 @@ It also takes precedence over a link reference definition with the label `TOC`. 
 .
 <nav class="toc" role="doc-toc">
 <ul>
-<li>Foo</li>
+<li><a href="#foo">Foo</a></li>
 </ul>
 </nav>
 <h1 id="foo">Foo</h1>

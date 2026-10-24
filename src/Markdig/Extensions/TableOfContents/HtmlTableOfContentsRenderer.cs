@@ -12,6 +12,7 @@ namespace Markdig.Extensions.TableOfContents;
 /// </summary>
 /// <remarks>
 /// An entry contains the plain text of its heading. Dropping the formatting keeps the entries uniform and keeps links and element IDs from the heading content, such as footnote references, out of the table of contents.
+/// If the heading has an ID, the entry text links to it. The link is written with <see cref="HtmlRenderer.WriteEscapeUrl"/>, so <see cref="HtmlRenderer.BaseUrl"/> and <see cref="HtmlRenderer.LinkRewriter"/> apply as they do to Markdown links.
 /// </remarks>
 /// <seealso href="https://www.w3.org/TR/dpub-aria-1.1/#doc-toc"/>
 public class HtmlTableOfContentsRenderer : HtmlObjectRenderer<TableOfContentsBlock>
@@ -45,7 +46,18 @@ public class HtmlTableOfContentsRenderer : HtmlObjectRenderer<TableOfContentsBlo
         {
             var entry = entries[i];
             renderer.Write("<li>");
-            WriteEntryText(renderer, entry);
+            string? id = entry.Heading.TryGetAttributes()?.Id;
+            if (string.IsNullOrEmpty(id))
+            {
+                WriteEntryText(renderer, entry);
+            }
+            else
+            {
+                renderer.Write("<a href=\"").WriteEscapeUrl("#" + id).WriteRaw("\">");
+                WriteEntryText(renderer, entry);
+                renderer.WriteRaw("</a>");
+            }
+
             if (entry.Children.Count > 0)
             {
                 renderer.WriteLine();

@@ -3,6 +3,8 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Extensions.TableOfContents;
+using Markdig.Renderers;
+using Markdig.Renderers.Html;
 using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 
@@ -13,6 +15,7 @@ public class TestTableOfContents
     private const string FooTableOfContents = "<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li>Foo</li>\n</ul>\n</nav>\n";
 
     private static readonly MarkdownPipeline s_pipeline = new MarkdownPipelineBuilder().UseTableOfContents().Build();
+    private static readonly MarkdownPipeline s_autoIdentifierPipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers().UseTableOfContents().Build();
 
     [Test]
     public void BuildsNestedEntries()
@@ -62,6 +65,58 @@ public class TestTableOfContents
         var pipeline = new MarkdownPipelineBuilder().UseTableOfContents(new TableOfContentsOptions { ListKind = TableOfContentsListKind.Ordered }).Build();
 
         Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ol>\n<li>Foo\n<ol>\n<li>Bar</li>\n</ol>\n</li>\n</ol>\n</nav>\n<h1>Foo</h1>\n<h2>Bar</h2>\n", Markdown.ToHtml("[TOC]\n\n# Foo\n## Bar\n", pipeline));
+    }
+
+    [Test]
+    public void LinksOnlyEntriesOfHeadingsWithId()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseTableOfContents().UseGenericAttributes().Build();
+
+        Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#foo\">Foo</a></li>\n<li>Bar</li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<h1>Bar</h1>\n", Markdown.ToHtml("[TOC]\n\n# Foo {#foo}\n# Bar\n", pipeline));
+    }
+
+    [Test]
+    public void LinksToCustomHeadingId()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers().UseTableOfContents().UseGenericAttributes().Build();
+
+        Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#custom\">Foo</a></li>\n<li><a href=\"#bar\">Bar</a></li>\n</ul>\n</nav>\n<h1 id=\"custom\">Foo</h1>\n<h1 id=\"bar\">Bar</h1>\n", Markdown.ToHtml("[TOC]\n\n# Foo {#custom}\n# Bar\n", pipeline));
+    }
+
+    [Test]
+    public void LinksNoEntryForEmptyHeadingId()
+    {
+        MarkdownDocument document = Markdown.Parse("[TOC]\n\n# Foo\n", s_pipeline);
+        document.Descendants<HeadingBlock>().Single().GetAttributes().Id = "";
+
+        Assert.AreEqual(FooTableOfContents + "<h1 id=\"\">Foo</h1>\n", document.ToHtml(s_pipeline));
+    }
+
+    [Test]
+    public void ResolvesLinksAgainstBaseUrl()
+    {
+        string html = Render("[TOC]\n\n# Foo\n\n[Foo](#foo)\n", renderer => renderer.BaseUrl = new Uri("https://example.com/docs/page.html"));
+
+        Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"https://example.com/docs/page.html#foo\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n<p><a href=\"https://example.com/docs/page.html#foo\">Foo</a></p>\n", html);
+    }
+
+    [Test]
+    public void PassesLinksToLinkRewriter()
+    {
+        string html = Render("[TOC]\n\n# Foo\n", renderer => renderer.LinkRewriter = url => "page.html" + url);
+
+        Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"page.html#foo\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n", html);
+    }
+
+    // TODO: Remove the Ignore once HtmlFootnoteLinkRenderer writes nothing when EnableHtmlForInline is false.
+    [Test, Ignore("HtmlFootnoteLinkRenderer ignores EnableHtmlForInline, so the entry still contains the footnote link")]
+    public void LeavesFootnoteReferencesOutOfEntries()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers().UseFootnotes().UseTableOfContents().Build();
+
+        string html = Markdown.ToHtml("[TOC]\n\n# Intro[^1]\n\n[^1]: Note\n", pipeline);
+
+        Assert.That(html, Does.StartWith("<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"#intro\">Intro</a></li>\n</ul>\n</nav>\n"));
     }
 
     [Test]
@@ -175,6 +230,18 @@ public class TestTableOfContents
     public void ThrowsForNullHeading()
     {
         Assert.Throws<ArgumentNullException>(() => new TableOfContentsEntry(null));
+    }
+
+    private static string Render(string markdown, Action<HtmlRenderer> configure)
+    {
+        var writer = new StringWriter();
+        var renderer = new HtmlRenderer(writer);
+        configure(renderer);
+        s_autoIdentifierPipeline.Setup(renderer);
+
+        renderer.Render(Markdown.Parse(markdown, s_autoIdentifierPipeline));
+        writer.Flush();
+        return writer.ToString();
     }
 
     private static string Describe(IReadOnlyList<TableOfContentsEntry> entries)
