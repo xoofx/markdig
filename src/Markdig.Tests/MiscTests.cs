@@ -130,6 +130,15 @@ public class MiscTests
     }
 
     [Test]
+    public void ThematicBreakIndentedToListItemContentStaysInTheItem()
+    {
+        TestParser.TestSpec("- item one\n\n  ---\n\n- item two", "<ul>\n<li>\n<p>item one</p>\n<hr />\n</li>\n<li>\n<p>item two</p>\n</li>\n</ul>");
+        TestParser.TestSpec("1. o\n\n   ***", "<ol>\n<li>\n<p>o</p>\n<hr />\n</li>\n</ol>");
+        TestParser.TestSpec("-\n  ***", "<ul>\n<li>\n<hr />\n</li>\n</ul>");
+        TestParser.TestSpec("> - o\n>\n>   ---", "<blockquote>\n<ul>\n<li>\n<p>o</p>\n<hr />\n</li>\n</ul>\n</blockquote>");
+    }
+
+    [Test]
     public void TestAltTextIsCorrectlyEscaped()
     {
         TestParser.TestSpec(

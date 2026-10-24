@@ -91,10 +91,12 @@ public class ListBlockParser : BlockParser
         }
 
         // When both a thematic break and a list item are possible
-        // interpretations of a line, the thematic break takes precedence
+        // interpretations of a line, the thematic break takes precedence.
+        // A thematic break indented to the content of the current list item belongs to that item.
         BlockState result;
         var thematicParser = ThematicBreakParser.Default;
-        if (processor.LastBlock is not FencedCodeBlock && thematicParser.HasOpeningCharacter(processor.CurrentChar))
+        if (processor.LastBlock is not FencedCodeBlock && thematicParser.HasOpeningCharacter(processor.CurrentChar)
+            && !(block is ListItemBlock currentItem && processor.Indent >= Math.Abs(currentItem.ColumnWidth)))
         {
             result = thematicParser.TryOpen(processor);
             if (result.IsBreak())
