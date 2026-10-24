@@ -37,7 +37,10 @@ public class TestPlainText
     [Test]
     [TestCase(/* markdownText: */ ":::\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers|advanced")]
     [TestCase(/* markdownText: */ ":::bar\nfoo\n:::", /* expected: */ "foo\n", /*extensions*/ "customcontainers+attributes|advanced")]
+    [TestCase(/* markdownText: */ "::foo::", /* expected: */ "foo\n", /*extensions*/ "customcontainers|advanced")]
     [TestCase(/* markdownText: */ "| Header1 | Header2 | Header3 |\n|--|--|--|\nt**es**t|value2|value3", /* expected: */ "Header1 Header2 Header3 test value2 value3","pipetables")]
+    [TestCase(/* markdownText: */ "foo[^1]\n\n[^1]: bar", /* expected: */ "foo\nbar\n", /*extensions*/ "footnotes|advanced")]
+    [TestCase(/* markdownText: */ "foo[^1] bar[^2] baz[^1]\n\n[^1]: one\n\n[^2]: two", /* expected: */ "foo bar baz\none\ntwo\n", /*extensions*/ "footnotes|advanced")]
     public void TestPlainWithExtensions(string markdownText, string expected, string extensions)
     {
         TestParser.TestSpec(markdownText, expected, extensions, plainText: true);
