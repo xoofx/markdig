@@ -272,6 +272,20 @@ public class TestLinkHelper
     }
 
     [Test]
+    public void TestAutoLinkUrlSchemeLength()
+    {
+        // A scheme is any sequence of 2-32 characters
+        var text = new StringSlice(@"<ws://localhost:8080>");
+        Assert.True(LinkHelper.TryParseAutolink(ref text, out string url, out bool isEmail));
+        Assert.False(isEmail);
+        Assert.AreEqual("ws://localhost:8080", url);
+
+        Assert.True(LinkHelper.TryParseAutolink(new StringSlice("<" + new string('a', 32) + ":b>"), out _, out _));
+        Assert.False(LinkHelper.TryParseAutolink(new StringSlice("<" + new string('a', 33) + ":b>"), out _, out _));
+        Assert.False(LinkHelper.TryParseAutolink(new StringSlice("<m:abc>"), out _, out _));
+    }
+
+    [Test]
     public void TestAutolinkInvalid()
     {
         Assert.False(LinkHelper.TryParseAutolink(new StringSlice(@""), out string text, out bool isEmail));
