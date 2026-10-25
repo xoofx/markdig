@@ -116,7 +116,7 @@ var pipeline = new MarkdownPipelineBuilder()
 | `.UsePreciseSourceLocation()` | Map AST nodes to their exact source location |
 | `.EnableTrackTrivia()` | Track whitespace and trivia for roundtripping |
 | `.ConfigureNewLine(string)` | Set the newline string for output |
-| `.DisableHeadings()` | Disable ATX and Setex heading parsing |
+| `.DisableHeadings()` | Disable ATX and setext heading parsing |
 | `.DisableHtml()` | Disable HTML block and inline HTML parsing |
 
 > [!CAUTION]

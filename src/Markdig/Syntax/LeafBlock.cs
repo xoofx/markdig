@@ -44,10 +44,10 @@ public abstract class LeafBlock : Block
             if (value != null)
             {
                 if (value.Parent != null)
-                    ThrowHelper.ArgumentException("Cannot add this inline as it as already attached to another container (inline.Parent != null)");
+                    ThrowHelper.ArgumentException("Cannot add this inline as it is already attached to another container (inline.Parent != null)");
 
                 if (value.ParentBlock != null)
-                    ThrowHelper.ArgumentException("Cannot add this inline as it as already attached to another container (inline.ParentBlock != null)");
+                    ThrowHelper.ArgumentException("Cannot add this inline as it is already attached to another container (inline.ParentBlock != null)");
 
                 value.ParentBlock = this;
             }

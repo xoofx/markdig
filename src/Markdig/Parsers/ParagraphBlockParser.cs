@@ -14,9 +14,9 @@ namespace Markdig.Parsers;
 public class ParagraphBlockParser : BlockParser
 {
     /// <summary>
-    /// Gets or sets the parse setex headings.
+    /// Gets or sets a value indicating whether setext headings are parsed.
     /// </summary>
-    public bool ParseSetexHeadings { get; set; } = true;
+    public bool ParseSetextHeadings { get; set; } = true;
 
     /// <summary>
     /// Attempts to open a block at the current parser position.
@@ -55,9 +55,9 @@ public class ParagraphBlockParser : BlockParser
             return BlockState.BreakDiscard;
         }
 
-        if (!processor.IsCodeIndent && ParseSetexHeadings)
+        if (!processor.IsCodeIndent && ParseSetextHeadings)
         {
-            return TryParseSetexHeading(processor, block);
+            return TryParseSetextHeading(processor, block);
         }
         block.NewLine = processor.Line.NewLine;
         block.UpdateSpanEnd(processor.Line.End);
@@ -103,7 +103,7 @@ public class ParagraphBlockParser : BlockParser
         return true;
     }
 
-    private BlockState TryParseSetexHeading(BlockProcessor state, Block block)
+    private BlockState TryParseSetextHeading(BlockProcessor state, Block block)
     {
         var line = state.Line;
         var sourcePosition = line.Start;

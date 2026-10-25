@@ -51,7 +51,7 @@ public class AutoIdentifierExtension : IMarkdownExtension
         var paragraphBlockParser = pipeline.BlockParsers.FindExact<ParagraphBlockParser>();
         if (paragraphBlockParser != null)
         {
-            // Install a hook on the ParagraphBlockParser when a HeadingBlock is actually processed as a Setex heading
+            // Install a hook on the ParagraphBlockParser when a HeadingBlock is actually processed as a setext heading
             paragraphBlockParser.Closed -= HeadingBlockParser_Closed;
             paragraphBlockParser.Closed += HeadingBlockParser_Closed;
         }

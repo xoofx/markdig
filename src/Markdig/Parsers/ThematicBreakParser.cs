@@ -69,21 +69,21 @@ public class ThematicBreakParser : BlockParser
             c = line.NextChar();
         }
 
-        // If it as less than 3 chars or it is a setex heading and we are already in a paragraph, let the paragraph handle it
+        // If it has fewer than 3 chars or it is a setext heading and we are already in a paragraph, let the paragraph handle it
         var previousParagraph = processor.CurrentBlock as ParagraphBlock;
 
-        var isSetexHeading = previousParagraph != null && breakChar == '-' && !hasInnerSpaces;
-        if (isSetexHeading)
+        var isSetextHeading = previousParagraph != null && breakChar == '-' && !hasInnerSpaces;
+        if (isSetextHeading)
         {
             var parent = previousParagraph!.Parent!;
             // A lazy continuation line cannot be a setext underline, so it is a thematic break
             if (processor.HasUnmatchedBlocks && (parent is QuoteBlock or ListItemBlock))
             {
-                isSetexHeading = false;
+                isSetextHeading = false;
             }
         }
 
-        if (breakCharCount < 3 || isSetexHeading)
+        if (breakCharCount < 3 || isSetextHeading)
         {
             return BlockState.None;
         }
