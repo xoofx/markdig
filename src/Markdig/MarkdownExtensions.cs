@@ -555,8 +555,11 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
-    /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
+    /// This will disable the HTML support in the markdown processor (HTML blocks and inline HTML are rendered as text).
     /// </summary>
+    /// <remarks>
+    /// Note that this does not sanitize the generated HTML.
+    /// </remarks>
     /// <param name="pipeline">The pipeline.</param>
     /// <returns>The modified pipeline</returns>
     public static MarkdownPipelineBuilder DisableHtml(this MarkdownPipelineBuilder pipeline)

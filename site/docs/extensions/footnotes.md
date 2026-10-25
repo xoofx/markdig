@@ -54,29 +54,21 @@ This has a long footnote[^long].
     - Even lists work in footnotes
     - Like this one
 
-## Inline footnotes
-
-You can also define footnotes inline (though this is less common):
-
-```markdown
-This has an inline footnote^[This is the inline footnote content].
-```
-
 ## HTML output
 
-Footnote references become superscript links, and footnote definitions are collected into a `<section>` at the end of the page:
+Footnote references become superscript links, and footnote definitions are collected into a `<div>` at the end of the page:
 
 ```html
-<p>Text with a footnote<a href="#fn:1" class="footnote-ref"><sup>1</sup></a>.</p>
+<p>Text with a footnote<a id="fnref:1" href="#fn:1" class="footnote-ref"><sup>1</sup></a>.</p>
 
-<section class="footnotes">
+<div class="footnotes">
+  <hr />
   <ol>
     <li id="fn:1">
-      <p>This is the footnote content.
-        <a href="#fnref:1" class="footnote-back-ref">↩</a></p>
+      <p>This is the footnote content.<a href="#fnref:1" class="footnote-back-ref">&#8617;</a></p>
     </li>
   </ol>
-</section>
+</div>
 ```
 
 ## Rules

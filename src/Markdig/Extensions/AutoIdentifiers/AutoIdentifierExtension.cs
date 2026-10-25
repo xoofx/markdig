@@ -123,8 +123,8 @@ public class AutoIdentifierExtension : IMarkdownExtension
     }
 
     /// <summary>
-    /// Callback when there is a reference to found to a heading.
-    /// Note that reference are only working if they are declared after.
+    /// Callback when a reference to a heading is found.
+    /// Note that a reference also works if it appears before the heading.
     /// </summary>
     private static Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline? child)
     {
