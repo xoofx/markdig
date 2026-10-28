@@ -51,7 +51,7 @@ public class AutoIdentifierExtension : IMarkdownExtension
         var paragraphBlockParser = pipeline.BlockParsers.FindExact<ParagraphBlockParser>();
         if (paragraphBlockParser != null)
         {
-            // Install a hook on the ParagraphBlockParser when a HeadingBlock is actually processed as a Setex heading
+            // Install a hook on the ParagraphBlockParser when a HeadingBlock is actually processed as a setext heading
             paragraphBlockParser.Closed -= HeadingBlockParser_Closed;
             paragraphBlockParser.Closed += HeadingBlockParser_Closed;
         }
@@ -123,8 +123,8 @@ public class AutoIdentifierExtension : IMarkdownExtension
     }
 
     /// <summary>
-    /// Callback when there is a reference to found to a heading.
-    /// Note that reference are only working if they are declared after.
+    /// Callback when a reference to a heading is found.
+    /// Note that a reference also works if it appears before the heading.
     /// </summary>
     private static Inline CreateLinkInlineForHeading(InlineProcessor inlineState, LinkReferenceDefinition linkRef, Inline? child)
     {

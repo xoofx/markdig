@@ -82,7 +82,7 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
 
         if (item.Parent != null)
         {
-            ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+            ThrowHelper.ArgumentException("Cannot add this block as it is already attached to another container (block.Parent != null)");
         }
 
         if (Count == _children.Length)
@@ -232,7 +232,7 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
 
         if (item.Parent != null)
         {
-            ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+            ThrowHelper.ArgumentException("Cannot add this block as it is already attached to another container (block.Parent != null)");
         }
         if ((uint)index > (uint)Count)
         {
@@ -294,7 +294,7 @@ public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
                 ThrowHelper.ArgumentNullException_item();
 
             if (value.Parent != null)
-                ThrowHelper.ArgumentException("Cannot add this block as it as already attached to another container (block.Parent != null)");
+                ThrowHelper.ArgumentException("Cannot add this block as it is already attached to another container (block.Parent != null)");
 
             var existingChild = _children[index].Block;
             if (existingChild != null)

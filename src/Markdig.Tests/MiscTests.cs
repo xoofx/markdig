@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 
 using Markdig.Extensions.AutoLinks;
 using Markdig.Extensions.Tables;
+using Markdig.Parsers;
 using Markdig.Syntax;
 using NUnit.Framework;
 
@@ -288,6 +289,18 @@ $$
         // Does not also disable link reference definitions
         TestParser.TestSpec("[Foo]\n\n[Foo]: bar", "<p><a href=\"bar\">Foo</a></p>");
         TestParser.TestSpec("[Foo]\n\n[Foo]: bar", "<p><a href=\"bar\">Foo</a></p>", noHeadingsPipeline);
+    }
+
+    [Test]
+    public void ObsoleteParseSetexHeadingsForwardsToParseSetextHeadings()
+    {
+        var parser = new ParagraphBlockParser();
+#pragma warning disable CS0618 // Type or member is obsolete
+        parser.ParseSetexHeadings = false;
+        Assert.IsFalse(parser.ParseSetextHeadings);
+        parser.ParseSetextHeadings = true;
+        Assert.IsTrue(parser.ParseSetexHeadings);
+#pragma warning restore CS0618
     }
 
     [Test]

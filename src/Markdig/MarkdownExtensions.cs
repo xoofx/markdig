@@ -532,7 +532,7 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
-    /// Adds support for right-to-left content by adding appropriate html attribtues.
+    /// Adds support for right-to-left content by adding appropriate HTML attributes.
     /// </summary>
     /// <param name="pipeline">The pipeline</param>
     /// <returns>The modified pipeline</returns>
@@ -555,8 +555,11 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
-    /// This will disable the HTML support in the markdown processor (for constraint/safe parsing).
+    /// This will disable the HTML support in the markdown processor (HTML blocks and inline HTML are rendered as text).
     /// </summary>
+    /// <remarks>
+    /// Note that this does not sanitize the generated HTML.
+    /// </remarks>
     /// <param name="pipeline">The pipeline.</param>
     /// <returns>The modified pipeline</returns>
     public static MarkdownPipelineBuilder DisableHtml(this MarkdownPipelineBuilder pipeline)
@@ -578,8 +581,8 @@ public static class MarkdownExtensions
     /// <summary>
     /// Configures the pipeline using a string that defines the extensions to activate.
     /// </summary>
-    /// <param name="pipeline">The pipeline (e.g: advanced for <see cref="UseAdvancedExtensions"/>, pipetables+gridtables for <see cref="UsePipeTables"/> and <see cref="UseGridTables"/></param>
-    /// <param name="extensions">The extensions to activate as a string</param>
+    /// <param name="pipeline">The pipeline</param>
+    /// <param name="extensions">The extensions to activate as a string (e.g: advanced for <see cref="UseAdvancedExtensions"/>, pipetables+gridtables for <see cref="UsePipeTables"/> and <see cref="UseGridTables"/>)</param>
     /// <returns>The modified pipeline</returns>
     public static MarkdownPipelineBuilder Configure(this MarkdownPipelineBuilder pipeline, string? extensions)
     {
@@ -718,7 +721,7 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
-    /// Disables parsing of ATX and Setex headings
+    /// Disables parsing of ATX and setext headings
     /// </summary>
     /// <param name="pipeline">The pipeline.</param>
     /// <returns>The modified pipeline</returns>
@@ -727,7 +730,7 @@ public static class MarkdownExtensions
         pipeline.BlockParsers.TryRemove<HeadingBlockParser>();
         if (pipeline.BlockParsers.TryFind<ParagraphBlockParser>(out var parser))
         {
-            parser.ParseSetexHeadings = false;
+            parser.ParseSetextHeadings = false;
         }
         return pipeline;
     }
@@ -736,7 +739,7 @@ public static class MarkdownExtensions
     /// Enables parsing and tracking of trivia characters
     /// </summary>
     /// <param name="pipeline">The pipeline.</param>
-    /// <returns>he modified pipeline</returns>
+    /// <returns>The modified pipeline</returns>
     public static MarkdownPipelineBuilder EnableTrackTrivia(this MarkdownPipelineBuilder pipeline)
     {
         pipeline.TrackTrivia = true;

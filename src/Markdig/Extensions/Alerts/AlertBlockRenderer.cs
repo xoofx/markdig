@@ -23,7 +23,7 @@ public class AlertBlockRenderer : HtmlObjectRenderer<AlertBlock>
     }
 
     /// <summary>
-    /// Gets of sets a delegate to render the kind of the alert.
+    /// Gets or sets a delegate to render the kind of the alert.
     /// </summary>
     public Action<HtmlRenderer, StringSlice> RenderKind { get; set; }
 
