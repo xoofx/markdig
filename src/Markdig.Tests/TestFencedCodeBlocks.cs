@@ -46,4 +46,15 @@ public class TestFencedCodeBlocks
             Assert.AreEqual(Contents, codeBlock.Lines.ToString());
         }
     }
+
+    // The indentation of the opening fence is removed from the content lines column by column,
+    // so a tab counts as the spaces it expands to.
+    [TestCase(" ```\n\tx\n ```", "<pre><code>   x\n</code></pre>\n")]
+    [TestCase("   ```\n\tx\n   ```", "<pre><code> x\n</code></pre>\n")]
+    [TestCase("  ~~~\n\t\tx\n  ~~~", "<pre><code>  \tx\n</code></pre>\n")]
+    [TestCase("2) a\n   >\t~~~\n   >\tx", "<ol start=\"2\">\n<li>a\n<blockquote>\n<pre><code>x\n</code></pre>\n</blockquote>\n</li>\n</ol>\n")]
+    public void TestTabsInIndentRemovedFromContent(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
 }
