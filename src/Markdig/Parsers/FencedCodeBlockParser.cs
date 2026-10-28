@@ -59,10 +59,11 @@ public class FencedCodeBlockParser : FencedBlockParserBase<FencedCodeBlock>
             // Remove any indent spaces
             var c = processor.CurrentChar;
             var indentCount = fence.IndentCount;
-            while (indentCount > 0 && c.IsSpace())
+            while (indentCount > 0 && c.IsSpaceOrTab())
             {
                 indentCount--;
-                c = processor.NextChar();
+                processor.NextColumn();
+                c = processor.CurrentChar;
             }
         }
 

@@ -38,6 +38,8 @@ public class QuoteBlockParser : BlockParser
         var quoteChar = processor.CurrentChar;
         var column = processor.Column;
         var c = processor.NextChar();
+        // A tab after the quote char stays in the trivia, even when the quote marker consumes all of it
+        var triviaStart = processor.Start;
 
         var quoteBlock = new QuoteBlock(this)
         {
@@ -57,6 +59,7 @@ public class QuoteBlockParser : BlockParser
             processor.NextColumn();
             hasSpaceAfterQuoteChar = true;
             processor.SkipFirstUnwindSpace = true;
+            triviaStart = processor.Start;
         }
         else if (c == '\t')
         {
@@ -70,14 +73,14 @@ public class QuoteBlockParser : BlockParser
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
-                processor.TriviaStart = processor.Start;
+                processor.TriviaStart = triviaStart;
                 triviaAfter = processor.UseTrivia(processor.Line.End);
                 wasEmptyLine = true;
             }
 
             if (!wasEmptyLine)
             {
-                processor.TriviaStart = processor.Start;
+                processor.TriviaStart = triviaStart;
             }
 
             quoteBlock.QuoteLines.Add(new QuoteBlockLine
@@ -142,11 +145,14 @@ public class QuoteBlockParser : BlockParser
 
         bool hasSpaceAfterQuoteChar = false;
         c = processor.NextChar(); // Skip quote marker char
+        // A tab after the quote char stays in the trivia, even when the quote marker consumes all of it
+        var triviaStart = processor.Start;
         if (c == ' ')
         {
             processor.NextColumn();
             hasSpaceAfterQuoteChar = true;
             processor.SkipFirstUnwindSpace = true;
+            triviaStart = processor.Start;
         }
         else if (c == '\t')
         {
@@ -160,7 +166,7 @@ public class QuoteBlockParser : BlockParser
             bool wasEmptyLine = false;
             if (processor.Line.IsEmptyOrWhitespace())
             {
-                processor.TriviaStart = processor.Start;
+                processor.TriviaStart = triviaStart;
                 triviaAfter = processor.UseTrivia(processor.Line.End);
                 wasEmptyLine = true;
             }
@@ -175,7 +181,7 @@ public class QuoteBlockParser : BlockParser
 
             if (!wasEmptyLine)
             {
-                processor.TriviaStart = processor.Start;
+                processor.TriviaStart = triviaStart;
             }
         }
 

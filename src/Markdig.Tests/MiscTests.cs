@@ -646,4 +646,17 @@ Continued 3a</p>
     {
         TestParser.TestSpec(markdown, expected);
     }
+
+    // The optional space after a block quote marker takes one column of a following tab, whatever
+    // column the tab starts at. A tab that only spans that one column is consumed entirely.
+    [TestCase("  >\tfoo", "<blockquote>\n<p>foo</p>\n</blockquote>\n")]
+    [TestCase("  >\tfoo\n  >\tbar", "<blockquote>\n<p>foo\nbar</p>\n</blockquote>\n")]
+    [TestCase("  > a\n  >\n  >\tb", "<blockquote>\n<p>a</p>\n<p>b</p>\n</blockquote>\n")]
+    [TestCase("- >\tfoo", "<ul>\n<li>\n<blockquote>\n<p>foo</p>\n</blockquote>\n</li>\n</ul>\n")]
+    [TestCase("   >\t\tfoo", "<blockquote>\n<pre><code>   foo\n</code></pre>\n</blockquote>\n")]
+    [TestCase("   > a\n   >\n   >\t\tb", "<blockquote>\n<p>a</p>\n<pre><code>   b\n</code></pre>\n</blockquote>\n")]
+    public void TestTabAfterQuoteMarker(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+    }
 }

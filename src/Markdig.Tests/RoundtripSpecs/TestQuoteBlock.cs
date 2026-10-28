@@ -292,4 +292,16 @@ public class TestQuoteBlock
     {
         RoundTrip(value);
     }
+
+    // A tab after the quote char, also when the quote marker consumes all of it
+    [TestCase("  >\tfoo")]
+    [TestCase("  >\tfoo\n  >\tbar")]
+    [TestCase("  > a\n  >\n  >\tb")]
+    [TestCase("  >\t\n  >\tb")]
+    [TestCase("   > a\n   >\n   >\tb")]
+    [TestCase("   > a\n   >\n   >\t\tb")]
+    public void TestTabAfterQuoteChar(string value)
+    {
+        RoundTrip(value);
+    }
 }
