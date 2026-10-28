@@ -109,8 +109,7 @@ public class TestTableOfContents
         Assert.AreEqual("<nav class=\"toc\" role=\"doc-toc\">\n<ul>\n<li><a href=\"page.html#foo\">Foo</a></li>\n</ul>\n</nav>\n<h1 id=\"foo\">Foo</h1>\n", html);
     }
 
-    // TODO: Remove the Ignore once HtmlFootnoteLinkRenderer writes nothing when EnableHtmlForInline is false.
-    [Test, Ignore("HtmlFootnoteLinkRenderer ignores EnableHtmlForInline, so the entry still contains the footnote link")]
+    [Test]
     public void LeavesFootnoteReferencesOutOfEntries()
     {
         var pipeline = new MarkdownPipelineBuilder().UseAutoIdentifiers().UseFootnotes().UseTableOfContents().Build();
