@@ -19,6 +19,16 @@ public class ParagraphBlockParser : BlockParser
     public bool ParseSetextHeadings { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets a value indicating whether setext headings are parsed.
+    /// </summary>
+    [Obsolete("Use ParseSetextHeadings instead.", error: false)]
+    public bool ParseSetexHeadings
+    {
+        get => ParseSetextHeadings;
+        set => ParseSetextHeadings = value;
+    }
+
+    /// <summary>
     /// Attempts to open a block at the current parser position.
     /// </summary>
     public override BlockState TryOpen(BlockProcessor processor)
