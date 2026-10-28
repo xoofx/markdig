@@ -8,7 +8,7 @@ You will find from the following links the supported extensions in markdig and t
   - [**Extra emphasis**](EmphasisExtraSpecs.md)
     - strike through `~~`,
     - Subscript `~`
-    - Superscript `^` 
+    - Superscript `^`
     - Inserted `++`
     - Marked `==`
   - [**Special attributes**](GenericAttributesSpecs.md)
@@ -33,6 +33,7 @@ You will find from the following links the supported extensions in markdig and t
   - [**YAML frontmatter**](YamlSpecs.md)
   - [**JIRA links**](JiraLinks.md)
   - [**Relative file links**](RelativeFileLinkSpecs.md)
+  - [**Table of Contents**](TableOfContentsSpecs.md)
   - [**CJK-friendly Emphasis**](CJKFriendlyEmphasis.md)
 
    > Notice that the links above are not yet the final documentation but are "specification" files used for testing the correctness of markdig for each extension

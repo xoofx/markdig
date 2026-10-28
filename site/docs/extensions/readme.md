@@ -71,6 +71,7 @@ var pipeline = new MarkdownPipelineBuilder()
 | [Non-ASCII no escape](other.md) | `.UseNonAsciiNoEscape()` | Disable URI escaping for non-ASCII |
 | [CJK friendly emphasis](cjk-friendly-emphasis.md) | `.UseCjkFriendlyEmphasis()` | Improved emphasis delimiter rules for CJK text |
 | [Relative file links](relative-file-links.md) | `.UseRelativeFileLinks()` | Rewrite links to `.md` files into links to `.html` pages |
+| [Table of Contents](table-of-contents.md) | `.UseTableOfContents()` | Replace a `[TOC]` paragraph with a nested list of the headings |
 
 ## Extension ordering
 
