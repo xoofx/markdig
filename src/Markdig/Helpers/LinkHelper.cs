@@ -294,16 +294,12 @@ public static class LinkHelper
 
             if (isValidChar)
             {
-                // a scheme is any sequence of 2–32 characters
-                if (state > 0 && builder.Length >= 32)
-                {
-                    goto ReturnFalse;
-                }
                 builder.Append(c);
             }
             else if (c == ':')
             {
-                if (state < 0 || builder.Length <= 2)
+                // a scheme is any sequence of 2–32 characters
+                if (state < 0 || builder.Length < 2 || builder.Length > 32)
                 {
                     goto ReturnFalse;
                 }
