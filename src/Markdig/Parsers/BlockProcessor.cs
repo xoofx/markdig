@@ -249,8 +249,8 @@ public class BlockProcessor
     public void NextColumn()
     {
         var c = Line.CurrentChar;
-        // If we are across a tab, we should just add 1 column
-        if (c == '\t' && CharHelper.IsAcrossTab(Column))
+        // If the tab still spans columns after this one, we should just add 1 column
+        if (c == '\t' && CharHelper.IsAcrossTab(Column + 1))
         {
             Column++;
         }
