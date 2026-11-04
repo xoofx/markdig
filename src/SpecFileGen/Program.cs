@@ -87,6 +87,7 @@ class Program
         new Spec("Auto Links",          "AutoLinks.md",                 "autolinks|advanced"),
         new Spec("Jira Links",          "JiraLinks.md",                 "jiralinks"),
         new Spec("Relative File Links", "RelativeFileLinkSpecs.md",     "relativefilelinks|advanced+relativefilelinks"),
+        new Spec("Table of Contents",   "TableOfContentsSpecs.md",      "autoidentifiers+tableofcontents|advanced+tableofcontents"),
         new Spec("Globalization",       "GlobalizationSpecs.md",        "globalization+advanced+emojis"),
         new Spec("Figures, Footers and Cites", "FigureFooterAndCiteSpecs.md", "figures+footers+citations|advanced"),
         new Spec("CJK-friendly Emphasis", "CJKFriendlyEmphasis.md",     "cjk-friendly-emphasis"),

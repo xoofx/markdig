@@ -29,6 +29,7 @@ using Markdig.Extensions.ReferralLinks;
 using Markdig.Extensions.RelativeFileLinks;
 using Markdig.Extensions.SelfPipeline;
 using Markdig.Extensions.SmartyPants;
+using Markdig.Extensions.TableOfContents;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
 using Markdig.Extensions.TextRenderer;
@@ -532,6 +533,31 @@ public static class MarkdownExtensions
     }
 
     /// <summary>
+    /// Uses the table of contents extension to replace a paragraph that consists of `[TOC]` alone with a nested list of the headings of the document.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseTableOfContents(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.ReplaceOrAdd<TableOfContentsExtension>(new TableOfContentsExtension());
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Uses the table of contents extension with the specified options to replace a paragraph that consists of `[TOC]` alone with a nested list of the headings of the document.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <param name="options">The options.</param>
+    /// <returns>The modified pipeline</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="options"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="options"/> contains an invalid value.</exception>
+    public static MarkdownPipelineBuilder UseTableOfContents(this MarkdownPipelineBuilder pipeline, TableOfContentsOptions options)
+    {
+        pipeline.Extensions.ReplaceOrAdd<TableOfContentsExtension>(new TableOfContentsExtension(options));
+        return pipeline;
+    }
+
+    /// <summary>
     /// Adds support for right-to-left content by adding appropriate HTML attributes.
     /// </summary>
     /// <param name="pipeline">The pipeline</param>
@@ -700,6 +726,9 @@ public static class MarkdownExtensions
                     break;
                 case "relativefilelinks":
                     pipeline.UseRelativeFileLinks();
+                    break;
+                case "tableofcontents":
+                    pipeline.UseTableOfContents();
                     break;
                 default:
                     throw new ArgumentException($"Invalid extension `{extension}` from `{extensions}`", nameof(extensions));
