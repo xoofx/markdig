@@ -120,6 +120,54 @@ public class TestNormalize
         Assert.AreEqual("# Test\n\n## Test", writer.ToString());
     }
 
+    [TestCase("[foo]: /url\n\n# Foo\n\n[foo] [Foo]", "[foo]: /url\n\n# Foo\n\n[foo] [Foo]")]
+    [TestCase("# Foo\n\n[Foo] [foo]\n\n[foo]: /url", "# Foo\n\n[Foo] [foo]\n\n[foo]: /url")]
+    public void AutoIdentifiersDoNotEmitGeneratedLinkReferenceDefinitionsBesideParsedOnes(string input, string expected)
+    {
+        AssertNormalizeKeepsHtml(input, expected, new MarkdownPipelineBuilder().UseAutoIdentifiers().Build());
+    }
+
+    [TestCase("::: note\nHello\n:::\n\n# Foo", "::: note\nHello\n:::\n\n# Foo")]
+    [TestCase(":::\n:::", ":::\n:::")]
+    [TestCase("::: note\nHello", "::: note\nHello\n:::")]
+    [TestCase(":::: outer arg1 arg2\n::: inner\nText ::inline::\n:::\n::::", ":::: outer arg1 arg2\n::: inner\nText ::inline::\n:::\n::::")]
+    [TestCase("- item\n\n  ::: note\n  > quote\n  :::\n- next", "- item\n  \n  ::: note\n  > quote\n  :::\n\n- next")]
+    public void CustomContainer(string input, string expected)
+    {
+        AssertNormalizeKeepsHtml(input, expected, new MarkdownPipelineBuilder().UseCustomContainers().Build());
+    }
+
+    [TestCase("Text[^1]\n\n[^1]: Hello\n\n# Foo", "Text[^1]\n\n# Foo\n\n[^1]: Hello")]
+    [TestCase(
+        "A[^a] B[^b] A again[^a]\n\n[^b]: Second\n\n    with more\n\n[^a]: First\n\n    ```\n    code\n    ```\n\n[^unused]: Unused",
+        "A[^a] B[^b] A again[^a]\n\n[^a]: First\n    \n    ```\n    code\n    ```\n\n[^b]: Second\n    \n    with more")]
+    [TestCase("Text[^1]\n\n[^1]: - item", "Text[^1]\n\n[^1]: \n    - item")]
+    [TestCase("[foo]: /url\n\nSee [foo] and[^1].\n\n[^1]: Note", "[foo]: /url\n\nSee [foo] and[^1].\n\n[^1]: Note")]
+    public void Footnotes(string input, string expected)
+    {
+        AssertNormalizeKeepsHtml(input, expected, new MarkdownPipelineBuilder().UseFootnotes().Build());
+    }
+
+    [TestCase("::: note\nHello\n:::\n\n# Foo")]
+    [TestCase("Text[^1]\n\n[^1]: Hello\n\n# Foo")]
+    [TestCase("[foo]: /url\n\n# Foo\n\n::: note\nSee [foo], [Foo] and[^1].\n:::\n\n[^1]: Note")]
+    public void AdvancedExtensionsKeepHtml(string input)
+    {
+        AssertNormalizeKeepsHtml(input, null, new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());
+    }
+
+    private static void AssertNormalizeKeepsHtml(string input, string expected, MarkdownPipeline pipeline)
+    {
+        string normalized = Markdown.Normalize(input, pipeline: pipeline);
+
+        if (expected is not null)
+        {
+            Assert.AreEqual(expected, normalized);
+        }
+        Assert.AreEqual(Markdown.ToHtml(input, pipeline), Markdown.ToHtml(normalized, pipeline));
+        Assert.AreEqual(normalized, Markdown.Normalize(normalized, pipeline: pipeline));
+    }
+
     [Test]
     public void Backslash()
     {

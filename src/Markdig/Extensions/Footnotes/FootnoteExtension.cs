@@ -3,6 +3,7 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
 
 namespace Markdig.Extensions.Footnotes;
 
@@ -33,6 +34,12 @@ public class FootnoteExtension : IMarkdownExtension
         {
             htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteGroupRenderer());
             htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteLinkRenderer());
+        }
+
+        if (renderer is NormalizeRenderer normalizeRenderer)
+        {
+            normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeFootnoteGroupRenderer>();
+            normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeFootnoteLinkRenderer>();
         }
     }
 }

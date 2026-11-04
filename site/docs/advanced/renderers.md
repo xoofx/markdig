@@ -23,6 +23,16 @@ space-after-quote option, rather than dropping the list item. Empty list items
 also retain a trailing space after their marker; normalization is not an exact
 whitespace round-trip.
 
+With the custom containers extension, a container is written between `:::` fences
+of its original length, with its info and arguments; a container without a closing
+fence gets one. With the footnotes extension, references are written as `[^label]`
+and footnotes as `[^label]: content`, with continuation lines indented by four
+spaces. The parser moves footnotes to the end of the document in the order of their
+first reference and drops footnotes without references, so normalized footnotes
+follow that order. Link reference definitions that an extension creates, such as
+those of footnotes or of headings with auto-identifiers, are not written as
+`[label]: url` lines.
+
 Custom text renderers can use `PushHangingIndent(marker)` to emit a marker on the
 first line and an equal number of spaces on continuation lines. Call it at the
 beginning of a line (use `EnsureLine()` if needed), before writing child content,

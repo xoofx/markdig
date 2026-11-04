@@ -4,6 +4,7 @@
 
 using Markdig.Parsers.Inlines;
 using Markdig.Renderers;
+using Markdig.Renderers.Normalize;
 
 namespace Markdig.Extensions.CustomContainers;
 
@@ -61,6 +62,11 @@ public class CustomContainerExtension : IMarkdownExtension
                 // Must be inserted before EmphasisRenderer
                 htmlRenderer.ObjectRenderers.Insert(0, new HtmlCustomContainerInlineRenderer());
             }
+        }
+
+        if (renderer is NormalizeRenderer normalizeRenderer)
+        {
+            normalizeRenderer.ObjectRenderers.AddIfNotAlready<NormalizeCustomContainerRenderer>();
         }
 
     }
