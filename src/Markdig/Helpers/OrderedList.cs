@@ -150,8 +150,7 @@ public class OrderedList<T> : List<T> where T: notnull
         {
             if (this[i] is TItem)
             {
-                RemoveAt(i);
-                Insert(i, replacement);
+                this[i] = replacement;
                 return true;
             }
         }

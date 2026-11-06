@@ -39,7 +39,7 @@ public class FooterExtension : IMarkdownExtension
     {
         if (renderer is HtmlRenderer htmlRenderer)
         {
-            htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFooterBlockRenderer());
+            htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFooterBlockRenderer>();
         }
     }
 }
