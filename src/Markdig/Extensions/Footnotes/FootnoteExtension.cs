@@ -32,8 +32,8 @@ public class FootnoteExtension : IMarkdownExtension
     {
         if (renderer is HtmlRenderer htmlRenderer)
         {
-            htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteGroupRenderer());
-            htmlRenderer.ObjectRenderers.AddIfNotAlready(new HtmlFootnoteLinkRenderer());
+            htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFootnoteGroupRenderer>();
+            htmlRenderer.ObjectRenderers.AddIfNotAlready<HtmlFootnoteLinkRenderer>();
         }
 
         if (renderer is NormalizeRenderer normalizeRenderer)
