@@ -618,7 +618,10 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             table.NormalizeUsingMaxWidth();
         }
 
-        if (state.Block is ParagraphBlock { Inline.FirstChild: not null } leadingParagraph)
+        // Delimiter promotion can leave empty plain containers or whitespace in the root (e.g. a trailing lone
+        // `|` after a row with emphasis). They are not a leading paragraph.
+        if (state.Block is ParagraphBlock { Inline: { FirstChild: not null } leadingInline } leadingParagraph &&
+            !IsEmptyOrWhitespaceInline(leadingInline))
         {
             // The table was preceded by a non-empty paragraph, e.g.
             // ```md
