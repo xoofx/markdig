@@ -259,4 +259,43 @@ public sealed class TestPipeTable
         Assert.That(html, Does.Contain("<table"));
         Assert.That(html, Does.Contain("<td>B</td>"));
     }
+
+    // https://github.com/xoofx/markdig/issues/977
+    [TestCase("| Type | `float` | `double` |\n|---|---|---|\n| **Alias** | `single` | `double` |\n|")]
+    [TestCase("| Type | `float` | `double` |\n|---|---|---|\n| **Alias** | `single` | `double` |\n|\n")]
+    [TestCase("| Type | `float` | `double` |\r\n|---|---|---|\r\n| **Alias** | `single` | `double` |\r\n|")]
+    [TestCase("| Type | `float` |\n|---|---|\n| *Alias* | `single` |\n|")]
+    [TestCase("| a | b |\n|---|---|\n| **x** | y |\n| ")]
+    [TestCase("| a | b |\n|---|---|\n| x | **y** |\n|")]
+    public void TableWithEmphasisAndTrailingLonePipeHasNoLeadingParagraph(string markdown)
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .UsePipeTables()
+            .Build();
+
+        var document = Markdown.Parse(markdown, pipeline);
+
+        Assert.That(document, Has.Count.EqualTo(1));
+        Assert.That(document[0], Is.InstanceOf<Table>());
+        Assert.That(Markdown.ToHtml(markdown, pipeline), Does.Not.Contain("<p>"));
+    }
+
+    [Test]
+    public void TableWithEmphasisAndTrailingLonePipeKeepsLeadingParagraph()
+    {
+        const string markdown = "Some text\n| a | b |\n|---|---|\n| **x** | y |\n|";
+
+        var pipeline = new MarkdownPipelineBuilder()
+            .UsePipeTables()
+            .Build();
+
+        var document = Markdown.Parse(markdown, pipeline);
+
+        Assert.That(document, Has.Count.EqualTo(2));
+        var paragraph = document[0] as ParagraphBlock;
+        Assert.That(paragraph, Is.Not.Null);
+        Assert.That(paragraph!.Inline!.FirstChild, Is.InstanceOf<LiteralInline>());
+        Assert.That(((LiteralInline)paragraph.Inline.FirstChild!).Content.ToString(), Is.EqualTo("Some text"));
+        Assert.That(document[1], Is.InstanceOf<Table>());
+    }
 }

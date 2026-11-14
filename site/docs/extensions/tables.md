@@ -137,6 +137,10 @@ Cells support inline Markdown — emphasis, code, links, etc.:
 | **Bold**      | ~~removed~~   |
 | `code`        | [link](#)     |
 
+In the default permissive mode, a trailing line containing only `|` stays part
+of the table, including when cells use emphasis. It does not create an empty
+paragraph before the table.
+
 ### Escaped pipes
 
 Use `\|` to include a literal pipe inside a cell:
