@@ -24,10 +24,29 @@ public class YamlFrontMatterParser : BlockParser
     /// <summary>
     /// Initializes a new instance of the <see cref="YamlFrontMatterParser"/> class.
     /// </summary>
-    public YamlFrontMatterParser()
+    public YamlFrontMatterParser() : this('-')
     {
-        OpeningCharacters = ['-'];
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="YamlFrontMatterParser"/> class with the specified fence character.
+    /// </summary>
+    /// <param name="fenceChar">The character used to delimit the frontmatter block.</param>
+    protected YamlFrontMatterParser(char fenceChar)
+    {
+        FenceChar = fenceChar;
+        OpeningCharacters = [fenceChar];
+    }
+
+    /// <summary>
+    /// Gets the character used to delimit the frontmatter block.
+    /// </summary>
+    public char FenceChar { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether a YAML-style <c>...</c> closing fence is accepted.
+    /// </summary>
+    protected virtual bool AllowDotsFence => FenceChar == '-';
 
     /// <summary>
     /// Creates the front matter block.
@@ -62,16 +81,16 @@ public class YamlFrontMatterParser : BlockParser
         var line = processor.Line;
         char c = line.CurrentChar;
 
-        // Must consist of exactly three dashes
-        while (c == '-' && count < 4)
+        // Must consist of exactly three fence characters
+        while (c == FenceChar && count < 4)
         {
             count++;
             c = line.NextChar();
         }
 
-        // If three dashes (optionally followed by whitespace)
-        // this is a YAML front matter block
-        if (count == 3 && c.IsWhiteSpaceOrZero() && line.TrimEnd())
+// If three fence characters (optionally followed by whitespace)
+            // this is a front matter block
+            if (count == 3 && c.IsWhiteSpaceOrZero() && line.TrimEnd())
         {
             bool hasFullYamlFrontMatter = false;
             // We make sure that there is a closing frontmatter somewhere in the document
@@ -89,15 +108,15 @@ public class YamlFrontMatterParser : BlockParser
                         c = fullLine.NextChar();
                     }
                     nc = fullLine.PeekChar();
-                    if (nc == '-')
+                    if (nc == FenceChar)
                     {
-                        if (fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && fullLine.NextChar() == '-' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
+                        if (fullLine.NextChar() == FenceChar && fullLine.NextChar() == FenceChar && fullLine.NextChar() == FenceChar && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
                         {
                             hasFullYamlFrontMatter = true;
                             break;
                         }
                     }
-                    else if (nc == '.')
+                    else if (AllowDotsFence && nc == '.')
                     {
                         if (fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && fullLine.NextChar() == '.' && (fullLine.NextChar() == '\0' || fullLine.SkipSpacesToEndOfLineOrEndOfDocument()))
                         {
@@ -136,10 +155,10 @@ public class YamlFrontMatterParser : BlockParser
     public override BlockState TryContinue(BlockProcessor processor, Block block)
     {
         // Determine if we have a closing fence.
-        // It can start or end with either <c>---</c> or <c>...</c>
+        // It can start or end with either <c>---</c> or <c>...</c> for YAML frontmatter.
         var line = processor.Line;
         var c = line.CurrentChar;
-        if (processor.Column == 0 && (c == '-' || c == '.'))
+        if (processor.Column == 0 && (c == FenceChar || (AllowDotsFence && c == '.')))
         {
             int count = line.CountAndSkipChar(c);
             c = line.CurrentChar;

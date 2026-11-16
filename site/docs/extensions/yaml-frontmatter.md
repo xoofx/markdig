@@ -8,6 +8,8 @@ Enable with `.UseYamlFrontMatter()` (not included in `UseAdvancedExtensions()`).
 
 This extension parses YAML front matter blocks at the beginning of a document. The YAML content is parsed into the AST as a `YamlFrontMatterBlock` but is **not rendered** in the HTML output.
 
+For TOML front matter (`+++` delimiters), see [TOML front matter](toml-frontmatter.md).
+
 ## Syntax
 
 The YAML front matter is enclosed between `---` delimiters at the very beginning of the document:
