@@ -116,6 +116,7 @@ var pipeline = new MarkdownPipelineBuilder()
 | `.UsePreciseSourceLocation()` | Map AST nodes to their exact source location |
 | `.EnableTrackTrivia()` | Track whitespace and trivia for roundtripping |
 | `.ConfigureNewLine(string)` | Set the newline string for output |
+| `.ConfigureHtmlRenderer(Action<HtmlRenderer>)` | Configure every `HtmlRenderer` set up by the pipeline, including the one used by `Markdown.ToHtml` (e.g. `renderer => renderer.ImplicitParagraph = true` to omit the `<p>` around paragraphs) |
 | `.DisableHeadings()` | Disable ATX and setext heading parsing |
 | `.DisableHtml()` | Disable HTML block and inline HTML parsing |
 
