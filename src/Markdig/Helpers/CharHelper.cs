@@ -114,6 +114,14 @@ public static class CharHelper
     internal
 #endif
     static void CheckOpenCloseDelimiter(Rune pc, Rune c, bool enableWithinWord, out bool canOpen, out bool canClose)
+        => CheckOpenCloseDelimiter(pc, c, enableWithinWord, allowPunctuationExceptions: true, out canOpen, out canClose);
+
+    /// <summary>
+    /// Performs the check open close delimiter operation.
+    /// When <paramref name="allowPunctuationExceptions"/> is <c>false</c>, characters such as <c>-</c> and <c>+</c>
+    /// are treated as punctuation, as required by CommonMark for <c>*</c> and <c>_</c>.
+    /// </summary>
+    internal static void CheckOpenCloseDelimiter(Rune pc, Rune c, bool enableWithinWord, bool allowPunctuationExceptions, out bool canOpen, out bool canClose)
     {
         pc.CheckUnicodeCategory(out bool prevIsWhiteSpace, out bool prevIsPunctuation);
         c.CheckUnicodeCategory(out bool nextIsWhiteSpace, out bool nextIsPunctuation);
@@ -121,10 +129,10 @@ public static class CharHelper
         CheckOpenCloseDelimiter(
             prevIsWhiteSpace,
             prevIsPunctuation,
-            prevIsPunctuation && IsPunctuationException(pc),
+            allowPunctuationExceptions && prevIsPunctuation && IsPunctuationException(pc),
             nextIsWhiteSpace,
             nextIsPunctuation,
-            nextIsPunctuation && IsPunctuationException(c),
+            allowPunctuationExceptions && nextIsPunctuation && IsPunctuationException(c),
             enableWithinWord,
             out canOpen,
             out canClose);

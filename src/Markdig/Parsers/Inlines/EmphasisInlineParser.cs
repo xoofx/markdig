@@ -227,7 +227,10 @@ public class EmphasisInlineParser : InlineParser, IPostInlineProcessor
         }
         else
         {
-            CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, out canOpen, out canClose);
+            // The punctuation exceptions (e.g. `-`, `+`, `†`) exist for extension delimiters such as `^` and `~`
+            // (e.g. `10^-18^`); CommonMark `*` and `_` must treat these characters as punctuation.
+            bool allowPunctuationExceptions = delimiterChar is not ('*' or '_');
+            CharHelper.CheckOpenCloseDelimiter(pc, c, emphasisDesc.EnableWithinWord, allowPunctuationExceptions, out canOpen, out canClose);
         }
 
         // We have potentially an open or close emphasis
