@@ -22,7 +22,20 @@ public class YamlFrontMatterExtension : IMarkdownExtension
     /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        if (!pipeline.BlockParsers.Contains<YamlFrontMatterParser>())
+        // Check the exact type: TomlFrontMatterParser derives from YamlFrontMatterParser,
+        // so Contains<YamlFrontMatterParser>() would incorrectly treat TOML as YAML
+        // and skip adding the YAML parser (see #980).
+        bool hasYamlParser = false;
+        for (int i = 0; i < pipeline.BlockParsers.Count; i++)
+        {
+            if (pipeline.BlockParsers[i].GetType() == typeof(YamlFrontMatterParser))
+            {
+                hasYamlParser = true;
+                break;
+            }
+        }
+
+        if (!hasYamlParser)
         {
             // Insert the YAML parser before the thematic break parser, as it is also triggered on a --- dash
             pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new YamlFrontMatterParser { AllowInMiddleOfDocument = AllowInMiddleOfDocument });
