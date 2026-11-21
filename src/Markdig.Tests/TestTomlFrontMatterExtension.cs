@@ -70,4 +70,19 @@ public class TestTomlFrontMatterExtension
         Assert.That(document.Descendants<YamlFrontMatterBlock>(), Is.Not.Empty);
         Assert.That(yamlDocument.Descendants<YamlFrontMatterBlock>(), Is.Not.Empty);
     }
+
+    [Test]
+    public void YamlParserIsAddedWhenTomlIsRegisteredFirst()
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .UseTomlFrontMatter()
+            .UseYamlFrontMatter()
+            .Build();
+
+        var yamlHtml = Markdown.ToHtml("---\ntitle: Hello\n---\n\n# Content\n", pipeline);
+        var tomlHtml = Markdown.ToHtml(Document, pipeline);
+
+        Assert.That(yamlHtml, Is.EqualTo("<h1>Content</h1>\n"));
+        Assert.That(tomlHtml, Is.EqualTo("<h1>Content</h1>\n"));
+    }
 }
