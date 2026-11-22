@@ -119,13 +119,15 @@ public static class Markdown
 
         pipeline ??= DefaultPipeline;
 
-        using var rentedRenderer = pipeline.RentHtmlRenderer();
+        var rentedRenderer = pipeline.RentHtmlRenderer();
         HtmlRenderer renderer = rentedRenderer.Instance;
 
         renderer.Render(document);
         renderer.Writer.Flush();
 
-        return renderer.Writer.ToString() ?? string.Empty;
+        string html = renderer.Writer.ToString() ?? string.Empty;
+        rentedRenderer.Return();
+        return html;
     }
 
     /// <summary>
@@ -143,11 +145,13 @@ public static class Markdown
 
         pipeline ??= DefaultPipeline;
 
-        using var rentedRenderer = pipeline.RentHtmlRenderer(writer);
+        var rentedRenderer = pipeline.RentHtmlRenderer(writer);
         HtmlRenderer renderer = rentedRenderer.Instance;
 
         renderer.Render(document);
         renderer.Writer.Flush();
+
+        rentedRenderer.Return();
     }
 
     /// <summary>

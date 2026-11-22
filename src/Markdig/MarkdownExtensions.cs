@@ -754,6 +754,11 @@ public static class MarkdownExtensions
     /// e.g. to set <see cref="HtmlRenderer.ImplicitParagraph"/>. Each call adds a configuration, applied in the order the extensions were added.
     /// <see cref="Markdown.ToPlainText(string, MarkdownPipeline?, MarkdownParserContext?)"/> also renders with an <see cref="HtmlRenderer"/>, so the configuration applies there too.
     /// </summary>
+    /// <remarks>
+    /// The action runs when the pipeline sets up a renderer, not for each conversion: <see cref="Markdown.ToHtml(string, MarkdownPipeline?, MarkdownParserContext?)"/>
+    /// caches and reuses its renderers, and can set up several of them at the same time.
+    /// The action must not replace <see cref="TextRendererBase.Writer"/>, which <see cref="Markdown.ToHtml(string, MarkdownPipeline?, MarkdownParserContext?)"/> provides.
+    /// </remarks>
     /// <param name="pipeline">The pipeline.</param>
     /// <param name="configure">The action called with each <see cref="HtmlRenderer"/> when the pipeline sets it up.</param>
     /// <returns>The modified pipeline</returns>

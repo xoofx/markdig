@@ -55,4 +55,36 @@ public class TestConfigureHtmlRenderer
     {
         Assert.Throws<ArgumentNullException>(() => new MarkdownPipelineBuilder().ConfigureHtmlRenderer(null!));
     }
+
+    [TestCase(true, "> [a](fail.html)", "one")] // the quote renderer sets ImplicitParagraph to false while it renders
+    [TestCase(false, "- [a](fail.html)", "<p>one</p>\n")] // the list renderer sets ImplicitParagraph to true for a tight list
+    public void FailedRenderingDoesNotChangeTheNextConversion(bool implicitParagraph, string failingMarkdown, string expected)
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .ConfigureHtmlRenderer(renderer =>
+            {
+                renderer.ImplicitParagraph = implicitParagraph;
+                renderer.LinkRewriter = url => url == "fail.html" ? throw new InvalidOperationException("Rewrite failed") : url;
+            })
+            .Build();
+
+        Assert.Throws<InvalidOperationException>(() => Markdown.ToHtml(failingMarkdown, pipeline));
+        Assert.AreEqual(expected, Markdown.ToHtml("one", pipeline));
+
+        Assert.Throws<InvalidOperationException>(() => Markdown.ToHtml(failingMarkdown, new StringWriter(), pipeline));
+        var writer = new StringWriter();
+        Markdown.ToHtml("one", writer, pipeline);
+        Assert.AreEqual(expected, writer.ToString());
+    }
+
+    [Test]
+    public void ReplacingTheWriterOfToHtmlThrows()
+    {
+        var pipeline = new MarkdownPipelineBuilder()
+            .ConfigureHtmlRenderer(renderer => renderer.Writer = new StringWriter())
+            .Build();
+
+        Assert.Throws<InvalidOperationException>(() => Markdown.ToHtml("one", pipeline));
+        Assert.Throws<InvalidOperationException>(() => Markdown.ToHtml("one", new StringWriter(), pipeline));
+    }
 }
