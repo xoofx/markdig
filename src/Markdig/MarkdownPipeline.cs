@@ -117,12 +117,14 @@ public sealed class MarkdownPipeline
 
         protected override HtmlRenderer NewInstance()
         {
-            TextWriter writer = _customWriter ? s_dummyWriter : new FastStringWriter();
+            // Each renderer gets a writer of its own while extensions set it up: they can read or change it.
+            // With a custom writer, the writer given to Markdown.ToHtml replaces it on each use.
+            var writer = new FastStringWriter();
             var renderer = new HtmlRenderer(writer);
             _pipeline.Setup(renderer);
 
-            // Reset expects the writer created here: Markdown.ToHtml provides the writer of its renderers
-            if (!ReferenceEquals(renderer.Writer, writer))
+            // Markdown.ToHtml returns the content of this writer and Reset clears it
+            if (!_customWriter && !ReferenceEquals(renderer.Writer, writer))
             {
                 ThrowHelper.InvalidOperationException("An extension of the pipeline replaced the Writer of the HtmlRenderer used by Markdown.ToHtml. Render with your own HtmlRenderer to use another writer.");
             }

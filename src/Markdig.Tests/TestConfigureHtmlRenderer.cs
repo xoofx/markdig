@@ -78,13 +78,40 @@ public class TestConfigureHtmlRenderer
     }
 
     [Test]
-    public void ReplacingTheWriterOfToHtmlThrows()
+    public void ReplacingTheWriterOfToHtml()
     {
         var pipeline = new MarkdownPipelineBuilder()
             .ConfigureHtmlRenderer(renderer => renderer.Writer = new StringWriter())
             .Build();
 
+        // The string overload returns the content of its own writer
         Assert.Throws<InvalidOperationException>(() => Markdown.ToHtml("one", pipeline));
-        Assert.Throws<InvalidOperationException>(() => Markdown.ToHtml("one", new StringWriter(), pipeline));
+
+        // The writer given to the TextWriter overload replaces the writer of the setup, as before
+        var writer = new StringWriter();
+        Markdown.ToHtml("one", writer, pipeline);
+        Assert.AreEqual("<p>one</p>\n", writer.ToString());
+    }
+
+    [Test]
+    public void EachRendererHasItsOwnWriterDuringSetup()
+    {
+        var setupWriters = new List<TextWriter>();
+        Action<HtmlRenderer> configure = renderer =>
+        {
+            lock (setupWriters)
+            {
+                setupWriters.Add(renderer.Writer);
+            }
+        };
+        var first = new MarkdownPipelineBuilder().ConfigureHtmlRenderer(configure).Build();
+        var second = new MarkdownPipelineBuilder().ConfigureHtmlRenderer(configure).Build();
+
+        Markdown.ToHtml("one", new StringWriter(), first);
+        Markdown.ToHtml("one", new StringWriter(), second);
+        Markdown.ToHtml("one", first);
+
+        Assert.AreEqual(3, setupWriters.Count);
+        Assert.AreEqual(3, setupWriters.Distinct().Count());
     }
 }
