@@ -132,6 +132,16 @@ public class TestTomlFrontMatterExtension
     }
 
     [Test]
+    public void YamlFrontMatterBlockKeepsItsPublicConstructor()
+    {
+        // A second public constructor would make constructor selection ambiguous (e.g. for System.Text.Json)
+        var constructors = typeof(YamlFrontMatterBlock).GetConstructors();
+
+        Assert.That(constructors, Has.Length.EqualTo(1));
+        Assert.That(constructors[0].GetParameters().Select(parameter => parameter.ParameterType), Is.EqualTo(new[] { typeof(BlockParser) }));
+    }
+
+    [Test]
     public void TomlParserIsNotAYamlParser()
     {
         var builder = new MarkdownPipelineBuilder().UseTomlFrontMatter();

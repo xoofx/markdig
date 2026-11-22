@@ -26,7 +26,7 @@ public class YamlFrontMatterBlock : CodeBlock
     /// </summary>
     /// <param name="parser">The parser.</param>
     /// <param name="fenceChar">The character used to delimit the frontmatter block.</param>
-    public YamlFrontMatterBlock(BlockParser parser, char fenceChar) : base(parser)
+    protected YamlFrontMatterBlock(BlockParser parser, char fenceChar) : base(parser)
     {
         FenceChar = fenceChar;
     }
