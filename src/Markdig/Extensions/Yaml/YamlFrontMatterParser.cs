@@ -55,7 +55,7 @@ public class YamlFrontMatterParser : BlockParser
     /// <returns>The front matter block</returns>
     protected virtual YamlFrontMatterBlock CreateFrontMatterBlock(BlockProcessor processor)
     {
-        return new YamlFrontMatterBlock(this);
+        return new YamlFrontMatterBlock(this, FenceChar);
     }
 
     /// <summary>
@@ -88,9 +88,9 @@ public class YamlFrontMatterParser : BlockParser
             c = line.NextChar();
         }
 
-// If three fence characters (optionally followed by whitespace)
-            // this is a front matter block
-            if (count == 3 && c.IsWhiteSpaceOrZero() && line.TrimEnd())
+        // If three fence characters (optionally followed by whitespace)
+        // this is a front matter block
+        if (count == 3 && c.IsWhiteSpaceOrZero() && line.TrimEnd())
         {
             bool hasFullYamlFrontMatter = false;
             // We make sure that there is a closing frontmatter somewhere in the document

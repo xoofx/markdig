@@ -724,6 +724,9 @@ public static class MarkdownExtensions
                 case "yaml":
                     pipeline.UseYamlFrontMatter();
                     break;
+                case "toml":
+                    pipeline.UseTomlFrontMatter();
+                    break;
                 case "nonascii-noescape":
                     pipeline.UseNonAsciiNoEscape();
                     break;

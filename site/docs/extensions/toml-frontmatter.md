@@ -64,7 +64,7 @@ using Tomlyn;
 using Tomlyn.Model;
 
 var tomlContent = tomlBlock.Lines.ToString();
-var metadata = Toml.ToModel(tomlContent);
+var metadata = TomlSerializer.Deserialize<TomlTable>(tomlContent);
 ```
 
 ## Common use case

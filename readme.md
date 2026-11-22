@@ -51,6 +51,7 @@ You can **try Markdig online** and compare it to other implementations on [babel
   - [**Bootstrap**](src/Markdig.Tests/Specs/BootstrapSpecs.md) class (to output bootstrap class)
   - [**Diagrams**](src/Markdig.Tests/Specs/DiagramsSpecs.md) extension whenever a fenced code block contains a special keyword, it will be converted to a div block with the content as-is (currently, supports [`mermaid`](https://mermaid.js.org) and [`nomnoml`](https://github.com/skanaar/nomnoml) diagrams)
   - [**YAML Front Matter**](src/Markdig.Tests/Specs/YamlSpecs.md) to parse without evaluating the front matter and to discard it from the HTML output (typically used for previewing without the front matter in MarkdownEditor)
+  - [**TOML Front Matter**](https://xoofx.github.io/markdig/docs/extensions/toml-frontmatter/) to parse a `+++` front matter without evaluating it and to discard it from the HTML output
   - [**JIRA links**](src/Markdig.Tests/Specs/JiraLinks.md) to automatically generate links for JIRA project references (Thanks to @clarkd: https://github.com/clarkd/MarkdigJiraLinker)
   - [**CJK-friendly Emphasis**](src/Markdig.Tests/Specs/CJKFriendlyEmphasis.md) to mitigate a CommonMark specification issue in CJK languages (Thanks to @tats-u: https://github.com/tats-u/markdown-cjk-friendly)
   - [**Relative file links**](https://xoofx.github.io/markdig/docs/extensions/relative-file-links/) to rewrite links to Markdown files, such as `usage.md#preview`, into links to the generated pages, such as `usage.html#preview`
@@ -93,7 +94,7 @@ var result = Markdown.ToHtml("This is a text with some *emphasis*");
 Console.WriteLine(result);   // prints: <p>This is a text with some <em>emphasis</em></p>
 ```
 
-In order to activate most of all advanced extensions (except Emoji, SoftLine as HardLine, Bootstrap, YAML Front Matter, JiraLinks and SmartyPants)
+In order to activate most of all advanced extensions (except Emoji, SoftLine as HardLine, Bootstrap, YAML Front Matter, TOML Front Matter, JiraLinks and SmartyPants)
 
 ```csharp
 // Configure the pipeline with all advanced extensions active

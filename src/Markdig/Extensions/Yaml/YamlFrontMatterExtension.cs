@@ -22,13 +22,13 @@ public class YamlFrontMatterExtension : IMarkdownExtension
     /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        // Check the exact type: TomlFrontMatterParser derives from YamlFrontMatterParser,
-        // so Contains<YamlFrontMatterParser>() would incorrectly treat TOML as YAML
-        // and skip adding the YAML parser (see #980).
+        // Check the fence character: TomlFrontMatterParser derives from YamlFrontMatterParser,
+        // so Contains<YamlFrontMatterParser>() would treat a TOML (+++) parser as the YAML one
+        // and skip adding the YAML parser.
         bool hasYamlParser = false;
         for (int i = 0; i < pipeline.BlockParsers.Count; i++)
         {
-            if (pipeline.BlockParsers[i].GetType() == typeof(YamlFrontMatterParser))
+            if (pipeline.BlockParsers[i] is YamlFrontMatterParser { FenceChar: '-' })
             {
                 hasYamlParser = true;
                 break;

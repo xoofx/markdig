@@ -3,7 +3,6 @@
 // See the license.txt file in the project root for more information.
 
 using Markdig.Extensions.Yaml;
-using Markdig.Parsers;
 using Markdig.Renderers;
 
 namespace Markdig.Extensions.Toml;
@@ -14,19 +13,15 @@ namespace Markdig.Extensions.Toml;
 public sealed class TomlFrontMatterExtension : IMarkdownExtension
 {
     /// <summary>
-    /// Allows the TOML frontmatter block to appear in the middle of the markdown file.
-    /// </summary>
-    public bool AllowInMiddleOfDocument { get; set; }
-
-    /// <summary>
     /// Configures this extension for the specified pipeline stage.
     /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
         if (!pipeline.BlockParsers.Contains<TomlFrontMatterParser>())
         {
-            // Insert the TOML parser before the thematic break parser to keep a stable parsing order.
-            pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new TomlFrontMatterParser { AllowInMiddleOfDocument = AllowInMiddleOfDocument });
+            // A TOML front matter can only start the document: insert its parser first, before the list parser
+            // that also opens on `+`, whichever other parsers the pipeline keeps.
+            pipeline.BlockParsers.Insert(0, new TomlFrontMatterParser());
         }
     }
 
