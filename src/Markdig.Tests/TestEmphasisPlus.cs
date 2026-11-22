@@ -29,6 +29,18 @@ public partial class TestEmphasisPlus
     }
 
     [Test]
+    public void MinusAndPlusArePunctuationForFlanking()
+    {
+        // `-` and `+` are ASCII punctuation, so `**` after them is not right-flanking when followed by a letter,
+        // and `*` between a letter and `-` is not left-flanking (same as for any other punctuation such as `?`).
+        TestParser.TestSpec("**x-**h", "<p>**x-**h</p>", "");
+        TestParser.TestSpec("**x+**h", "<p>**x+**h</p>", "");
+        TestParser.TestSpec("a-*a**", "<p>a-<em>a</em>*</p>", "");
+        TestParser.TestSpec("*a**-", "<p><em>a</em>*-</p>", "");
+        TestParser.TestSpec("a-_b_", "<p>a-<em>b</em></p>", "");
+    }
+
+    [Test]
     public void RecognizeSupplementaryChars()
     {
         TestParser.TestSpec("🌶️**𰻞**🍜**𰻞**🌶️**麺**🍜", "<p>🌶️<strong>𰻞</strong>🍜<strong>𰻞</strong>🌶️<strong>麺</strong>🍜</p>", "");
