@@ -27,8 +27,9 @@ public class YamlFrontMatterRoundtripRenderer : MarkdownObjectRenderer<Roundtrip
     /// </summary>
     protected override void Write(RoundtripRenderer renderer, YamlFrontMatterBlock obj)
     {
-        renderer.Writer.WriteLine("---");
+        var fence = new string(obj.FenceChar, 3);
+        renderer.Writer.WriteLine(fence);
         _codeBlockRenderer.Write(renderer, obj);
-        renderer.Writer.WriteLine("---");
+        renderer.Writer.WriteLine(fence);
     }
 }

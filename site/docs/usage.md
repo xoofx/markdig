@@ -140,7 +140,7 @@ var pipeline = new MarkdownPipelineBuilder()
     .Build();
 ```
 
-Available extension tokens: `common`, `advanced`, `alerts`, `pipetables`, `gfm-pipetables`, `emphasisextras`, `listextras`, `hardlinebreak`, `footnotes`, `footers`, `citations`, `attributes`, `gridtables`, `abbreviations`, `emojis`, `definitionlists`, `customcontainers`, `figures`, `mathematics`, `bootstrap`, `medialinks`, `smartypants`, `autoidentifiers`, `tasklists`, `diagrams`, `nofollowlinks`, `noopenerlinks`, `noreferrerlinks`, `nohtml`, `yaml`, `nonascii-noescape`, `autolinks`, `globalization`, `cjk-friendly-emphasis`, `relativefilelinks`, `tableofcontents`.
+Available extension tokens: `common`, `advanced`, `alerts`, `pipetables`, `gfm-pipetables`, `emphasisextras`, `listextras`, `hardlinebreak`, `footnotes`, `footers`, `citations`, `attributes`, `gridtables`, `abbreviations`, `emojis`, `definitionlists`, `customcontainers`, `figures`, `mathematics`, `bootstrap`, `medialinks`, `smartypants`, `autoidentifiers`, `tasklists`, `diagrams`, `nofollowlinks`, `noopenerlinks`, `noreferrerlinks`, `nohtml`, `yaml`, `toml`, `nonascii-noescape`, `autolinks`, `globalization`, `cjk-friendly-emphasis`, `relativefilelinks`, `tableofcontents`.
 
 ## The MarkdownParserContext
 

@@ -33,6 +33,7 @@ using Markdig.Extensions.TableOfContents;
 using Markdig.Extensions.Tables;
 using Markdig.Extensions.TaskLists;
 using Markdig.Extensions.TextRenderer;
+using Markdig.Extensions.Toml;
 using Markdig.Extensions.Yaml;
 using Markdig.Helpers;
 using Markdig.Parsers;
@@ -143,6 +144,17 @@ public static class MarkdownExtensions
     public static MarkdownPipelineBuilder UseYamlFrontMatter(this MarkdownPipelineBuilder pipeline)
     {
         pipeline.Extensions.AddIfNotAlready<YamlFrontMatterExtension>();
+        return pipeline;
+    }
+
+    /// <summary>
+    /// Uses TOML frontmatter extension that will parse a TOML frontmatter into the MarkdownDocument. Note that they are not rendered by any default HTML renderer.
+    /// </summary>
+    /// <param name="pipeline">The pipeline.</param>
+    /// <returns>The modified pipeline</returns>
+    public static MarkdownPipelineBuilder UseTomlFrontMatter(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.AddIfNotAlready<TomlFrontMatterExtension>();
         return pipeline;
     }
 
@@ -711,6 +723,9 @@ public static class MarkdownExtensions
                     break;
                 case "yaml":
                     pipeline.UseYamlFrontMatter();
+                    break;
+                case "toml":
+                    pipeline.UseTomlFrontMatter();
                     break;
                 case "nonascii-noescape":
                     pipeline.UseNonAsciiNoEscape();

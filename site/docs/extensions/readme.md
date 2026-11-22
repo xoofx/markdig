@@ -63,6 +63,7 @@ var pipeline = new MarkdownPipelineBuilder()
 | [Bootstrap](other.md) | `.UseBootstrap()` | Bootstrap CSS classes |
 | [Hardline breaks](other.md) | `.UseSoftlineBreakAsHardlineBreak()` | Treat soft line breaks as `<br>` |
 | [YAML front matter](yaml-frontmatter.md) | `.UseYamlFrontMatter()` | Parse and discard YAML front matter |
+| [TOML front matter](toml-frontmatter.md) | `.UseTomlFrontMatter()` | Parse and discard TOML front matter |
 | [JIRA links](other.md) | `.UseJiraLinks(options)` | Auto-link Jira issue keys |
 | [Globalization](other.md) | `.UseGlobalization()` | Right-to-left text support |
 | [Referral links](other.md) | `.UseReferralLinks(rels)` | Add `rel` attributes to links |

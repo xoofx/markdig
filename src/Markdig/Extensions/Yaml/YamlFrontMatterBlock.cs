@@ -17,7 +17,22 @@ public class YamlFrontMatterBlock : CodeBlock
     /// Initializes a new instance of the <see cref="YamlFrontMatterBlock"/> class.
     /// </summary>
     /// <param name="parser">The parser.</param>
-    public YamlFrontMatterBlock(BlockParser parser) : base(parser)
+    public YamlFrontMatterBlock(BlockParser parser) : this(parser, '-')
     {
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="YamlFrontMatterBlock"/> class with the specified fence character.
+    /// </summary>
+    /// <param name="parser">The parser.</param>
+    /// <param name="fenceChar">The character used to delimit the frontmatter block.</param>
+    protected YamlFrontMatterBlock(BlockParser parser, char fenceChar) : base(parser)
+    {
+        FenceChar = fenceChar;
+    }
+
+    /// <summary>
+    /// Gets the character used to delimit this frontmatter block.
+    /// </summary>
+    public char FenceChar { get; }
 }

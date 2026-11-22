@@ -45,6 +45,7 @@ Welcome to the Markdig documentation. Whether you are new to Markdig or an exper
 | [Media links](extensions/media-links.md) | Embedded YouTube, Vimeo, and media players |
 | [List extras](extensions/list-extras.md) | Alpha and Roman numeral ordered lists |
 | [YAML front matter](extensions/yaml-frontmatter.md) | YAML metadata blocks |
+| [TOML front matter](extensions/toml-frontmatter.md) | TOML metadata blocks |
 | [Other extensions](extensions/other.md) | Bootstrap, hardline breaks, JIRA links, globalization, and more |
 
 ## Developer guide
