@@ -117,9 +117,18 @@ public sealed class MarkdownPipeline
 
         protected override HtmlRenderer NewInstance()
         {
-            TextWriter writer = _customWriter ? s_dummyWriter : new FastStringWriter();
+            // Each renderer gets a writer of its own while extensions set it up: they can read or change it.
+            // With a custom writer, the writer given to Markdown.ToHtml replaces it on each use.
+            var writer = new FastStringWriter();
             var renderer = new HtmlRenderer(writer);
             _pipeline.Setup(renderer);
+
+            // Markdown.ToHtml returns the content of this writer and Reset clears it
+            if (!_customWriter && !ReferenceEquals(renderer.Writer, writer))
+            {
+                ThrowHelper.InvalidOperationException("An extension of the pipeline replaced the Writer of the HtmlRenderer used by Markdown.ToHtml. Render with your own HtmlRenderer to use another writer.");
+            }
+
             return renderer;
         }
 
@@ -138,7 +147,12 @@ public sealed class MarkdownPipeline
         }
     }
 
-    internal readonly ref struct RentedHtmlRenderer : IDisposable
+    /// <summary>
+    /// A renderer taken from a <see cref="HtmlRendererCache"/>. Call <see cref="Return"/> only after a successful rendering:
+    /// a rendering that throws can leave the renderer in an intermediate state (for example <see cref="HtmlRenderer.ImplicitParagraph"/>
+    /// changed by a list or quote renderer), so it is dropped instead of being reused.
+    /// </summary>
+    internal readonly ref struct RentedHtmlRenderer
     {
         private readonly HtmlRendererCache _cache;
         public readonly HtmlRenderer Instance;
@@ -149,6 +163,6 @@ public sealed class MarkdownPipeline
             Instance = renderer;
         }
 
-        public void Dispose() => _cache.Release(Instance);
+        public void Return() => _cache.Release(Instance);
     }
 }
