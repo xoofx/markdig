@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 
@@ -11,6 +13,7 @@ namespace Markdig.Syntax;
 /// A block quote (Section 5.1 CommonMark specs)
 /// </summary>
 /// <seealso cref="ContainerBlock" />
+[DebuggerDisplay("{GetType().Name} Count = {Count}, QuoteChar: {QuoteChar}")]
 public class QuoteBlock : ContainerBlock
 {
     private List<QuoteBlockLine> Trivia => GetOrSetDerivedTrivia<List<QuoteBlockLine>>();

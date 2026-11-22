@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license.
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 
@@ -13,6 +15,7 @@ namespace Markdig.Syntax;
 /// <remarks>
 /// Related to CommonMark spec: 4.5 Fenced code blocks
 /// </remarks>
+[DebuggerDisplay("{GetType().Name} Line: {Line}, Info: {Info}, {Lines}")]
 public class FencedCodeBlock : CodeBlock, IFencedBlock
 {
     private TriviaProperties? _trivia => TryGetDerivedTrivia<TriviaProperties>();

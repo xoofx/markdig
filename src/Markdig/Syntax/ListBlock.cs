@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax;
@@ -10,6 +12,7 @@ namespace Markdig.Syntax;
 /// A list (Section 5.3 CommonMark specs)
 /// </summary>
 /// <seealso cref="ContainerBlock" />
+[DebuggerDisplay("{GetType().Name} Count = {Count}, Ordered: {IsOrdered}, Bullet: {BulletType}")]
 public class ListBlock : ContainerBlock
 {
     /// <summary>
