@@ -5,6 +5,7 @@
 using Markdig.Extensions.Toml;
 using Markdig.Extensions.Yaml;
 using Markdig.Parsers;
+using Markdig.Renderers;
 using Markdig.Renderers.Roundtrip;
 using Markdig.Syntax;
 
@@ -126,8 +127,38 @@ public class TestTomlFrontMatterExtension
 
         Assert.That(yamlHtml, Is.EqualTo("<h1>Content</h1>\n"));
         Assert.That(tomlHtml, Is.EqualTo("<h1>Content</h1>\n"));
-        Assert.That(builder.BlockParsers.Count(parser => parser is YamlFrontMatterParser { FenceChar: '-' }), Is.EqualTo(1));
+        Assert.That(builder.BlockParsers.Count(parser => parser is YamlFrontMatterParser), Is.EqualTo(1));
         Assert.That(builder.BlockParsers.Count(parser => parser is TomlFrontMatterParser), Is.EqualTo(1));
+    }
+
+    [Test]
+    public void TomlParserIsNotAYamlParser()
+    {
+        var builder = new MarkdownPipelineBuilder().UseTomlFrontMatter();
+        builder.Build();
+
+        Assert.That(builder.BlockParsers.Contains<YamlFrontMatterParser>(), Is.False);
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void YamlParserCanBeCustomizedWithTomlEnabled(bool tomlFirst)
+    {
+        var builder = new MarkdownPipelineBuilder();
+        if (tomlFirst)
+        {
+            builder.UseTomlFrontMatter().UseYamlFrontMatter();
+        }
+        else
+        {
+            builder.UseYamlFrontMatter().UseTomlFrontMatter();
+        }
+        builder.Extensions.Add(new AllowYamlInMiddleOfDocumentExtension());
+        var pipeline = builder.Build();
+
+        Assert.That(builder.BlockParsers.Find<YamlFrontMatterParser>()!.FenceChar, Is.EqualTo('-'));
+        Assert.That(Markdown.ToHtml("Text\n\n---\nkey: 1\n---\n", pipeline), Is.EqualTo("<p>Text</p>\n"));
+        Assert.That(Markdown.Parse("Text\n\n+++\nkey = 1\n+++\n", pipeline).Descendants<TomlFrontMatterBlock>(), Is.Empty);
     }
 
     [Test]
@@ -152,5 +183,14 @@ public class TestTomlFrontMatterExtension
 
     private sealed class DerivedYamlFrontMatterParser : YamlFrontMatterParser
     {
+    }
+
+    private sealed class AllowYamlInMiddleOfDocumentExtension : IMarkdownExtension
+    {
+        public void Setup(MarkdownPipelineBuilder pipeline) => pipeline.BlockParsers.Find<YamlFrontMatterParser>()!.AllowInMiddleOfDocument = true;
+
+        public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
+        {
+        }
     }
 }

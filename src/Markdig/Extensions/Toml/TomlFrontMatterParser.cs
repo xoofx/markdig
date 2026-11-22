@@ -11,7 +11,7 @@ namespace Markdig.Extensions.Toml;
 /// Block parser for a TOML frontmatter.
 /// </summary>
 /// <seealso cref="TomlFrontMatterBlock" />
-public sealed class TomlFrontMatterParser : YamlFrontMatterParser
+public sealed class TomlFrontMatterParser : FrontMatterParser
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="TomlFrontMatterParser"/> class.

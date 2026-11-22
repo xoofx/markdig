@@ -22,20 +22,7 @@ public class YamlFrontMatterExtension : IMarkdownExtension
     /// </summary>
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        // Check the fence character: TomlFrontMatterParser derives from YamlFrontMatterParser,
-        // so Contains<YamlFrontMatterParser>() would treat a TOML (+++) parser as the YAML one
-        // and skip adding the YAML parser.
-        bool hasYamlParser = false;
-        for (int i = 0; i < pipeline.BlockParsers.Count; i++)
-        {
-            if (pipeline.BlockParsers[i] is YamlFrontMatterParser { FenceChar: '-' })
-            {
-                hasYamlParser = true;
-                break;
-            }
-        }
-
-        if (!hasYamlParser)
+        if (!pipeline.BlockParsers.Contains<YamlFrontMatterParser>())
         {
             // Insert the YAML parser before the thematic break parser, as it is also triggered on a --- dash
             pipeline.BlockParsers.InsertBefore<ThematicBreakParser>(new YamlFrontMatterParser { AllowInMiddleOfDocument = AllowInMiddleOfDocument });
