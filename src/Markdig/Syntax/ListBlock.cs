@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 using Markdig.Parsers;
 
 namespace Markdig.Syntax;
@@ -10,8 +12,12 @@ namespace Markdig.Syntax;
 /// A list (Section 5.3 CommonMark specs)
 /// </summary>
 /// <seealso cref="ContainerBlock" />
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public class ListBlock : ContainerBlock
 {
+    private string DebuggerDisplay =>
+        $"{DebuggerDisplayLocation}, Count: {Count}, Ordered: {IsOrdered}, Marker: '{(IsOrdered ? OrderedDelimiter : BulletType)}'";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ListBlock"/> class.
     /// </summary>

@@ -2,6 +2,8 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
+using System.Diagnostics;
+
 using Markdig.Helpers;
 using Markdig.Parsers;
 
@@ -11,6 +13,7 @@ namespace Markdig.Syntax;
 /// Base class for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
 /// </summary>
 /// <seealso cref="MarkdownObject" />
+[DebuggerDisplay($"{{{nameof(DebuggerDisplayLocation)},nq}}")]
 public abstract class Block : MarkdownObject, IBlock
 {
     private BlockTriviaProperties? _trivia => GetTrivia<BlockTriviaProperties>();
