@@ -43,6 +43,8 @@ All AST nodes inherit from `MarkdownObject`, which provides:
 | `Line` | `int` | Zero-based line number in the source |
 | `Column` | `int` | Zero-based column number |
 
+In the debugger, block nodes and inline nodes with the default display show their type, zero-based line number, and source span. Some displays include details such as a block's child count or a code fence's info string. Use `UsePreciseSourceLocation()` to track exact inline spans.
+
 ### Block types
 
 {.table}

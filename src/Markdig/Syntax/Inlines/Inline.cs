@@ -14,7 +14,7 @@ namespace Markdig.Syntax.Inlines;
 /// Base class for all syntax tree inlines.
 /// </summary>
 /// <seealso cref="MarkdownObject" />
-[DebuggerDisplay("{GetType().Name} Line: {Line}, Span: {Span}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplayLocation)},nq}}")]
 public abstract class Inline : MarkdownObject, IInline
 {
     /// <summary>

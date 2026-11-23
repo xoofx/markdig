@@ -12,9 +12,12 @@ namespace Markdig.Syntax;
 /// A list (Section 5.3 CommonMark specs)
 /// </summary>
 /// <seealso cref="ContainerBlock" />
-[DebuggerDisplay("{GetType().Name} Count = {Count}, Ordered: {IsOrdered}, Bullet: {BulletType}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public class ListBlock : ContainerBlock
 {
+    private string DebuggerDisplay =>
+        $"{DebuggerDisplayLocation}, Count: {Count}, Ordered: {IsOrdered}, Marker: '{(IsOrdered ? OrderedDelimiter : BulletType)}'";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ListBlock"/> class.
     /// </summary>

@@ -1,7 +1,14 @@
+// Copyright (c) Alexandre Mutel. All rights reserved.
+// This file is licensed under the BSD-Clause 2 license.
+// See the license.txt file in the project root for more information.
+
+#nullable enable
+
 using System.Diagnostics;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
+using Markdig.Helpers;
+using Markdig.Parsers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 
@@ -10,39 +17,66 @@ namespace Markdig.Tests;
 [TestFixture]
 public sealed class TestDebuggerDisplay
 {
-    private static readonly Regex ExpressionMemberRegex = new(@"\{([A-Za-z_]\w*)", RegexOptions.Compiled);
-
-    private static IEnumerable<Type> SyntaxNodeTypes()
+    private static IEnumerable<TestCaseData> DisplayCases()
     {
-        return typeof(MarkdownObject).Assembly.GetTypes()
-            .Where(type => !type.IsAbstract && (typeof(Block).IsAssignableFrom(type) || typeof(Inline).IsAssignableFrom(type)))
-            .OrderBy(type => type.FullName);
+        yield return new TestCaseData(new BlankLineBlock(), "");
+        yield return new TestCaseData(new ContainerInline(), "");
+        yield return new TestCaseData(new MarkdownDocument(), ", Count: 0");
+        yield return new TestCaseData(new ParagraphBlock(new ParagraphBlockParser()), ", Lines: 0");
+        yield return new TestCaseData(new HeadingBlock(new HeadingBlockParser()) { Level = 3 }, ", Level: 3");
+        yield return new TestCaseData(new ListBlock(new ListBlockParser()) { BulletType = '-' }, ", Count: 0, Ordered: False, Marker: '-'");
+        yield return new TestCaseData(
+            new ListBlock(new ListBlockParser()) { IsOrdered = true, BulletType = '1', OrderedDelimiter = ')' },
+            ", Count: 0, Ordered: True, Marker: ')'");
+        yield return new TestCaseData(new ListItemBlock(new ListBlockParser()) { Order = 3 }, ", Count: 0, Order: 3");
+        yield return new TestCaseData(new QuoteBlock(new QuoteBlockParser()) { QuoteChar = '>' }, ", Count: 0, Marker: '>'");
+        yield return new TestCaseData(
+            new FencedCodeBlock(new FencedCodeBlockParser()) { Info = "csharp", Lines = new StringLineGroup("var x = 1;") },
+            ", Info: csharp, Lines: 1");
+        yield return new TestCaseData(new LineBreakInline { IsHard = true, IsBackslash = true }, ", Hard: True, Backslash: True");
     }
 
-    [TestCaseSource(nameof(SyntaxNodeTypes))]
-    public void SyntaxNodeHasDebuggerDisplay(Type type)
+    [TestCaseSource(nameof(DisplayCases))]
+    public void SyntaxNodeShowsSourceLocationAndDetails(MarkdownObject node, string details)
     {
-        var declaringType = type;
-        DebuggerDisplayAttribute? attribute = null;
-        while (declaringType is not null && attribute is null)
-        {
-            attribute = declaringType.GetCustomAttribute<DebuggerDisplayAttribute>(inherit: false);
-            declaringType = declaringType.BaseType;
-        }
+        node.Line = 2;
+        node.Span = new SourceSpan(10, 20);
 
-        Assert.IsNotNull(attribute, $"{type.FullName} has no [DebuggerDisplay] on itself or a base type");
+        Assert.That(GetDisplay(node), Is.EqualTo($"{node.GetType().Name} Line: 2, Span: 10-20{details}"));
+    }
 
-        const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy;
-        foreach (Match match in ExpressionMemberRegex.Matches(attribute!.Value))
+    [Test]
+    public void SyntaxNodeShowsWhenSourceSpanIsEmpty()
+    {
+        Assert.That(GetDisplay(new ContainerInline()), Is.EqualTo("ContainerInline Line: 0, Span: (empty)"));
+    }
+
+    [Test]
+    public void UnlabeledFenceShowsLineCount()
+    {
+        var fence = (FencedCodeBlock)Markdown.Parse("```\nfirst\nsecond\n```")[0];
+
+        Assert.That(GetDisplay(fence), Does.EndWith(", Info: (none), Lines: 2"));
+    }
+
+    private static string GetDisplay(MarkdownObject node)
+    {
+        for (Type? type = node.GetType(); type is not null; type = type.BaseType)
         {
-            var memberName = match.Groups[1].Value;
-            var members = type.GetMember(memberName, flags);
-            for (var baseType = type.BaseType; members.Length == 0 && baseType is not null; baseType = baseType.BaseType)
+            var attribute = type.GetCustomAttribute<DebuggerDisplayAttribute>(inherit: false);
+            if (attribute is null)
             {
-                members = baseType.GetMember(memberName, flags);
+                continue;
             }
 
-            Assert.IsNotEmpty(members, $"[DebuggerDisplay(\"{attribute.Value}\")] on {type.FullName} references unknown member {memberName}");
+            Assert.That(attribute.Value, Does.StartWith("{").And.EndWith(",nq}"));
+            var propertyName = attribute.Value[1..^4];
+            var property = type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic)
+                ?? throw new AssertionException($"{type.Name} has no debugger display property named {propertyName}");
+            return property.GetValue(node) as string
+                ?? throw new AssertionException($"{type.Name}.{propertyName} returned no display string");
         }
+
+        throw new AssertionException($"{node.GetType().Name} has no debugger display");
     }
 }

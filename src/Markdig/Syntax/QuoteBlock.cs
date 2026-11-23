@@ -13,10 +13,12 @@ namespace Markdig.Syntax;
 /// A block quote (Section 5.1 CommonMark specs)
 /// </summary>
 /// <seealso cref="ContainerBlock" />
-[DebuggerDisplay("{GetType().Name} Count = {Count}, QuoteChar: {QuoteChar}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public class QuoteBlock : ContainerBlock
 {
     private List<QuoteBlockLine> Trivia => GetOrSetDerivedTrivia<List<QuoteBlockLine>>();
+
+    private string DebuggerDisplay => $"{DebuggerDisplayLocation}, Count: {Count}, Marker: '{QuoteChar}'";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QuoteBlock"/> class.

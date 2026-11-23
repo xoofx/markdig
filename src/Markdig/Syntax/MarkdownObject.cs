@@ -101,6 +101,9 @@ public abstract class MarkdownObject : IMarkdownObject
     /// </summary>
     public SourceSpan Span;
 
+    private protected string DebuggerDisplayLocation =>
+        $"{GetType().Name} Line: {Line}, Span: {(Span.IsEmpty ? "(empty)" : Span.ToString())}";
+
     /// <summary>
     /// Gets a string of the location in the text.
     /// </summary>

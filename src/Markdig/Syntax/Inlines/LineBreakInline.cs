@@ -12,9 +12,11 @@ namespace Markdig.Syntax.Inlines;
 /// A base class for a line break.
 /// </summary>
 /// <seealso cref="LeafInline" />
-[DebuggerDisplay("{GetType().Name} Hard: {IsHard}, Backslash: {IsBackslash}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public class LineBreakInline : LeafInline
 {
+    private string DebuggerDisplay => $"{DebuggerDisplayLocation}, Hard: {IsHard}, Backslash: {IsBackslash}";
+
     /// <summary>
     /// Gets or sets the is hard.
     /// </summary>

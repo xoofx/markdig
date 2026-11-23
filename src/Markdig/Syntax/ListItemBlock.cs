@@ -13,11 +13,13 @@ namespace Markdig.Syntax;
 /// A list item (Section 5.2 CommonMark specs)
 /// </summary>
 /// <seealso cref="ContainerBlock" />
-[DebuggerDisplay("{GetType().Name} Count = {Count}, Order: {Order}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public class ListItemBlock : ContainerBlock
 {
     private TriviaProperties? _trivia => TryGetDerivedTrivia<TriviaProperties>();
     private TriviaProperties Trivia => GetOrSetDerivedTrivia<TriviaProperties>();
+
+    private string DebuggerDisplay => $"{DebuggerDisplayLocation}, Count: {Count}, Order: {Order}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ListItemBlock"/> class.

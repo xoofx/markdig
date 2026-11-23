@@ -17,10 +17,12 @@ namespace Markdig.Syntax;
 /// A base class for container blocks.
 /// </summary>
 /// <seealso cref="Block" />
-[DebuggerDisplay("{GetType().Name} Count = {Count}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public abstract class ContainerBlock : Block, IList<Block>, IReadOnlyList<Block>
 {
     private BlockWrapper[] _children;
+
+    private string DebuggerDisplay => $"{DebuggerDisplayLocation}, Count: {Count}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ContainerBlock"/> class.

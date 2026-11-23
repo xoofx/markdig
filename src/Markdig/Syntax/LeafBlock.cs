@@ -13,10 +13,12 @@ namespace Markdig.Syntax;
 /// Base class for all leaf blocks.
 /// </summary>
 /// <seealso cref="Block" />
-[DebuggerDisplay("{GetType().Name} Line: {Line}, {Lines}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public abstract class LeafBlock : Block
 {
     private ContainerInline? inline;
+
+    private string DebuggerDisplay => $"{DebuggerDisplayLocation}, Lines: {Lines.Count}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LeafBlock"/> class.

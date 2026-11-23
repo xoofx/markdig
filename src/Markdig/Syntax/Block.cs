@@ -13,7 +13,7 @@ namespace Markdig.Syntax;
 /// Base class for a block structure. Either a <see cref="LeafBlock"/> or a <see cref="ContainerBlock"/>.
 /// </summary>
 /// <seealso cref="MarkdownObject" />
-[DebuggerDisplay("{GetType().Name} Line: {Line}, Span: {Span}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplayLocation)},nq}}")]
 public abstract class Block : MarkdownObject, IBlock
 {
     private BlockTriviaProperties? _trivia => GetTrivia<BlockTriviaProperties>();

@@ -11,11 +11,13 @@ namespace Markdig.Syntax;
 /// <summary>
 /// Represents a heading.
 /// </summary>
-[DebuggerDisplay("{GetType().Name} Line: {Line}, {Lines} Level: {Level}")]
+[DebuggerDisplay($"{{{nameof(DebuggerDisplay)},nq}}")]
 public class HeadingBlock : LeafBlock
 {
     private TriviaProperties? _trivia => TryGetDerivedTrivia<TriviaProperties>();
     private TriviaProperties Trivia => GetOrSetDerivedTrivia<TriviaProperties>();
+
+    private string DebuggerDisplay => $"{DebuggerDisplayLocation}, Level: {Level}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeadingBlock"/> class.
