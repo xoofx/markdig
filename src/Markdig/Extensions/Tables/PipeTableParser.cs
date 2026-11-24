@@ -637,12 +637,7 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             // We've processed inlines in the table, but not the leading paragraph itself yet.
             state.PostProcessInlines(0, leadingParagraph.Inline, null, isFinalProcessing: true);
 
-            ContainerBlock parent = leadingParagraph.Parent!;
-
-            parent.ProcessInlinesEnd += (_, _) =>
-            {
-                parent.Insert(parent.IndexOf(leadingParagraph) + 1, table);
-            };
+            InsertTableAfterParagraphOnProcessInlinesEnd(leadingParagraph, table);
         }
         else
         {
@@ -652,6 +647,18 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
         // We don't want to continue procesing delimiters, as we are already processing them here
         return false;
+    }
+
+    // Kept out of PostProcess so that the closure is only allocated when a table follows a paragraph,
+    // instead of on every call to PostProcess.
+    private static void InsertTableAfterParagraphOnProcessInlinesEnd(ParagraphBlock leadingParagraph, Table table)
+    {
+        ContainerBlock parent = leadingParagraph.Parent!;
+
+        parent.ProcessInlinesEnd += (_, _) =>
+        {
+            parent.Insert(parent.IndexOf(leadingParagraph) + 1, table);
+        };
     }
 
     private static bool ParseHeaderString(Inline? inline, out TableColumnAlign? align, out int delimiterCount)
@@ -1136,19 +1143,16 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
         if (delimiter.Parent is not { } parent) return;
 
-        // Collect content after the delimiter
-        var contentAfter = new List<Inline>();
+        // Move content after the delimiter from parent into a new container
+        ContainerInline? newContainer = null;
         var current = delimiter.NextSibling;
         while (current != null)
         {
-            contentAfter.Add(current);
-            current = current.NextSibling;
-        }
-
-        // Remove content after delimiter from parent
-        foreach (var inline in contentAfter)
-        {
-            inline.Remove();
+            var next = current.NextSibling;
+            current.Remove();
+            newContainer ??= CreateSplitContainer(parent);
+            newContainer.AppendChild(current);
+            current = next;
         }
 
         // Remove delimiter from parent
@@ -1157,14 +1161,9 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         // Insert delimiter after the ancestor (at root level)
         ancestor.InsertAfter(delimiter);
 
-        // If there's content after, wrap in new container and insert after delimiter
-        if (contentAfter.Count > 0)
+        // If there's content after, insert its container after delimiter
+        if (newContainer != null)
         {
-            var newContainer = CreateSplitContainer(parent);
-            foreach (var inline in contentAfter)
-            {
-                newContainer.AppendChild(inline);
-            }
             delimiter.InsertAfter(newContainer);
         }
     }
