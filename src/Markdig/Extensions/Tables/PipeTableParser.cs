@@ -637,7 +637,17 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
             // We've processed inlines in the table, but not the leading paragraph itself yet.
             state.PostProcessInlines(0, leadingParagraph.Inline, null, isFinalProcessing: true);
 
-            InsertTableAfterParagraphOnProcessInlinesEnd(leadingParagraph, table);
+            ContainerBlock parent = leadingParagraph.Parent!;
+
+            // Locals of this branch, so that the closure is only allocated when a table follows a paragraph.
+            // Capturing the method-level table and leadingParagraph would allocate it on each call.
+            ParagraphBlock paragraph = leadingParagraph;
+            Table insertedTable = table;
+
+            parent.ProcessInlinesEnd += (_, _) =>
+            {
+                parent.Insert(parent.IndexOf(paragraph) + 1, insertedTable);
+            };
         }
         else
         {
@@ -647,18 +657,6 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
         // We don't want to continue procesing delimiters, as we are already processing them here
         return false;
-    }
-
-    // Kept out of PostProcess so that the closure is only allocated when a table follows a paragraph,
-    // instead of on every call to PostProcess.
-    private static void InsertTableAfterParagraphOnProcessInlinesEnd(ParagraphBlock leadingParagraph, Table table)
-    {
-        ContainerBlock parent = leadingParagraph.Parent!;
-
-        parent.ProcessInlinesEnd += (_, _) =>
-        {
-            parent.Insert(parent.IndexOf(leadingParagraph) + 1, table);
-        };
     }
 
     private static bool ParseHeaderString(Inline? inline, out TableColumnAlign? align, out int delimiterCount)
