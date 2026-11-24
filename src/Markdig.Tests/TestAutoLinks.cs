@@ -117,26 +117,84 @@ public class TestAutoLinks
     [TestCase("| a | b |\n|---|---|\n| with \\| pipe http://a.com | then text |\n")]
     [TestCase("other nhttp://a.com mailto:@a.com ftp:// tel: www. h t w")]
     [TestCase("*[HTML]: Hyper Text\n\nThe HTML with http://a.com and [link](http://b.com) and `code http://c.com`")]
-    public void TestPrecheckSkippingKeepsSyntaxTree(string markdown)
+    [TestCase("http:// and [http://a.com then www.b.com and (https://c.com) or www. and www.d.com")]
+    [TestCase("www.a.com www.b.com `www.c.com` www.d.com <b>www.e.com</b> tel:1 mailto:a@b.com mailto:c@d.com")]
+    [TestCase("awww.a.com wwww.b.com ww.c.com w www.d.com: http:/e.com https:// f https://g.com:80/h:i")]
+    [TestCase("ahttp://a.com shttp://b.com httpss://c.com ttp://d.com ftps://e.com mailtos:f@g.com tel:")]
+    public void TestPossibleMatchSearchKeepsSyntaxTree(string markdown)
     {
         foreach (var trackTrivia in new[] { false, true })
         {
-            var builder = new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseAdvancedExtensions();
-            builder.TrackTrivia = trackTrivia;
-            var pipeline = builder.Build();
-
-            // A global parser is tried at every opening character, which disables the skipping
-            var referenceBuilder = new MarkdownPipelineBuilder().UsePreciseSourceLocation().UseAdvancedExtensions();
-            referenceBuilder.TrackTrivia = trackTrivia;
-            referenceBuilder.InlineParsers.Add(new NeverMatchingInlineParser());
-            var referencePipeline = referenceBuilder.Build();
-
-            var document = Markdown.Parse(markdown, pipeline);
-            var referenceDocument = Markdown.Parse(markdown, referencePipeline);
-
-            Assert.That(Dump(document), Is.EqualTo(Dump(referenceDocument)), $"TrackTrivia: {trackTrivia}");
-            Assert.That(Markdown.ToHtml(document, pipeline), Is.EqualTo(Markdown.ToHtml(referenceDocument, referencePipeline)), $"TrackTrivia: {trackTrivia}");
+            AssertSameSyntaxTreeAsWithoutSearch(markdown, builder =>
+            {
+                builder.UsePreciseSourceLocation().UseAdvancedExtensions();
+                builder.TrackTrivia = trackTrivia;
+            });
         }
+    }
+
+    // The scheme of a link contains opening characters of another parser, at which the literal parser stops.
+    [TestCase("a mailto:a@b.com b", "<p>a <a href=\"mailto:a@b.com\">a@b.com</a> b</p>")]
+    [TestCase("a http://a.com b https://b.com c", "<p>a <a href=\"http://a.com\">http://a.com</a> b <a href=\"https://b.com\">https://b.com</a> c</p>")]
+    [TestCase("to ftp://a.com so tel:+1 pop", "<p>to <a href=\"ftp://a.com\">ftp://a.com</a> so <a href=\"tel:+1\">+1</a> pop</p>")]
+    [TestCase("oops www.a.com stop", "<p>oops <a href=\"http://www.a.com\">www.a.com</a> stop</p>")]
+    public void TestLinksWithOpeningCharactersOfAnotherParserInScheme(string markdown, string expected)
+    {
+        Action<MarkdownPipelineBuilder> configure = builder => builder.UseAutoLinks().InlineParsers.Add(
+            new NeverMatchingInlineParser('o', 'p', 's', 't', 'l', ':', '/', '.'));
+
+        var builder = new MarkdownPipelineBuilder();
+        configure(builder);
+
+        Assert.That(Markdown.ToHtml(markdown, builder.Build()), Is.EqualTo(expected + "\n"));
+        AssertSameSyntaxTreeAsWithoutSearch(markdown, configure);
+    }
+
+    [Test]
+    public void TestPossibleMatchSearchKeepsSyntaxTreeOfRandomDocuments()
+    {
+        string[] tokens =
+        [
+            "http://", "https://", "ftp://", "mailto:", "tel:", "www.", "a.com", "b@c.de", "+123", "http", "https", "ftp",
+            "mailto", "tel", "www", "w", "h", "t", "s", "p", ":", "//", ".", " ", " ", " ", "\n", "\n\n", "*", "_", "~", "(", ")",
+            "[", "]", "`", "<", ">", "|", "\\", "word", "\u00e9", "- ", "> ",
+        ];
+        var random = new Random(980);
+
+        for (int i = 0; i < 2000; i++)
+        {
+            var markdown = new StringBuilder();
+            for (int count = random.Next(1, 40); count > 0; count--)
+            {
+                markdown.Append(tokens[random.Next(tokens.Length)]);
+            }
+
+            string text = markdown.ToString();
+            AssertSameSyntaxTreeAsWithoutSearch(text, builder => builder.UsePreciseSourceLocation().UseAutoLinks());
+            AssertSameSyntaxTreeAsWithoutSearch(text, builder => builder.UsePreciseSourceLocation().UseAdvancedExtensions());
+        }
+    }
+
+    private static void AssertSameSyntaxTreeAsWithoutSearch(string markdown, Action<MarkdownPipelineBuilder> configure)
+    {
+        var builder = new MarkdownPipelineBuilder();
+        configure(builder);
+        var pipeline = builder.Build();
+
+        // A global parser is tried at every opening character, which disables the search for possible matches
+        var referenceBuilder = new MarkdownPipelineBuilder();
+        configure(referenceBuilder);
+        referenceBuilder.InlineParsers.Add(new NeverMatchingInlineParser());
+        var referencePipeline = referenceBuilder.Build();
+
+        var document = Markdown.Parse(markdown, pipeline);
+        var referenceDocument = Markdown.Parse(markdown, referencePipeline);
+
+        var html = Markdown.ToHtml(document, pipeline);
+        var referenceHtml = Markdown.ToHtml(referenceDocument, referencePipeline);
+
+        Assert.That(Dump(document), Is.EqualTo(Dump(referenceDocument)), markdown);
+        Assert.That(html, Is.EqualTo(referenceHtml), markdown);
     }
 
     [Test]
@@ -154,6 +212,22 @@ public class TestAutoLinks
         processor.ProcessInlineLeaf(paragraph);
 
         Assert.That(starts, Is.EqualTo(new[] { 2, 3, 4 }));
+    }
+
+    // A possible match found in one text must not be used for another text of the same length.
+    [Test]
+    public void TestPossibleMatchIsSearchedAgainForAnotherText()
+    {
+        var pipeline = new MarkdownPipelineBuilder().UseAutoLinks().Build();
+        var processor = new InlineProcessor(new MarkdownDocument(), pipeline.InlineParsers, false, null);
+
+        var slice = new StringSlice("a www.b.com");
+        processor.LiteralInlineParser.Match(processor, ref slice);
+        Assert.That(slice.Start, Is.EqualTo(2));
+
+        slice = new StringSlice("a wwwxb.com");
+        processor.LiteralInlineParser.Match(processor, ref slice);
+        Assert.That(slice.Start, Is.EqualTo(11));
     }
 
     private static string Dump(MarkdownDocument document)
@@ -177,6 +251,11 @@ public class TestAutoLinks
 
     private sealed class NeverMatchingInlineParser : InlineParser
     {
+        public NeverMatchingInlineParser(params char[] openingCharacters)
+        {
+            OpeningCharacters = openingCharacters;
+        }
+
         public override bool Match(InlineProcessor processor, ref StringSlice slice) => false;
     }
 }

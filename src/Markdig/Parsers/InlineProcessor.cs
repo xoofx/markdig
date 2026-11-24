@@ -34,6 +34,7 @@ public class InlineProcessor
     private int _unescapedSourceStart;
     internal ContainerBlock? PreviousContainerToReplace;
     internal ContainerBlock? NewContainerToReplace;
+    internal InlineParserList.PossibleMatch PossibleMatch;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InlineProcessor" /> class.
@@ -269,6 +270,7 @@ public class InlineProcessor
 
         previousSliceOffset = 0;
         previousLineIndexForSliceOffset = 0;
+        PossibleMatch = default;
         lineOffsets.Clear();
         var text = leafBlock.Lines.ToSlice(lineOffsets);
         _unescapedSourceStart = text.Start;
@@ -542,6 +544,7 @@ public class InlineProcessor
     private void Reset()
     {
         _unescapedSourceOffsets = null;
+        PossibleMatch = default;
         Block = null;
         BlockNew = null;
         Inline = null;

@@ -2,7 +2,7 @@
 // This file is licensed under the BSD-Clause 2 license. 
 // See the license.txt file in the project root for more information.
 
-using Markdig.Helpers;
+using System.Buffers;
 
 namespace Markdig.Parsers;
 
@@ -12,8 +12,11 @@ namespace Markdig.Parsers;
 /// <seealso cref="ParserList{InlineParser, InlineParserState}" />
 public class InlineParserList : ParserList<InlineParser, InlineProcessor>
 {
-    // ASCII opening characters whose parsers all offer InlineParser.PrecheckMatch, or null if there are none.
-    private readonly bool[]? _prechecked;
+    // Parsers that search their possible matches themselves, or null if there are none.
+    private readonly InlineParser[]? _searchingParsers;
+
+    // The opening characters of all other parsers.
+    private readonly SearchValues<char>? _otherOpeningCharacters;
 
     /// <summary>
     /// Initializes a new instance of the InlineParserList class.
@@ -34,13 +37,30 @@ public class InlineParserList : ParserList<InlineParser, InlineProcessor>
         // A global parser is tried at every opening character, so skipping one would change its results
         if (GlobalParsers is null)
         {
+            var searchingParsers = new List<InlineParser>();
+            var otherOpeningCharacters = new List<char>();
             foreach (var openingChar in OpeningCharacters)
             {
-                if (openingChar < 128 && Array.TrueForAll(GetParsersForOpeningCharacter(openingChar)!, parser => parser.HasMatchPrecheck))
+                var openingParsers = GetParsersForOpeningCharacter(openingChar)!;
+                if (!Array.TrueForAll(openingParsers, openingParser => openingParser.CanSearchPossibleMatch))
                 {
-                    _prechecked ??= new bool[128];
-                    _prechecked[openingChar] = true;
+                    otherOpeningCharacters.Add(openingChar);
+                    continue;
                 }
+
+                foreach (var openingParser in openingParsers)
+                {
+                    if (!searchingParsers.Contains(openingParser))
+                    {
+                        searchingParsers.Add(openingParser);
+                    }
+                }
+            }
+
+            if (searchingParsers.Count > 0)
+            {
+                _searchingParsers = searchingParsers.ToArray();
+                _otherOpeningCharacters = SearchValues.Create(otherOpeningCharacters.ToArray());
             }
         }
     }
@@ -52,36 +72,79 @@ public class InlineParserList : ParserList<InlineParser, InlineProcessor>
 
     /// <summary>
     /// Searches for an opening character like <see cref="ParserList{T, TState}.IndexOfOpeningCharacter"/>, skipping
-    /// the positions where <see cref="InlineParser.PrecheckMatch"/> rules out every parser of the character.
+    /// the positions where <see cref="InlineParser.IndexOfPossibleMatch"/> rules out every parser of the character.
     /// </summary>
-    internal int IndexOfOpeningCharacterThatMayMatch(string text, int start, int end)
+    /// <param name="processor">The processor that parses the text. It keeps the last possible match found.</param>
+    /// <param name="text">The text.</param>
+    /// <param name="start">The start.</param>
+    /// <param name="end">The end.</param>
+    /// <returns>The position of the first opening character that may start a match; if not found, returns -1</returns>
+    internal int IndexOfOpeningCharacterThatMayMatch(InlineProcessor processor, string text, int start, int end)
     {
-        int index = IndexOfOpeningCharacter(text, start, end);
-
-        var prechecked = _prechecked;
-        if (prechecked is not null)
+        if (_searchingParsers is null)
         {
-            while (index >= 0)
+            return IndexOfOpeningCharacter(text, start, end);
+        }
+
+        int index = text.AsSpan(start, end - start + 1).IndexOfAny(_otherOpeningCharacters!);
+        if (index >= 0)
+        {
+            index += start;
+        }
+
+        // A possible match depends on the text alone, so the last one found stays valid until the scan passes it
+        ref var possibleMatch = ref processor.PossibleMatch;
+        if (!ReferenceEquals(possibleMatch.Text, text) || possibleMatch.End != end ||
+            start < possibleMatch.Start || possibleMatch.Index < start)
+        {
+            SearchPossibleMatch(ref possibleMatch, text, start, end);
+        }
+
+        return possibleMatch.Index <= end && (index < 0 || possibleMatch.Index < index) ? possibleMatch.Index : index;
+    }
+
+    private void SearchPossibleMatch(ref PossibleMatch possibleMatch, string text, int start, int end)
+    {
+        int index = int.MaxValue;
+
+        foreach (var parser in _searchingParsers!)
+        {
+            int parserIndex = parser.IndexOfPossibleMatch(text, start, end);
+            if (parserIndex >= 0 && parserIndex < index)
             {
-                char c = text[index];
-                if (c >= prechecked.Length || !prechecked[c])
-                {
-                    break;
-                }
-
-                var slice = new StringSlice(text, index, end);
-                foreach (var parser in GetParsersForOpeningCharacter(c)!)
-                {
-                    if (parser.PrecheckMatch(slice))
-                    {
-                        return index;
-                    }
-                }
-
-                index = IndexOfOpeningCharacter(text, index + 1, end);
+                index = parserIndex;
             }
         }
 
-        return index;
+        possibleMatch.Text = text;
+        possibleMatch.Start = start;
+        possibleMatch.End = end;
+        possibleMatch.Index = index;
+    }
+
+    /// <summary>
+    /// The first possible match of the searching parsers from <see cref="Start"/> to <see cref="End"/> of a text.
+    /// </summary>
+    internal struct PossibleMatch
+    {
+        /// <summary>
+        /// The text that was searched.
+        /// </summary>
+        public string? Text;
+
+        /// <summary>
+        /// The position from which the text was searched.
+        /// </summary>
+        public int Start;
+
+        /// <summary>
+        /// The last position of the text.
+        /// </summary>
+        public int End;
+
+        /// <summary>
+        /// The position of the possible match, or <see cref="int.MaxValue"/> if there is none.
+        /// </summary>
+        public int Index;
     }
 }

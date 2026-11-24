@@ -42,7 +42,7 @@ public sealed class LiteralInlineParser : InlineParser
 
         // PostMatch expects to be called at every opening character
         int nextStart = PostMatch is null
-            ? processor.Parsers.IndexOfOpeningCharacterThatMayMatch(text, slice.Start + 1, slice.End)
+            ? processor.Parsers.IndexOfOpeningCharacterThatMayMatch(processor, text, slice.Start + 1, slice.End)
             : processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
         int length;
 

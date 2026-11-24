@@ -51,11 +51,54 @@ public class AutoLinkParser : InlineParser
         return PrecheckMatch(slice) && MatchCore(processor, ref slice);
     }
 
-    // The opening characters are common letters: the literal parser scans past those rejected here without calling Match.
-    // A derived parser can override Match, so only this exact type offers the precheck.
-    internal override bool HasMatchPrecheck => GetType() == typeof(AutoLinkParser);
+    // The opening characters are common letters, so the literal parser asks for the possible matches where it would
+    // otherwise stop at each of them. A derived parser can override Match, so only this exact type offers the search.
+    internal override bool CanSearchPossibleMatch => GetType() == typeof(AutoLinkParser);
 
-    internal override bool PrecheckMatch(in StringSlice slice)
+    internal override int IndexOfPossibleMatch(string text, int start, int end)
+    {
+        // A link starts with "www." or with a scheme and its ':'. Both characters are rare in prose, unlike the
+        // opening characters.
+        int position = start;
+
+        while (position <= end)
+        {
+            int anchor = text.AsSpan(position, end - position + 1).IndexOfAny(':', 'w');
+            if (anchor < 0)
+            {
+                break;
+            }
+
+            anchor += position;
+            int candidate = anchor;
+
+            if (text[anchor] == ':')
+            {
+                ReadOnlySpan<char> scheme = text.AsSpan(start, anchor - start);
+                candidate = scheme.EndsWith("http", StringComparison.Ordinal) ? anchor - 4
+                    : scheme.EndsWith("https", StringComparison.Ordinal) ? anchor - 5
+                    : scheme.EndsWith("mailto", StringComparison.Ordinal) ? anchor - 6
+                    : scheme.EndsWith("ftp", StringComparison.Ordinal) ? anchor - 3
+                    : scheme.EndsWith("tel", StringComparison.Ordinal) ? anchor - 3
+                    : -1;
+            }
+            else if (anchor == end || text[anchor + 1] != 'w')
+            {
+                candidate = -1;
+            }
+
+            if (candidate >= 0 && PrecheckMatch(new StringSlice(text, candidate, end)))
+            {
+                return candidate;
+            }
+
+            position = anchor + 1;
+        }
+
+        return -1;
+    }
+
+    private bool PrecheckMatch(in StringSlice slice)
     {
         ReadOnlySpan<char> span = slice.AsSpan();
 

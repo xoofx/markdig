@@ -21,12 +21,17 @@ public abstract class InlineParser : ParserBase<InlineProcessor>, IInlineParser<
     public abstract bool Match(InlineProcessor processor, ref StringSlice slice);
 
     /// <summary>
-    /// Gets a value indicating whether <see cref="PrecheckMatch"/> can rule out a match of this parser.
+    /// Gets a value indicating whether <see cref="IndexOfPossibleMatch"/> finds every position at which this parser
+    /// can match.
     /// </summary>
-    internal virtual bool HasMatchPrecheck => false;
+    internal virtual bool CanSearchPossibleMatch => false;
 
     /// <summary>
-    /// Returns <c>false</c> if <see cref="Match"/> cannot succeed at the beginning of the slice. Must not have side effects.
+    /// Returns the first position from <paramref name="start"/> to <paramref name="end"/> at which <see cref="Match"/>
+    /// may succeed, or -1 if there is none. The result must depend on the text alone.
     /// </summary>
-    internal virtual bool PrecheckMatch(in StringSlice slice) => true;
+    /// <param name="text">The text.</param>
+    /// <param name="start">The start.</param>
+    /// <param name="end">The end.</param>
+    internal virtual int IndexOfPossibleMatch(string text, int start, int end) => start;
 }
