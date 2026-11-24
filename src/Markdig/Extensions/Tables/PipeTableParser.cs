@@ -639,9 +639,14 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
 
             ContainerBlock parent = leadingParagraph.Parent!;
 
+            // Locals of this branch, so that the closure is only allocated when a table follows a paragraph.
+            // Capturing the method-level table and leadingParagraph would allocate it on each call.
+            ParagraphBlock paragraph = leadingParagraph;
+            Table insertedTable = table;
+
             parent.ProcessInlinesEnd += (_, _) =>
             {
-                parent.Insert(parent.IndexOf(leadingParagraph) + 1, table);
+                parent.Insert(parent.IndexOf(paragraph) + 1, insertedTable);
             };
         }
         else
@@ -1136,19 +1141,16 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
     {
         if (delimiter.Parent is not { } parent) return;
 
-        // Collect content after the delimiter
-        var contentAfter = new List<Inline>();
+        // Move content after the delimiter from parent into a new container
+        ContainerInline? newContainer = null;
         var current = delimiter.NextSibling;
         while (current != null)
         {
-            contentAfter.Add(current);
-            current = current.NextSibling;
-        }
-
-        // Remove content after delimiter from parent
-        foreach (var inline in contentAfter)
-        {
-            inline.Remove();
+            var next = current.NextSibling;
+            current.Remove();
+            newContainer ??= CreateSplitContainer(parent);
+            newContainer.AppendChild(current);
+            current = next;
         }
 
         // Remove delimiter from parent
@@ -1157,14 +1159,9 @@ public class PipeTableParser : InlineParser, IPostInlineProcessor
         // Insert delimiter after the ancestor (at root level)
         ancestor.InsertAfter(delimiter);
 
-        // If there's content after, wrap in new container and insert after delimiter
-        if (contentAfter.Count > 0)
+        // If there's content after, insert its container after delimiter
+        if (newContainer != null)
         {
-            var newContainer = CreateSplitContainer(parent);
-            foreach (var inline in contentAfter)
-            {
-                newContainer.AppendChild(inline);
-            }
             delimiter.InsertAfter(newContainer);
         }
     }
