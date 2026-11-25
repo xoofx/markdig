@@ -86,6 +86,19 @@ public class MiscTests
         }
     }
 
+    [Theory]
+    [TestCase("[a](", "<a href=\"\">a</a>")]
+    [TestCase("[a](u (", "[a](u ()")]
+    public void UnclosedInlineLinksAreNotQuadratic(string pattern, string lastPattern)
+    {
+        // Each failed inline link must stop early instead of scanning to the end of the text
+        var count = 100_000 / pattern.Length;
+        var markdown = string.Concat(Enumerable.Repeat(pattern, count)) + ")";
+        var expected = "<p>" + string.Concat(Enumerable.Repeat(pattern, count - 1)) + lastPattern + "</p>\n";
+
+        Assert.AreEqual(expected, Markdown.ToHtml(markdown));
+    }
+
     [Test]
     public void MaximumNestingDepthCanBeRaisedForDeepListExtras()
     {
