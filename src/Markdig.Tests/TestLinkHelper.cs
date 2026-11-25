@@ -49,6 +49,20 @@ public class TestLinkHelper
     }
 
     [Test]
+    [TestCase(32, true)]
+    [TestCase(33, false)]
+    public void TestUrlNestedParenthesisLimit(int depth, bool isValid)
+    {
+        var url = new string('(', depth) + "a" + new string(')', depth);
+        var text = new StringSlice(url + " nooo");
+        Assert.AreEqual(isValid, LinkHelper.TryParseUrl(ref text, out string link, out _));
+        Assert.AreEqual(isValid ? url : null, link);
+
+        text = new StringSlice(url + " nooo");
+        Assert.AreEqual(isValid, LinkHelper.TryParseUrlTrivia(ref text, out link, out _));
+    }
+
+    [Test]
     public void TestUrlAlternate()
     {
         var text = new StringSlice("<toto_tata_tutu> nooo");
@@ -79,6 +93,19 @@ public class TestLinkHelper
         Assert.True(LinkHelper.TryParseTitle(ref text, out string title, out _));
         Assert.AreEqual(@"tata\tutu""", title);
         Assert.AreEqual(' ', text.CurrentChar);
+    }
+
+    [Test]
+    [TestCase(@"(tata\(tutu\))", true)]
+    [TestCase("(tata(tutu))", false)]
+    [TestCase("'tata(tutu)'", true)]
+    public void TestTitleUnescapedParenthesis(string input, bool isValid)
+    {
+        var text = new StringSlice(input);
+        Assert.AreEqual(isValid, LinkHelper.TryParseTitle(ref text, out _, out _));
+
+        text = new StringSlice(input);
+        Assert.AreEqual(isValid, LinkHelper.TryParseTitleTrivia(ref text, out _, out _));
     }
 
     [Test]

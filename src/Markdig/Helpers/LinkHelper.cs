@@ -17,6 +17,9 @@ namespace Markdig.Helpers;
 /// </summary>
 public static class LinkHelper
 {
+    // Same limit as cmark; the spec allows a limit on nesting as long as at least three levels are supported
+    private const int MaxDestinationParenthesesNesting = 32;
+
     /// <summary>
     /// Attempts to parse autolink.
     /// </summary>
@@ -694,6 +697,11 @@ public static class LinkHelper
                     title = buffer.ToString();
                     return true;
                 }
+                else if (c == '(' && enclosingCharacter == '(')
+                {
+                    // An unescaped ( is not allowed in a title enclosed in parentheses
+                    break;
+                }
                 else if (c == '\\')
                 {
                     hasEscape = true;
@@ -775,6 +783,11 @@ public static class LinkHelper
                     text.SkipChar();
                     title = buffer.ToString();
                     return true;
+                }
+                else if (c == '(' && enclosingCharacter == '(')
+                {
+                    // An unescaped ( is not allowed in a title enclosed in parentheses
+                    break;
                 }
                 else if (c == '\\')
                 {
@@ -877,6 +890,11 @@ public static class LinkHelper
                     if (!hasEscape)
                     {
                         openedParent++;
+                        // Like cmark, limit the nesting so an unbalanced destination fails early instead of scanning to the end
+                        if (openedParent > MaxDestinationParenthesesNesting && !isAutoLink)
+                        {
+                            break;
+                        }
                     }
                 }
 
@@ -1029,6 +1047,11 @@ public static class LinkHelper
                     if (!hasEscape)
                     {
                         openedParent++;
+                        // Like cmark, limit the nesting so an unbalanced destination fails early instead of scanning to the end
+                        if (openedParent > MaxDestinationParenthesesNesting && !isAutoLink)
+                        {
+                            break;
+                        }
                     }
                 }
 
