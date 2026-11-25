@@ -40,7 +40,10 @@ public sealed class LiteralInlineParser : InlineParser
     {
         string text = slice.Text;
 
-        int nextStart = processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
+        // PostMatch expects to be called at every opening character
+        int nextStart = PostMatch is null
+            ? processor.Parsers.IndexOfOpeningCharacterThatMayMatch(processor, text, slice.Start + 1, slice.End)
+            : processor.Parsers.IndexOfOpeningCharacter(text, slice.Start + 1, slice.End);
         int length;
 
         if ((uint)nextStart >= (uint)text.Length)
