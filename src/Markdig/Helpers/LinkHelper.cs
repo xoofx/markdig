@@ -1234,6 +1234,16 @@ public static class LinkHelper
             }
             else
             {
+                // A title that starts on a following line but doesn't close is not part of the definition:
+                // the definition ends after the url
+                if (newLineCount > 0)
+                {
+                    text = saved;
+                    title = null;
+                    titleSpan = SourceSpan.Empty;
+                    return true;
+                }
+
                 return false;
             }
         }
@@ -1373,6 +1383,20 @@ public static class LinkHelper
             }
             else
             {
+                // A title that starts on a following line but doesn't close is not part of the definition:
+                // the definition ends after the url
+                if (newLineCount > 0)
+                {
+                    text = saved;
+                    title = null;
+                    titleEnclosingCharacter = '\0';
+                    newLine = NewLine.None;
+                    unescapedTitle = SourceSpan.Empty;
+                    triviaAfterTitle = SourceSpan.Empty;
+                    titleSpan = SourceSpan.Empty;
+                    return true;
+                }
+
                 return false;
             }
         }

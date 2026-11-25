@@ -254,6 +254,30 @@ public class TestLinkHelper
     }
 
     [Test]
+    public void TestLinkReferenceDefinitionUnclosedTitleOnNextLine()
+    {
+        var text = new StringSlice("[foo]: /url\n(title\n");
+        Assert.True(LinkHelper.TryParseLinkReferenceDefinition(ref text, out string label, out string url, out string title, out _, out _, out SourceSpan titleSpan));
+        Assert.AreEqual("foo", label);
+        Assert.AreEqual("/url", url);
+        Assert.IsNull(title);
+        Assert.AreEqual(SourceSpan.Empty, titleSpan);
+        // The definition ends after the url, the unclosed title stays for the paragraph
+        Assert.AreEqual('\n', text.CurrentChar);
+    }
+
+    [TestCase("[foo]: /url\n(title\n\n[foo]", "<p>(title</p>\n<p><a href=\"/url\">foo</a></p>")]
+    [TestCase("[foo]: /url\n\"title\n\n[foo]", "<p>&quot;title</p>\n<p><a href=\"/url\">foo</a></p>")]
+    [TestCase("[foo]: /url\n'title\nnext line\n\n[foo]", "<p>'title\nnext line</p>\n<p><a href=\"/url\">foo</a></p>")]
+    [TestCase("[foo]:\n/url\n(title\n\n[foo]", "<p>(title</p>\n<p><a href=\"/url\">foo</a></p>")]
+    [TestCase("[foo]: /url (title\n\n[foo]", "<p>[foo]: /url (title</p>\n<p>[foo]</p>")]
+    public void TestLinkReferenceDefinitionUnclosedTitle(string markdown, string expected)
+    {
+        TestParser.TestSpec(markdown, expected);
+        TestParser.TestSpec(markdown, expected, new MarkdownPipelineBuilder().EnableTrackTrivia().Build());
+    }
+
+    [Test]
     public void TestAutoLinkUrlSimple()
     {
         var text = new StringSlice(@"<http://google.com>");
