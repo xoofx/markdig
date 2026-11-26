@@ -1239,6 +1239,7 @@ public static class LinkHelper
                 if (newLineCount > 0)
                 {
                     text = saved;
+                    SkipRestOfLine(ref text, out _);
                     title = null;
                     titleSpan = SourceSpan.Empty;
                     return true;
@@ -1269,7 +1270,9 @@ public static class LinkHelper
             if (newLineCount > 0 && title != null)
             {
                 text = saved;
+                SkipRestOfLine(ref text, out _);
                 title = null;
+                titleSpan = SourceSpan.Empty;
                 return true;
             }
 
@@ -1285,6 +1288,39 @@ public static class LinkHelper
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Skips the spaces and tabs left on the current line and the line break after them.
+    /// Returns the position of the last skipped space or tab.
+    /// </summary>
+    private static int SkipRestOfLine<T>(ref T text, out NewLine newLine) where T : ICharIterator
+    {
+        newLine = NewLine.None;
+        var c = text.CurrentChar;
+        while (c.IsSpaceOrTab())
+        {
+            c = text.NextChar();
+        }
+        int lastTrivia = text.Start - 1;
+
+        if (c == '\r')
+        {
+            newLine = NewLine.CarriageReturn;
+            c = text.NextChar();
+            if (c == '\n')
+            {
+                newLine = NewLine.CarriageReturnLineFeed;
+                text.SkipChar();
+            }
+        }
+        else if (c == '\n')
+        {
+            newLine = NewLine.LineFeed;
+            text.SkipChar();
+        }
+
+        return lastTrivia;
     }
 
     /// <summary>
@@ -1388,11 +1424,11 @@ public static class LinkHelper
                 if (newLineCount > 0)
                 {
                     text = saved;
+                    triviaBeforeTitle = new SourceSpan(triviaBeforeTitleStart, SkipRestOfLine(ref text, out newLine));
+                    triviaAfterTitle = new SourceSpan(text.Start, text.Start - 1);
                     title = null;
                     titleEnclosingCharacter = '\0';
-                    newLine = NewLine.None;
                     unescapedTitle = SourceSpan.Empty;
-                    triviaAfterTitle = SourceSpan.Empty;
                     titleSpan = SourceSpan.Empty;
                     return true;
                 }
@@ -1426,10 +1462,12 @@ public static class LinkHelper
             if (newLineCount > 0 && title != null)
             {
                 text = saved;
+                triviaBeforeTitle = new SourceSpan(triviaBeforeTitleStart, SkipRestOfLine(ref text, out newLine));
+                triviaAfterTitle = new SourceSpan(text.Start, text.Start - 1);
                 title = null;
-                newLine = NewLine.None;
+                titleEnclosingCharacter = '\0';
                 unescapedTitle = SourceSpan.Empty;
-                triviaAfterTitle = SourceSpan.Empty;
+                titleSpan = SourceSpan.Empty;
                 return true;
             }
 

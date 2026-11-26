@@ -262,8 +262,8 @@ public class TestLinkHelper
         Assert.AreEqual("/url", url);
         Assert.IsNull(title);
         Assert.AreEqual(SourceSpan.Empty, titleSpan);
-        // The definition ends after the url, the unclosed title stays for the paragraph
-        Assert.AreEqual('\n', text.CurrentChar);
+        // The definition ends after the url line, the unclosed title stays for the paragraph
+        Assert.AreEqual('(', text.CurrentChar);
     }
 
     [TestCase("[foo]: /url\n(title\n\n[foo]", "<p>(title</p>\n<p><a href=\"/url\">foo</a></p>")]
@@ -271,6 +271,9 @@ public class TestLinkHelper
     [TestCase("[foo]: /url\n'title\nnext line\n\n[foo]", "<p>'title\nnext line</p>\n<p><a href=\"/url\">foo</a></p>")]
     [TestCase("[foo]:\n/url\n(title\n\n[foo]", "<p>(title</p>\n<p><a href=\"/url\">foo</a></p>")]
     [TestCase("[foo]: /url (title\n\n[foo]", "<p>[foo]: /url (title</p>\n<p>[foo]</p>")]
+    [TestCase("[foo]: /url \n(title\n\n[foo]", "<p>(title</p>\n<p><a href=\"/url\">foo</a></p>")]
+    [TestCase("[foo]: /url\t\n(title\n\n[foo]", "<p>(title</p>\n<p><a href=\"/url\">foo</a></p>")]
+    [TestCase("[foo]: /url \n\"title\" ok\n\n[foo]", "<p>&quot;title&quot; ok</p>\n<p><a href=\"/url\">foo</a></p>")]
     public void TestLinkReferenceDefinitionUnclosedTitle(string markdown, string expected)
     {
         TestParser.TestSpec(markdown, expected);
