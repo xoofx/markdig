@@ -210,6 +210,18 @@ public class TestLinkReferenceDefinition
         RoundTrip(value);
     }
 
+    [TestCase("[a]: /r\n(t")]
+    [TestCase("[a]: /r\n\"t\n")]
+    [TestCase("[a]: /r\n't\nu\n")]
+    [TestCase("[a]:\n/r\n(t\n")]
+    [TestCase("[a]: /r \n(t")]
+    [TestCase("[a]: /r \n\"t\" ok\n")]
+    [TestCase("[a]: /r\r\n(t\r\n")]
+    public void TestUnclosedTitleOnNextLine(string value)
+    {
+        RoundTrip(value);
+    }
+
     [TestCase("> [foo]: /url 'the title'\n")]
     [TestCase("> [foo]: /url\n> 'the title'\n")]
     [TestCase("> [foo]:\n> /url 'the title'\n")]
