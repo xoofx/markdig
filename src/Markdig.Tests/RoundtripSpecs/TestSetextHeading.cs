@@ -13,6 +13,10 @@ public class TestSetextHeading
     [TestCase("h1 \n===")] //3
     [TestCase("h1\\\n===")] //3
     [TestCase("h1\n === ")] //3
+    [TestCase("h1\n=== \n")] //3
+    [TestCase("h1\n===  \np")] //3
+    [TestCase("h1\n---\t\np")] //3
+    [TestCase("h1\n -  \r\np")] //1
     [TestCase("h1\nh1 l2\n===")] //3
     [TestCase("h1\n====")] // 4
     [TestCase("h1\n ====")] // 4
