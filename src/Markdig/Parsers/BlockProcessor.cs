@@ -672,9 +672,23 @@ public class BlockProcessor
             if (block.IsContainerBlock)
             {
                 var currentContainer = Unsafe.As<ContainerBlock>(block);
-                CurrentContainer = currentContainer;
-                LastBlock = currentContainer.LastChild;
-                CurrentBlock = currentBlock;
+                var lastBlock = currentContainer.LastChild;
+
+                // This method runs several times per line, and the three values rarely change between two calls.
+                // Storing a reference in a field runs the GC write barrier, even when the value stays the same,
+                // so compare first and store only on a change
+                if (!ReferenceEquals(CurrentContainer, currentContainer))
+                {
+                    CurrentContainer = currentContainer;
+                }
+                if (!ReferenceEquals(LastBlock, lastBlock))
+                {
+                    LastBlock = lastBlock;
+                }
+                if (!ReferenceEquals(CurrentBlock, currentBlock))
+                {
+                    CurrentBlock = currentBlock;
+                }
                 return;
             }
         }
